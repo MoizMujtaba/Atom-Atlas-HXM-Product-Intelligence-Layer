@@ -41,6 +41,22 @@ export function getMergedPRs() {
   return read<AtomPR[]>("merged-prs.json", [])
 }
 
+export interface AtomTranslation {
+  signalType: string
+  userImpact: string
+  targetPersona?: string
+  podConfirmed?: string
+  migrationSignal: boolean
+  frictionFixed: string | null
+  newCapability: string | null
+  productionRisk?: "high" | "medium" | "low"
+  productionRiskReason?: string
+  reviewerRisks?: string[]
+  instrumentationGap?: boolean
+  nextOpportunity?: string | null
+  watchItems: string[]
+}
+
 export interface AtomPR {
   number: number
   repo: string
@@ -50,12 +66,85 @@ export interface AtomPR {
   mergedAt: string
   author: string | null
   fileCount: number | null
-  translation: {
-    signalType: string
-    userImpact: string
-    migrationSignal: boolean
-    frictionFixed: string | null
-    newCapability: string | null
-    watchItems: string[]
+  translation: AtomTranslation
+}
+
+// ── Derived signals ──────────────────────────────────────────────────────────
+
+const POD_EVENTS: Record<string, string[]> = {
+  "WFM 1": ["employee_task_clicked", "employee_task_saved", "employee_submitted", "employee_created"],
+  "WFM 2": ["addExpense_aiFeedbackBannerShown", "addExpense_upserted", "addExpenseLine_upserted", "expenseDetail_upserted", "addExpense_aiExpenseExtractionFeedback", "addExpense_aiExpenseExtractionFeedbackDismissed"],
+  "PAY": ["sso_login_attempt", "sso_login_success", "sso_login_failed", "mfa_sms_setup_phone"],
+  "FNM 1": [],
+  "FNM 2": [],
+  "Data Platform": [],
+}
+
+export interface RegressionSignal {
+  event: string
+  thisWeek: number
+  lastWeek: number
+  dropPct: number
+  pod: string
+}
+
+export interface InstrumentationGap {
+  prTitle: string
+  prNumber: number
+  repo: string
+  team: string
+  newCapability: string
+}
+
+export function getRegressions(threshold = 20): RegressionSignal[] {
+  const events = getWeeklyEvents()
+  const prs = getMergedPRs()
+  const regressions: RegressionSignal[] = []
+
+  for (const [pod, podEventNames] of Object.entries(POD_EVENTS)) {
+    for (const ev of podEventNames) {
+      const data = events.find(e => e.event === ev)
+      if (!data || data.lastWeek === 0) continue
+      const dropPct = Math.round(((data.lastWeek - data.thisWeek) / data.lastWeek) * 100)
+      if (dropPct < threshold) continue
+
+      // Only flag as regression if no PR in this pod shipped this week that could explain it
+      const podPRs = prs.filter(p => p.team === pod)
+      const hasFrictionFix = podPRs.some(p =>
+        p.translation.frictionFixed && ev.split("_").some(word => p.translation.frictionFixed?.toLowerCase().includes(word.toLowerCase()))
+      )
+      if (!hasFrictionFix) {
+        regressions.push({ event: ev, thisWeek: data.thisWeek, lastWeek: data.lastWeek, dropPct, pod })
+      }
+    }
   }
+
+  return regressions.sort((a, b) => b.dropPct - a.dropPct)
+}
+
+export function getInstrumentationGaps(): InstrumentationGap[] {
+  const prs = getMergedPRs()
+  const gaps: InstrumentationGap[] = []
+
+  for (const pr of prs) {
+    const t = pr.translation
+    // Explicitly flagged by Claude, or inferred: has new capability but no tracking data
+    if (t.instrumentationGap || (t.newCapability && t.signalType === "new-capability")) {
+      // Check if there's any PostHog event in weekly-events that could correspond
+      const events = getWeeklyEvents()
+      const podEvents = POD_EVENTS[pr.team] || []
+      const hasTracking = podEvents.some(ev => events.find(e => e.event === ev && e.thisWeek > 0))
+      if (!hasTracking || t.instrumentationGap) {
+        gaps.push({
+          prTitle: pr.title,
+          prNumber: pr.number,
+          repo: pr.repo,
+          team: pr.team,
+          newCapability: t.newCapability || "New capability shipped without PostHog tracking",
+        })
+      }
+    }
+  }
+
+  return gaps
 }

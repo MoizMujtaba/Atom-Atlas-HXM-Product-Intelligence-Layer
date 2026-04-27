@@ -1,4 +1,4 @@
-import { getMergedPRs, getWeeklyEvents } from "@/lib/atom-data"
+import { getMergedPRs, getWeeklyEvents, getRegressions, getInstrumentationGaps } from "@/lib/atom-data"
 import { loadHypotheses } from "@/lib/rice"
 import { wowTrend, wowColor } from "@/lib/utils"
 
@@ -20,10 +20,18 @@ const SIGNAL_COLORS: Record<string, string> = {
   migration: "bg-purple-50 text-purple-700 border-purple-200",
 }
 
+const RISK_DOT: Record<string, string> = {
+  high: "bg-red-500",
+  medium: "bg-amber-400",
+  low: "bg-green-400",
+}
+
 export default async function SignalsPage() {
   const prs = getMergedPRs()
   const events = getWeeklyEvents()
   const hypotheses = loadHypotheses()
+  const regressions = getRegressions(20)
+  const gaps = getInstrumentationGaps()
 
   const eventMap = Object.fromEntries(events.map((e: { event: string; thisWeek: number; lastWeek: number }) => [e.event, e]))
   const pods = Object.keys(POD_EVENTS)
@@ -35,10 +43,64 @@ export default async function SignalsPage() {
         <p className="text-gray-500 text-sm mt-1">Per-pod engineering activity × PostHog correlation</p>
       </div>
 
+      {/* ── Regression Alerts ── */}
+      {regressions.length > 0 && (
+        <div className="rounded-xl border border-red-200 bg-red-50 overflow-hidden">
+          <div className="px-5 py-3 border-b border-red-200 flex items-center gap-2">
+            <span className="text-red-700 font-semibold text-sm">Regression Alerts</span>
+            <span className="text-xs bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded font-medium">{regressions.length} events down &gt;20% WoW</span>
+          </div>
+          <div className="divide-y divide-red-100">
+            {regressions.map((r) => (
+              <div key={r.event} className="px-5 py-3 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-mono text-red-800">{r.event}</p>
+                  <p className="text-xs text-red-600 mt-0.5">{r.pod} · dropped {r.dropPct}% — {r.lastWeek.toLocaleString()} → {r.thisWeek.toLocaleString()}</p>
+                </div>
+                <span className="text-sm font-semibold text-red-700">−{r.dropPct}%</span>
+              </div>
+            ))}
+          </div>
+          <div className="px-5 py-2 bg-red-50 border-t border-red-100">
+            <p className="text-xs text-red-600">No shipped PR this week explains these drops. Investigate broken flows or data pipeline issues.</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Instrumentation Gaps ── */}
+      {gaps.length > 0 && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 overflow-hidden">
+          <div className="px-5 py-3 border-b border-amber-200 flex items-center gap-2">
+            <span className="text-amber-700 font-semibold text-sm">Shipped Blind</span>
+            <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-2 py-0.5 rounded font-medium">{gaps.length} PRs with no PostHog tracking</span>
+          </div>
+          <div className="divide-y divide-amber-100">
+            {gaps.map((g) => (
+              <div key={`${g.repo}-${g.prNumber}`} className="px-5 py-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-amber-400 text-lg shrink-0">◎</span>
+                  <div>
+                    <a href={`/pr/${g.repo}/${g.prNumber}`} className="text-sm font-medium text-amber-800 hover:underline">
+                      {g.prTitle}
+                    </a>
+                    <p className="text-xs text-amber-600 mt-0.5">{g.team} · {g.newCapability}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="px-5 py-2 bg-amber-50 border-t border-amber-100">
+            <p className="text-xs text-amber-600">These features shipped with no user behavior tracking. You cannot measure adoption or detect failures.</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Per-pod sections ── */}
       {pods.map((pod) => {
         const podPRs = prs.filter((pr) => pr.team === pod)
         const podEvents = POD_EVENTS[pod]
         const podHyps = hypotheses.filter((h) => h.pod === pod && h.status === "active")
+        const podRegressions = regressions.filter(r => r.pod === pod)
         const hasData = podPRs.length > 0 || podEvents.length > 0
 
         return (
@@ -49,7 +111,8 @@ export default async function SignalsPage() {
                 <span>{podPRs.length} PRs</span>
                 <span>·</span>
                 <span>{podEvents.length > 0 ? `${podEvents.length} tracked events` : "No PostHog events"}</span>
-                {podHyps.length > 0 && <><span>·</span><span className="text-red-600 font-medium">{podHyps.length} active signals</span></>}
+                {podRegressions.length > 0 && <><span>·</span><span className="text-red-600 font-medium">{podRegressions.length} regressions</span></>}
+                {podHyps.length > 0 && <><span>·</span><span className="text-violet-600 font-medium">{podHyps.length} active signals</span></>}
               </div>
             </div>
 
@@ -72,12 +135,13 @@ export default async function SignalsPage() {
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {podEvents.map((ev) => {
                       const data = eventMap[ev]
+                      const isRegression = podRegressions.some(r => r.event === ev)
                       return (
-                        <div key={ev} className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                        <div key={ev} className={`rounded-lg border px-3 py-2 ${isRegression ? "border-red-300 bg-red-50" : "border-gray-200 bg-gray-50"}`}>
                           <p className="font-mono text-xs text-gray-500 truncate">{ev}</p>
                           {data ? (
                             <div className="flex items-end gap-2 mt-1">
-                              <span className="text-lg font-semibold tabular-nums text-gray-900">{data.thisWeek.toLocaleString()}</span>
+                              <span className={`text-lg font-semibold tabular-nums ${isRegression ? "text-red-700" : "text-gray-900"}`}>{data.thisWeek.toLocaleString()}</span>
                               <span className={`text-xs font-medium mb-0.5 ${wowColor(data.thisWeek, data.lastWeek, !ev.includes("failed"))}`}>
                                 {wowTrend(data.thisWeek, data.lastWeek)}
                               </span>
@@ -99,16 +163,43 @@ export default async function SignalsPage() {
               {podPRs.length > 0 && (
                 <div className="space-y-2">
                   <p className="text-xs uppercase tracking-wide text-gray-400 font-medium">Shipped (7d)</p>
-                  <div className="space-y-1">
-                    {podPRs.map((pr) => (
-                      <div key={`${pr.repo}-${pr.number}`} className="flex items-start gap-3 text-sm py-1">
-                        <span className="text-gray-400 font-mono text-xs mt-0.5 shrink-0">#{pr.number}</span>
-                        <a href={`/pr/${pr.repo}/${pr.number}`} className="text-blue-600 hover:text-blue-800 hover:underline leading-snug">
-                          {pr.title}
-                        </a>
-                        <span className="ml-auto text-gray-400 text-xs shrink-0">{pr.repo}</span>
-                      </div>
-                    ))}
+                  <div className="space-y-2">
+                    {podPRs.map((pr) => {
+                      const t = pr.translation
+                      const riskDot = t.productionRisk ? RISK_DOT[t.productionRisk] : null
+                      return (
+                        <div key={`${pr.repo}-${pr.number}`} className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                          <div className="flex items-start gap-2">
+                            {riskDot && <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${riskDot}`} title={`${t.productionRisk} risk`} />}
+                            <div className="flex-1 min-w-0">
+                              <a href={`/pr/${pr.repo}/${pr.number}`} className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium leading-snug">
+                                {pr.title}
+                              </a>
+                              <p className="text-xs text-gray-600 mt-1 leading-snug">{t.userImpact}</p>
+                              {t.targetPersona && (
+                                <p className="text-xs text-gray-400 mt-0.5">→ {t.targetPersona}</p>
+                              )}
+                              {t.reviewerRisks && t.reviewerRisks.length > 0 && (
+                                <div className="mt-2 space-y-0.5">
+                                  {t.reviewerRisks.slice(0, 2).map((risk: string, i: number) => (
+                                    <p key={i} className="text-xs text-amber-700 flex gap-1 items-start">
+                                      <span className="shrink-0">⚠</span>{risk}
+                                    </p>
+                                  ))}
+                                </div>
+                              )}
+                              {t.nextOpportunity && (
+                                <p className="text-xs text-blue-600 mt-1.5 italic">Next: {t.nextOpportunity}</p>
+                              )}
+                              {t.instrumentationGap && (
+                                <span className="inline-block mt-1 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">no PostHog tracking</span>
+                              )}
+                            </div>
+                            <span className="text-gray-400 text-xs shrink-0 mt-0.5">{pr.repo}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               )}
