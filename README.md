@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atom — Atlas HXM Product Intelligence Layer
 
-## Getting Started
+Atom translates raw engineering activity into product signals for Atlas HXM's CPO and PMs. It correlates GitHub PR merges with PostHog behavioral data and Linear roadmap context, then surfaces them as prioritized insights on a Vercel dashboard.
 
-First, run the development server:
+## What it does
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Exec View** — SSO health, exception counts, rage click proxy, pod PR velocity (7-day WoW)
+- **Signal Feed** — Per-pod breakdown of shipped PRs correlated with their PostHog event coverage gaps
+- **RICE Backlog** — Hypothesis-driven opportunity scoring calibrated to Atlas HXM's 2,600+ WSE base
+- **Competitor Intel** — Lightweight tracking of Deel, Remote, and Globalization Partners
+- **PR Detail** — Claude-powered plain-language translation of any PR diff into user impact, friction fixed, new capability, and watch items
+
+## Architecture
+
+```
+Atom (Claude Code + MCP)          Vercel App (Next.js 14)
+────────────────────────          ───────────────────────
+PostHog MCP  ──┐                  app/page.tsx (exec view)
+GitHub CLI   ──┤─► data/          app/signals/page.tsx
+Linear MCP   ──┘   atom-output/   app/rice/page.tsx
+                   *.json         app/compete/page.tsx
+                                  app/pr/[repo]/[number]/page.tsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Atom writes static JSON files. The Vercel app reads them — no PostHog or Linear API keys needed in the deployed app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pod taxonomy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Pod | Owns |
+|-----|------|
+| WFM 1 | Census verification, HRSD, assignee flows |
+| WFM 2 | Expense management, AI extraction, contribution splits |
+| PAY | SSO/MFA, payroll auth, identity |
+| FNM 1 | Take Home Pay, virtual expense cards, Ramp integration |
+| FNM 2 | GTN mapping, recon file import, Partner Connect |
+| Data Platform | Data warehouse, pipelines, external schemas |
 
-## Learn More
+## RICE calibration
 
-To learn more about Next.js, take a look at the following resources:
+- **Reach**: % of 2,600 WSEs affected (5% = 130 WSEs = meaningful)
+- **Impact**: 1-5 scale (5 = prevents WSE loss, 4 = fixes critical friction, 3 = improves retention, 2 = nice to have, 1 = edge case)
+- **Confidence**: PM conviction (100% = proven, 80% = strong signal, 60% = hypothesis, 40% = intuition)
+- **Effort**: Dev-weeks (1 = small, 2 = medium, 5 = large, 10 = quarter)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Running locally
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Install dependencies
+npm install
 
-## Deploy on Vercel
+# Set environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your keys
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Start dev server
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000 to see the dashboard.
+
+## Environment variables
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ANTHROPIC_API_KEY` | Yes | PR diff translation via Claude |
+| `GITHUB_TOKEN` | Yes | PR data fetching |
+| `POSTHOG_API_KEY` | Optional | Live PostHog queries (Atom uses MCP instead) |
+| `POSTHOG_PROJECT_ID` | Optional | PostHog project (52189 = Atlas Web Prod) |
+| `LINEAR_API_KEY` | Optional | Linear roadmap queries |
+| `NEXT_PUBLIC_BASE_URL` | Vercel only | Self-referencing API calls on PR detail page |
+
+## Deploying to Vercel
+
+1. Connect this repo to Vercel
+2. Add `ANTHROPIC_API_KEY` and `GITHUB_TOKEN` as environment variables
+3. Set `NEXT_PUBLIC_BASE_URL` to your Vercel deployment URL
+4. Deploy — the static JSON files under `data/atom-output/` are committed and served directly
+
+## Data refresh
+
+Static JSON files under `data/atom-output/` are populated by running Atom (Claude Code session with PostHog + Linear + GitHub MCPs active). Re-run weekly or on demand, commit the updated files, and redeploy.
+
+## Tech stack
+
+- Next.js 14 App Router, TypeScript, Tailwind CSS
+- Anthropic Claude (claude-sonnet-4-6) for PR translation
+- PostHog, GitHub, Linear as data sources via MCP
+- Vercel for hosting

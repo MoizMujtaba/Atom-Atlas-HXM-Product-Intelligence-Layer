@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-04-27T20:00:00Z",
+  "period": "Apr 21–27, 2026",
+  "ssoAttempts": 487,
+  "ssoSuccess": 455,
+  "ssoFailed": 133,
+  "ssoSuccessRate": 93,
+  "ssoAttemptsPrev": 487,
+  "ssoSuccessPrev": 448,
+  "ssoSuccessRatePrev": 92,
+  "exceptions": 3915,
+  "exceptionsPrev": 4201,
+  "rageclicks": 1451,
+  "rageclicksPrev": 1390,
+  "pageviews": 34458,
+  "pageviewsPrev": 37938
+}

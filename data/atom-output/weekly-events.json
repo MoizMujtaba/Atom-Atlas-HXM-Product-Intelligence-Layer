@@ -1,0 +1,21 @@
+[
+  { "event": "$pageview", "thisWeek": 34458, "lastWeek": 37938 },
+  { "event": "first_click", "thisWeek": 5859, "lastWeek": 6764 },
+  { "event": "$exception", "thisWeek": 3915, "lastWeek": 4201 },
+  { "event": "$rageclick", "thisWeek": 1451, "lastWeek": 1390 },
+  { "event": "addExpense_aiFeedbackBannerShown", "thisWeek": 1271, "lastWeek": 937 },
+  { "event": "employee_task_clicked", "thisWeek": 540, "lastWeek": 448 },
+  { "event": "sso_login_attempt", "thisWeek": 487, "lastWeek": 487 },
+  { "event": "sso_login_success", "thisWeek": 455, "lastWeek": 448 },
+  { "event": "addExpense_upserted", "thisWeek": 326, "lastWeek": 347 },
+  { "event": "employee_task_saved", "thisWeek": 305, "lastWeek": 264 },
+  { "event": "addExpenseLine_upserted", "thisWeek": 250, "lastWeek": 216 },
+  { "event": "sso_login_failed", "thisWeek": 133, "lastWeek": 108 },
+  { "event": "expenseDetail_upserted", "thisWeek": 70, "lastWeek": 130 },
+  { "event": "employee_submitted", "thisWeek": 28, "lastWeek": 30 },
+  { "event": "employee_created", "thisWeek": 27, "lastWeek": 22 },
+  { "event": "mfa_sms_setup_phone", "thisWeek": 17, "lastWeek": 21 },
+  { "event": "addExpense_aiExpenseExtractionFeedbackDismissed", "thisWeek": 16, "lastWeek": 1 },
+  { "event": "addExpense_aiExpenseExtractionFeedback", "thisWeek": 5, "lastWeek": 0 },
+  { "event": "addExpenseLine_aiFeedbackBannerShown", "thisWeek": 2, "lastWeek": 2 }
+]

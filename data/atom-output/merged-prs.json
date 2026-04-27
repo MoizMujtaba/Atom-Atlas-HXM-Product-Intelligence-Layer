@@ -1,0 +1,149 @@
+[
+  {
+    "number": 617, "repo": "Atlas-Webapp", "team": "WFM 1",
+    "title": "WFM1-1112: Re-architecture of assignee flow + comments + flagged corrected value",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/617",
+    "mergedAt": "2026-04-27T19:25:14Z", "author": "joel-deleon-atlas", "fileCount": 28,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "Assignees can now view threaded comment history on flagged fields and submit corrected values directly within the census verification flow.",
+      "migrationSignal": false,
+      "frictionFixed": "Eliminated duplicated route, service, and repository code per assignee flow.",
+      "newCapability": "Assignees see comment history on flagged fields and can submit corrected values. The addComment action now returns a commentId enabling downstream tracking.",
+      "watchItems": ["Monitor whether external users can see and add comments post-deploy", "Track flagged field correction completion rate in PostHog", "useEffect in CommentThreadPopover flagged by reviewer — monitor for race conditions"]
+    }
+  },
+  {
+    "number": 610, "repo": "Atlas-Webapp", "team": "PAY",
+    "title": "PAY-1093: refactor MFA capture phone form",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/610",
+    "mergedAt": "2026-04-24T19:57:57Z", "author": "nextinterfaces", "fileCount": 4,
+    "translation": {
+      "signalType": "error-handling",
+      "userImpact": "Users who fail OTP send during MFA phone capture now see an error message and recovery path instead of a silent broken failure.",
+      "migrationSignal": false,
+      "frictionFixed": "OTP send failures during MFA phone capture previously lacked a proper error redirect — users can now recover.",
+      "newCapability": null,
+      "watchItems": ["Monitor mfa_sms_setup_phone drop-off — down 24% WoW this week", "Confirm country dropdown sort order doesn't cause confusion for frequently used countries"]
+    }
+  },
+  {
+    "number": 603, "repo": "Atlas-Webapp", "team": "WFM 1",
+    "title": "WFM1-1169: Automatic assignment of fields",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/603",
+    "mergedAt": "2026-04-24T20:49:19Z", "author": "joel-deleon-atlas", "fileCount": 15,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "Validation fields are now automatically routed to the correct assignee on census verification round creation — WSEs see only their fields, client admins see only theirs.",
+      "migrationSignal": false,
+      "frictionFixed": "Assignee-filtered view was broken because assigneeUserId was never populated on creation, meaning neither WSEs nor client admins could see correctly segmented fields.",
+      "newCapability": "Automatic per-field assignee routing during census verification session creation.",
+      "watchItems": ["Casing inconsistency ('Employee' vs 'employee') may cause fields to silently route to wrong assignee — monitor WSE reports of missing fields", "Watch for census sessions where assigneeUserId remains null after round creation"]
+    }
+  },
+  {
+    "number": 600, "repo": "Atlas-Webapp", "team": "WFM 2",
+    "title": "WFM2-666: Contribution splits add contribution split entry modal",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/600",
+    "mergedAt": "2026-04-27T13:16:31Z", "author": "fabianm-atlas", "fileCount": 29,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "Admins can now configure country-specific contribution splits via a new modal form — setting benefit type, split percentages, and employer/employee contributions per country.",
+      "migrationSignal": false,
+      "frictionFixed": null,
+      "newCapability": "New modal to add contribution split entries per country, with benefit type selection, split validation, and a discard dialog. Shipped with no PostHog instrumentation.",
+      "watchItems": ["No PostHog events added — contribution_split_added should be tracked", "Monitor for form validation errors on split percentage totals"]
+    }
+  },
+  {
+    "number": 598, "repo": "Atlas-Webapp", "team": "PAY",
+    "title": "PAY-1405: add events flags to sso posthog monitoring",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/598",
+    "mergedAt": "2026-04-24T18:44:51Z", "author": "linh-atlas", "fileCount": 4,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "SSO setup and configuration actions are now tracked in PostHog, giving the product team full funnel visibility into the SSO onboarding flow.",
+      "migrationSignal": false,
+      "frictionFixed": null,
+      "newCapability": "8 new SSO events now tracked: setup initiation, metadata upload, manual entry, test connection success/failure, and enable/disable toggles.",
+      "watchItems": ["Validate all 8 SSO events are firing in PostHog", "Monitor SSO_SETUP_STARTED vs SSO_ENABLED conversion rate", "sso_login_failed up 23% WoW — determine if this is new visibility or genuine regression"]
+    }
+  },
+  {
+    "number": 597, "repo": "Atlas-Webapp", "team": "WFM 1",
+    "title": "WFM1-1137: Finish implementing HRSD for Census Verification",
+    "url": "https://github.com/atlashxm/Atlas-Webapp/pull/597",
+    "mergedAt": "2026-04-23T19:28:35Z", "author": "TristanBarrow", "fileCount": 30,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "HRSD reviewers can now flag any census verification field with a comment and due date, and all employee data sections are automatically included in every verification round.",
+      "migrationSignal": false,
+      "frictionFixed": "Field lists were manually curated and incomplete; reviewers had no way to flag discrepancies with a tracked note and deadline.",
+      "newCapability": "Flag fields with comment + due date, bulk-approve non-flagged fields, select-all that auto-excludes flagged fields.",
+      "watchItems": ["Monitor flag submission success/failure — multi-step DB transaction, partial failure could leave fields inconsistent", "Bulk approve: verify flagged fields are never accidentally approved under concurrent actions"]
+    }
+  },
+  {
+    "number": 221, "repo": "Payments-Backend", "team": "FNM 1",
+    "title": "FNM1-805: BE - Update the GetTakeHomePay API for empty response & save Last sync attempted timestamp",
+    "url": "https://github.com/atlashxm/Payments-Backend/pull/221",
+    "mergedAt": "2026-04-27T13:47:54Z", "author": "jasminek-atlas", "fileCount": 9,
+    "translation": {
+      "signalType": "error-handling",
+      "userImpact": "Users querying Take Home Pay with no payroll data now receive a clear error message and can see when the last sync was attempted instead of getting an empty response.",
+      "migrationSignal": false,
+      "frictionFixed": "Users received no meaningful feedback when Take Home Pay data was unavailable — now get explicit error + last sync timestamp.",
+      "newCapability": "GetTakeHomePay API returns a 'Last sync attempted at' timestamp alongside not-found errors.",
+      "watchItems": ["Monitor API response rates for TakeHomePayNotFoundResponse — high rates indicate upstream sync failures", "Watch for null LastSyncAttemptedAt if TakeHomePaySyncLogs table is empty"]
+    }
+  },
+  {
+    "number": 215, "repo": "Payments-Backend", "team": "FNM 1",
+    "title": "FNM1-653: Virtual Expense Cards Service",
+    "url": "https://github.com/atlashxm/Payments-Backend/pull/215",
+    "mergedAt": "2026-04-22T08:09:29Z", "author": "raulgrim", "fileCount": 30,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "Employees can now request virtual expense cards through Atlas HXM. Admins can approve, reject, freeze, unfreeze, or terminate cards with real-time provisioning via Ramp.",
+      "migrationSignal": false,
+      "frictionFixed": null,
+      "newCapability": "End-to-end virtual expense card lifecycle: request → admin approval → Ramp provisioning → freeze/unfreeze/terminate. Wallet balance management and transaction history for admins.",
+      "watchItems": ["Stripe Issuing referenced in DEMO.md but Ramp used in env — confirm which provider is live", "Dual webhook handlers (Stripe + Ramp) suggest incomplete migration — monitor for misrouted webhook events", "Card provisioning via background worker — monitor queue lag and provisioning failure rates"]
+    }
+  },
+  {
+    "number": 112, "repo": "Atlas-Frontend", "team": "Platform",
+    "title": "partnerconnectfe fix",
+    "url": "https://github.com/atlashxm/Atlas-Frontend/pull/112",
+    "mergedAt": "2026-04-27T07:38:18Z", "author": null, "fileCount": null,
+    "translation": {
+      "signalType": "infrastructure",
+      "userImpact": "Bug fix in Partner Connect frontend. Specific user impact requires diff review.",
+      "migrationSignal": false, "frictionFixed": null, "newCapability": null, "watchItems": []
+    }
+  },
+  {
+    "number": 110, "repo": "Atlas-Frontend", "team": "FNM 2",
+    "title": "FNM2-788: Change GTN import button label",
+    "url": "https://github.com/atlashxm/Atlas-Frontend/pull/110",
+    "mergedAt": "2026-04-24T19:28:06Z", "author": null, "fileCount": 1,
+    "translation": {
+      "signalType": "navigation",
+      "userImpact": "The GTN import button now has a clearer label, reducing confusion about what the action triggers.",
+      "migrationSignal": false, "frictionFixed": "Ambiguous button label", "newCapability": null, "watchItems": []
+    }
+  },
+  {
+    "number": 109, "repo": "Atlas-Frontend", "team": "FNM 2",
+    "title": "FNM2-778: Added new button for GTN Mapping and Import Recon File",
+    "url": "https://github.com/atlashxm/Atlas-Frontend/pull/109",
+    "mergedAt": "2026-04-24T17:47:03Z", "author": null, "fileCount": 1,
+    "translation": {
+      "signalType": "new-capability",
+      "userImpact": "Users can now trigger GTN mapping and import a reconciliation file from the same view without navigating away.",
+      "migrationSignal": false, "frictionFixed": null,
+      "newCapability": "New GTN Mapping and Import Recon File buttons on Partner Connect dashboard.",
+      "watchItems": ["No PostHog events for GTN mapping actions — add gtn_mapping_triggered and recon_file_imported"]
+    }
+  }
+]
