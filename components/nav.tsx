@@ -7,6 +7,7 @@ const links = [
   { href: "/", label: "Exec" },
   { href: "/brief", label: "Weekly Brief" },
   { href: "/signals", label: "Signals" },
+  { href: "/cycles", label: "Cycles" },
   { href: "/rice", label: "RICE Backlog" },
   { href: "/compete", label: "Compete" },
 ]

@@ -1,0 +1,278 @@
+{
+  "generatedAt": "2026-04-27T22:00:00Z",
+  "pods": [
+    {
+      "pod": "WFM 1",
+      "cycleNumber": 26,
+      "cycleEnds": "2026-05-04",
+      "totalIssues": 80,
+      "completedIssues": 11,
+      "devCompleted": 11,
+      "inReview": 15,
+      "inProgress": 11,
+      "todo": 32,
+      "completionPct": 14,
+      "slipRisk": "low",
+      "slipRiskReason": "Cycle just started Apr 27. Census verification delivery on track with 3 PRs merged this week.",
+      "mergedPRsThisWeek": [
+        { "linearId": "WFM1-1112", "prNumber": 617, "linearStatus": "In Review", "stale": true },
+        { "linearId": "WFM1-1169", "prNumber": 603, "linearStatus": "In Review", "stale": true },
+        { "linearId": "WFM1-1137", "prNumber": 597, "linearStatus": null, "stale": false, "note": "Not in current cycle — shipped from previous cycle" }
+      ],
+      "keyInProgress": [
+        { "id": "WFM1-1158", "title": "Edit flagged field, see and add comments, and submit round back", "assignee": "Joel de Leon" },
+        { "id": "WFM1-1082", "title": "Capture audit event hooks for all verification actions", "assignee": "Joel de Leon" },
+        { "id": "WFM1-935", "title": "Build notification orchestration", "assignee": "omarj.contractor" },
+        { "id": "WFM1-838", "title": "Bulk Onboarding — Bug fixes, API, Switch", "assignee": "Joel de Leon" }
+      ],
+      "signals": [
+        {
+          "type": "stale-tickets",
+          "urgency": "P2",
+          "title": "2 merged PRs not closed in Linear",
+          "detail": "WFM1-1112 (PR 617) and WFM1-1169 (PR 603) are merged but Linear still shows 'In Review'. Velocity metrics are understated. Close these tickets."
+        },
+        {
+          "type": "instrumentation-gap-planned",
+          "urgency": "P2",
+          "title": "WFM1-1124 (PostHog SDK exception capturing) still Todo",
+          "detail": "This ticket directly fixes the instrumentation gap Atom detected — exceptions from the webapp are currently invisible. It has no PR activity and is not assigned. Risk of another sprint passing with blind error tracking."
+        },
+        {
+          "type": "cluster",
+          "urgency": "P2",
+          "title": "Notification system: 7 email notification tickets all unstarted",
+          "detail": "WFM1-1119, WFM1-1120, WFM1-1121, WFM1-1122, WFM1-1123, WFM1-937, WFM1-1081 — HRSD and employee email notifications are all Todo with no assignee. If Omar's orchestration (WFM1-935) ships but email delivery doesn't, users get no notifications. Dependency chain not visible in cycle."
+        }
+      ]
+    },
+    {
+      "pod": "WFM 2",
+      "cycleNumber": 25,
+      "cycleName": "Apr26'WK4",
+      "cycleEnds": "2026-04-28",
+      "totalIssues": 60,
+      "completedIssues": 28,
+      "devCompleted": 4,
+      "inReview": 10,
+      "inProgress": 6,
+      "todo": 4,
+      "completionPct": 47,
+      "slipRisk": "high",
+      "slipRiskReason": "Cycle ends TOMORROW at 47% completion. Policies landing page (WFM2-491) and DB schema (WFM2-712) still In Progress with no PR merged yet.",
+      "mergedPRsThisWeek": [
+        { "linearId": "WFM2-666", "prNumber": 600, "linearStatus": "Dev Completed", "stale": false }
+      ],
+      "keyInProgress": [
+        { "id": "WFM2-491", "title": "Policies Landing Page — Table, Search, Filter & Urgency Styling", "assignee": "johnj.contractor" },
+        { "id": "WFM2-712", "title": "Policies — Database Schema", "assignee": "johnj.contractor" },
+        { "id": "WFM2-718", "title": "Dev Copy — Country Rules Tab Layout", "assignee": "Uzair Ahmed" },
+        { "id": "WFM2-722", "title": "Dev Copy — Contribution Splits Collapsable View", "assignee": "Uzair Ahmed" }
+      ],
+      "signals": [
+        {
+          "type": "slip",
+          "urgency": "P1",
+          "title": "Cycle ends tomorrow — 53% of issues not done",
+          "detail": "WFM 2 cycle 25 closes Apr 28. Policies feature (WFM2-491, WFM2-712) still in progress with no PR. Contribution splits shipped (WFM2-666 merged), but the policies work will roll into next cycle. PM needs to decide: extend, carry over, or drop scope."
+        },
+        {
+          "type": "instrumentation-gap",
+          "urgency": "P2",
+          "title": "Contribution splits shipped blind",
+          "detail": "WFM2-666 merged (PR 600) with no PostHog events. WFM2-667 (Edit modal) still In Review. You will not be able to measure admin adoption of contribution splits or detect if the form is broken."
+        },
+        {
+          "type": "unplanned-debt",
+          "urgency": "P3",
+          "title": "Dev Copy tickets are duplicating in-review work",
+          "detail": "WFM2-718 and WFM2-722 are 'Dev Copy' items that mirror WFM2-662 and WFM2-664, which are also In Review. This pattern inflates the issue count and hides actual completion rate. Consider consolidating."
+        }
+      ]
+    },
+    {
+      "pod": "PAY",
+      "cycleNumber": 26,
+      "cycleEnds": "2026-05-02",
+      "totalIssues": 44,
+      "completedIssues": 2,
+      "devCompleted": 4,
+      "inReview": 4,
+      "inProgress": 13,
+      "todo": 19,
+      "completionPct": 5,
+      "slipRisk": "medium",
+      "slipRiskReason": "5% completion with cycle ending May 2. MFA features nearly shipped but QA regression test (PAY-1287) is Todo with no assignee. SQL migration and MFA running in parallel — context switching risk.",
+      "mergedPRsThisWeek": [
+        { "linearId": "PAY-1093", "prNumber": 610, "linearStatus": "In Review", "stale": true },
+        { "linearId": "PAY-1405", "prNumber": 598, "linearStatus": "Dev Completed", "stale": false }
+      ],
+      "keyInProgress": [
+        { "id": "PAY-1088", "title": "MFA — Configurable OTP Method Selection (Story)", "assignee": "henriquev" },
+        { "id": "PAY-1090", "title": "FE — OTP Verification Screen", "assignee": "henriquev" },
+        { "id": "PAY-1089", "title": "FE — MFA Method Selection Screen", "assignee": "henriquev" },
+        { "id": "PAY-271", "title": "Customer Service — Mongo to SQL Migration (Top Story)", "assignee": "Lin Yu Han" },
+        { "id": "PAY-911", "title": "PROD — Enable Step 2 SQL-only", "assignee": "alexandrom.contractor" }
+      ],
+      "signals": [
+        {
+          "type": "qa-gap",
+          "urgency": "P1",
+          "title": "MFA shipping without regression test",
+          "detail": "PAY-1287 (MFA QA regression test) is Todo with no assignee. Three MFA feature tickets are In Progress and nearly done. Shipping MFA without a regression test is high risk — auth flow breakage affects all WSE logins. Assign PAY-1287 immediately."
+        },
+        {
+          "type": "context-switch",
+          "urgency": "P2",
+          "title": "Henrique carrying MFA + Tokenization simultaneously",
+          "detail": "PAY-1088/1089/1090 (MFA) and PAY-1192/1193/1195 (Tokenization) are all assigned to henriquev and all Todo/In Progress. MFA needs to close before tokenization starts — these are competing auth surface changes."
+        },
+        {
+          "type": "stale-tickets",
+          "urgency": "P2",
+          "title": "PAY-1093 merged but Linear not updated",
+          "detail": "PR 610 (MFA phone form refactor) is merged but PAY-1093 remains 'In Review'. Close the ticket."
+        },
+        {
+          "type": "migration",
+          "urgency": "P2",
+          "title": "SQL migration at Step 2 — PAY-907 (Step 1 PROD) still Todo",
+          "detail": "PAY-910 (TRNG Step 2) and PAY-911 (PROD Step 2) are In Progress, but PAY-907 (PROD Step 1) is still Todo. Verify step 1 is actually complete before Step 2 goes to PROD."
+        }
+      ]
+    },
+    {
+      "pod": "FNM 1",
+      "cycleNumber": 28,
+      "cycleName": "Apr26'WK5",
+      "cycleEnds": "2026-05-04",
+      "totalIssues": 37,
+      "completedIssues": 0,
+      "devCompleted": 4,
+      "inReview": 8,
+      "inProgress": 9,
+      "todo": 15,
+      "completionPct": 0,
+      "slipRisk": "medium",
+      "slipRiskReason": "Two PROD customer-blocking issues (Sage sync, Megagen Implantt) in progress alongside active feature development. Virtual expense card epic has a PR merged but feature is incomplete.",
+      "mergedPRsThisWeek": [
+        { "linearId": "FNM1-805", "prNumber": 221, "linearStatus": "In Review", "stale": true },
+        { "linearId": "FNM1-653", "prNumber": 215, "linearStatus": "In Review", "stale": true }
+      ],
+      "keyInProgress": [
+        { "id": "FNM1-815", "title": "PROD: Sage sync — Megagen Implantt (Customer 10437) invoice export blocked", "assignee": "Ernesto de Loayza", "isProdBlocker": true },
+        { "id": "FNM1-807", "title": "Invoice export to Sage fails with invalid customer ID", "assignee": "Ernesto de Loayza", "isProdBlocker": true },
+        { "id": "FNM1-830", "title": "Virtual Expense Cards hosted in Payroll Service", "assignee": "Raul Grimaldi" },
+        { "id": "FNM1-760", "title": "Submit for Disbursement Flow — Review Payments Tab", "assignee": "Jasmine Kaur" }
+      ],
+      "signals": [
+        {
+          "type": "prod-blocker",
+          "urgency": "P1",
+          "title": "PROD: Megagen Implantt invoice export blocked (Customer 10437)",
+          "detail": "FNM1-815 and FNM1-807 are both In Progress — customer is blocked from exporting invoices to Sage. This is a live revenue/trust risk. Ernesto is assigned to both. Confirm ETA and escalation path if not resolved today."
+        },
+        {
+          "type": "incomplete-feature",
+          "urgency": "P2",
+          "title": "Expense cards PR merged but feature is incomplete",
+          "detail": "FNM1-653 (Virtual Expense Cards epic) has PR 215 merged but epic is still 'In Review'. FNM1-755 (card transactions → generate expense bulk flow) is Todo. FNM1-830 (hosting in payroll service) still In Progress. The card lifecycle is not end-to-end yet — do not announce to customers."
+        },
+        {
+          "type": "provider-risk",
+          "urgency": "P2",
+          "title": "Stripe vs Ramp provider ambiguity still unresolved",
+          "detail": "FNM1-672 (Upgrade PostHog SDKs) is Triage. FNM1-653 epic references Stripe in DEMO.md but Ramp in .env. FNM1-830 is 'Virtual Expense Cards hosted in Payroll Service' — confirm which payment provider is live before enabling for any customer."
+        }
+      ]
+    },
+    {
+      "pod": "FNM 2",
+      "cycleNumber": 16,
+      "cycleEnds": "2026-05-04",
+      "totalIssues": 51,
+      "completedIssues": 6,
+      "devCompleted": 6,
+      "inReview": 3,
+      "inProgress": 12,
+      "todo": 24,
+      "completionPct": 12,
+      "slipRisk": "low",
+      "slipRiskReason": "Cycle just started. GTN acceleration to PROD (FNM2-983) is In Progress and is the primary delivery this cycle.",
+      "mergedPRsThisWeek": [
+        { "linearId": "FNM2-788", "prNumber": 110, "linearStatus": null, "stale": false, "note": "Label change — minor, not in current cycle" },
+        { "linearId": "FNM2-778", "prNumber": 109, "linearStatus": null, "stale": false, "note": "GTN buttons — not in current cycle 16" }
+      ],
+      "keyInProgress": [
+        { "id": "FNM2-983", "title": "Deploy GTN Acceleration to PROD (subset test)", "assignee": "Marcelo Mallmann" },
+        { "id": "FNM2-855", "title": "Create Setting By Pay Group to Control GTN Processing", "assignee": "Jose Morales" },
+        { "id": "FNM2-956", "title": "Evaluate ITOS API vs Atlas Payroll Input File — Gap Analysis", "assignee": "Tom Jegou" }
+      ],
+      "signals": [
+        {
+          "type": "instrumentation-gap",
+          "urgency": "P1",
+          "title": "GTN deployment to PROD has zero PostHog observability",
+          "detail": "FNM2-983 is deploying GTN Acceleration to PROD this week. There are no PostHog events for GTN mapping, recon approval, or pay group processing. If something breaks in PROD, you will find out from a customer complaint, not Atom. Add gtn_mapping_triggered and gtn_recon_approved before PROD rollout."
+        },
+        {
+          "type": "unplanned",
+          "urgency": "P3",
+          "title": "PRs 109 and 110 not in current cycle",
+          "detail": "The two Atlas-Frontend PRs merged this week (GTN button labels/additions) don't map to any FNM2 cycle 16 issue. Minor UI work but adds to untracked scope."
+        }
+      ]
+    },
+    {
+      "pod": "Data Platform",
+      "cycleNumber": 26,
+      "cycleEnds": "2026-05-04",
+      "totalIssues": 1,
+      "completedIssues": 0,
+      "devCompleted": 0,
+      "inReview": 0,
+      "inProgress": 0,
+      "todo": 1,
+      "completionPct": 0,
+      "slipRisk": "low",
+      "signals": [
+        {
+          "type": "capacity",
+          "urgency": "P3",
+          "title": "Data Platform cycle has 1 issue — is the pod blocked or supporting others?",
+          "detail": "DATA-74 (Gather gateway endpoint information) is Todo with no PR activity this week. Either the pod is supporting other teams, blocked on access, or the cycle wasn't properly populated. Confirm before quarterly planning."
+        }
+      ]
+    }
+  ],
+  "crossPodSignals": [
+    {
+      "urgency": "P1",
+      "title": "5 merged PRs are stale in Linear — velocity data is wrong",
+      "detail": "WFM1-1112, WFM1-1169, PAY-1093, FNM1-805, FNM1-653 all have merged PRs but Linear still shows 'In Review'. Cycle completion metrics are understated across 3 pods. Close these tickets now.",
+      "affectedPods": ["WFM 1", "PAY", "FNM 1"]
+    },
+    {
+      "urgency": "P1",
+      "title": "Atlas-Frontend PR 112 has no Linear ticket",
+      "detail": "The 'partnerconnectfe fix' PR was merged with no linked issue. Unknown what regression it fixed. Add a Linear ticket retroactively so the fix is traceable to a user issue.",
+      "affectedPods": ["Platform"]
+    },
+    {
+      "urgency": "P2",
+      "title": "3 pods have zero PostHog instrumentation — blind to user behavior",
+      "detail": "FNM 1, FNM 2, and Data Platform have shipped features this cycle with no PostHog events. The GTN PROD rollout (FNM2-983) and virtual expense card launch (FNM1-653) are going live this week with no behavioral telemetry.",
+      "affectedPods": ["FNM 1", "FNM 2", "Data Platform"]
+    }
+  ],
+  "plannedVsShipped": {
+    "totalPlannedThisWeek": 239,
+    "totalMergedPRs": 11,
+    "mappedToLinear": 8,
+    "unmapped": 3,
+    "staleTickets": 5,
+    "p1Signals": 4,
+    "p2Signals": 8,
+    "p3Signals": 3
+  }
+}
