@@ -103,20 +103,45 @@ export default async function PRPage({
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-mono bg-gray-900 text-white px-2 py-0.5 rounded">ATOM</span>
           <span className="text-xs uppercase tracking-wide font-medium opacity-70">{translation.signalType}</span>
+          {translation.urgencyTier && (
+            <span className={`text-xs font-bold px-2 py-0.5 rounded border ${
+              translation.urgencyTier === "P1" ? "bg-red-600 text-white border-red-600" :
+              translation.urgencyTier === "P2" ? "bg-amber-500 text-white border-amber-500" :
+              "bg-gray-100 text-gray-600 border-gray-300"
+            }`}>{translation.urgencyTier}</span>
+          )}
+          {translation.outcomeType && (
+            <span className={`text-xs px-2 py-0.5 rounded font-medium border ${
+              translation.outcomeType === "retention" ? "bg-blue-100 text-blue-700 border-blue-200" :
+              translation.outcomeType === "revenue" ? "bg-green-100 text-green-700 border-green-200" :
+              translation.outcomeType === "risk" ? "bg-red-100 text-red-700 border-red-200" :
+              translation.outcomeType === "migration" ? "bg-violet-100 text-violet-700 border-violet-200" :
+              "bg-cyan-100 text-cyan-700 border-cyan-200"
+            }`}>{translation.outcomeType}</span>
+          )}
           {translation.productionRisk && (
             <span className={`text-xs border px-2 py-0.5 rounded font-medium ${riskStyle}`}>
               {translation.productionRisk} risk
             </span>
+          )}
+          {translation.legacyImpact && translation.legacyImpact !== "neutral" && (
+            <span className={`text-xs border px-2 py-0.5 rounded font-medium ${
+              translation.legacyImpact === "accelerates-sunset" ? "bg-green-100 text-green-700 border-green-200" : "bg-red-100 text-red-700 border-red-200"
+            }`}>{translation.legacyImpact === "accelerates-sunset" ? "↑ accelerates sunset" : "↓ blocks sunset"}</span>
           )}
           {translation.instrumentationGap && (
             <span className="text-xs bg-amber-100 text-amber-700 border border-amber-300 px-2 py-0.5 rounded font-medium">
               no PostHog tracking
             </span>
           )}
-          {translation.migrationSignal && (
-            <span className="text-xs bg-violet-100 text-violet-700 border border-violet-200 px-2 py-0.5 rounded font-medium">migration</span>
-          )}
         </div>
+
+        {translation.recommendedAction && (
+          <div className="rounded-lg bg-white bg-opacity-60 border border-current border-opacity-20 px-4 py-3">
+            <p className="text-xs uppercase tracking-wide opacity-60 font-medium mb-1">Recommended Action (next 48h)</p>
+            <p className="text-sm font-semibold">{translation.recommendedAction}</p>
+          </div>
+        )}
 
         <div>
           <p className="text-sm font-semibold mb-1">User Impact</p>
@@ -125,6 +150,13 @@ export default async function PRPage({
             <p className="text-xs mt-1 opacity-70">Affects: {translation.targetPersona}</p>
           )}
         </div>
+
+        {translation.ignoreCost && (
+          <div>
+            <p className="text-xs uppercase tracking-wide opacity-60 font-medium mb-1">If You Ignore This</p>
+            <p className="text-sm">{translation.ignoreCost}</p>
+          </div>
+        )}
 
         {translation.productionRiskReason && (
           <div>

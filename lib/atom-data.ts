@@ -55,6 +55,12 @@ export interface AtomTranslation {
   instrumentationGap?: boolean
   nextOpportunity?: string | null
   watchItems: string[]
+  // Decision layer
+  urgencyTier?: "P1" | "P2" | "P3"
+  recommendedAction?: string
+  outcomeType?: "retention" | "revenue" | "efficiency" | "risk" | "migration"
+  ignoreCost?: string
+  legacyImpact?: "accelerates-sunset" | "neutral" | "delays-sunset"
 }
 
 export interface AtomPR {

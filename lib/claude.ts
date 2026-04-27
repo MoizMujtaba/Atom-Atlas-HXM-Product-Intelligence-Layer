@@ -16,6 +16,12 @@ export interface AtomTranslation {
   instrumentationGap: boolean
   nextOpportunity: string | null
   watchItems: string[]
+  // Decision layer
+  urgencyTier: "P1" | "P2" | "P3"
+  recommendedAction: string
+  outcomeType: "retention" | "revenue" | "efficiency" | "risk" | "migration"
+  ignoreCost: string
+  legacyImpact: "accelerates-sunset" | "neutral" | "delays-sunset"
 }
 
 export async function translatePRDiff(
@@ -80,14 +86,18 @@ Respond with a JSON object matching this exact shape:
   "frictionFixed": "What specific user pain point was removed, or null",
   "newCapability": "What new user action is now possible in plain language, or null",
   "productionRisk": "high" | "medium" | "low",
-  "productionRiskReason": "Why this risk level — e.g. 'multi-step DB transaction with no rollback', 'touches auth flow', 'UI-only change'",
-  "reviewerRisks": ["Specific risk or concern flagged by a reviewer in the comments — quote or paraphrase the actual concern", ...],
-  "instrumentationGap": true if this PR ships new user-visible behavior (new UI, new action, new flow) with NO PostHog event tracking added in the diff,
-  "nextOpportunity": "What a PM should consider building next based on what just shipped, or null if no obvious follow-on",
-  "watchItems": ["Specific metric or behavior to monitor in PostHog this week", ...]
+  "productionRiskReason": "Why this risk level — cite specific code evidence: transaction boundaries, auth surface, async jobs, UI-only",
+  "reviewerRisks": ["Specific risk or concern flagged by a reviewer — quote or paraphrase the actual concern, or omit if none"],
+  "instrumentationGap": true if new user-visible behavior ships with NO PostHog event in the diff,
+  "nextOpportunity": "Specific product idea a PM should now consider, or null",
+  "watchItems": ["Specific PostHog metric or behavior to check this week"],
+  "urgencyTier": "P1" if production risk is high OR regression is detected OR >200 WSEs affected, "P2" if new capability shipped without tracking or medium risk, "P3" otherwise,
+  "recommendedAction": "One sentence: the single most important thing a PM should do in the next 48 hours because of this PR. Start with a verb.",
+  "outcomeType": one of: "retention" (WSE or client retention at risk or protected), "revenue" (expansion, upsell, or ARR risk), "efficiency" (reduces internal cost, support load, or engineering debt), "risk" (security, reliability, compliance), "migration" (legacy-to-webapp progress or setback),
+  "ignoreCost": "What specifically happens if a PM ignores this signal for 2 weeks? Be concrete.",
+  "legacyImpact": "accelerates-sunset" if this moves work to the webapp and off the legacy app, "delays-sunset" if it adds new work to legacy or creates new technical debt there, "neutral" otherwise
 }
 
-If reviewerRisks is empty because there were no meaningful concerns in the comments, return [].
 Return only valid JSON, no markdown.`
 
   const message = await client.messages.create({
@@ -114,6 +124,11 @@ Return only valid JSON, no markdown.`
       instrumentationGap: false,
       nextOpportunity: null,
       watchItems: [],
+      urgencyTier: "P3",
+      recommendedAction: "Review this PR manually — translation failed.",
+      outcomeType: "efficiency",
+      ignoreCost: "Unknown — translation failed.",
+      legacyImpact: "neutral",
     }
   }
 }
@@ -121,10 +136,13 @@ Return only valid JSON, no markdown.`
 export interface WeeklyBrief {
   headline: string
   summary: string
+  weekSignal: "green" | "amber" | "red"
+  weekSignalReason: string
   regressions: { event: string; drop: number; hypothesis: string }[]
-  topRisks: { title: string; reason: string }[]
+  topRisks: { title: string; reason: string; recommendedAction?: string }[]
   instrumentationGaps: string[]
-  opportunities: { idea: string; fromPR: string }[]
+  opportunities: { idea: string; outcomeType?: string; fromPR: string; estimatedEffort?: string }[]
+  p1Actions: string[]
   execSignal: string
 }
 
@@ -149,7 +167,7 @@ export async function generateWeeklyBrief(
 
   const prompt = `You are Atom, product intelligence layer for Atlas HXM — global HCM SaaS for 2,600+ WSEs.
 
-Write a weekly product brief for the CPO based on this week's engineering activity and behavioral data.
+Write a weekly product brief for the CPO. Your job is NOT to list everything that happened. Your job is to surface the 3–5 signals that require a decision, cluster related work into themes, and tell the PM exactly what to do.
 
 SHIPPED THIS WEEK (${prs.length} PRs):
 ${prSummary}
@@ -162,16 +180,19 @@ ${regressionSummary || "None detected"}
 
 Write a JSON brief with this exact shape:
 {
-  "headline": "One punchy sentence summarizing the most important thing that happened this week",
-  "summary": "2-3 sentences: what the engineering team shipped, what the data shows, what the PM should care about",
-  "regressions": [{ "event": "event name", "drop": percentage_as_number, "hypothesis": "why this might have dropped — user behavior change, broken flow, or seasonal?" }],
-  "topRisks": [{ "title": "short risk title", "reason": "why it's a risk and what could happen in production" }],
-  "instrumentationGaps": ["plain language description of a feature that shipped blind — no PostHog tracking added"],
-  "opportunities": [{ "idea": "specific product idea or next step", "fromPR": "which PR or signal surfaced this" }],
-  "execSignal": "One sentence for the exec: is this week green, amber, or red — and why?"
+  "headline": "One punchy sentence — the most important thing that happened or broke this week",
+  "summary": "2-3 sentences MAX: cluster the week's PRs into 1-2 themes, name the data signal that validates or contradicts them, state what the PM must decide",
+  "weekSignal": "green" | "amber" | "red",
+  "weekSignalReason": "Why this color — cite one specific metric or event",
+  "regressions": [{ "event": "event name", "drop": percentage_as_number, "hypothesis": "specific reason this might have dropped — broken flow, data issue, or user behavior?" }],
+  "topRisks": [{ "title": "concise risk title", "reason": "specific production or user consequence", "recommendedAction": "what PM should do in next 48h" }],
+  "instrumentationGaps": ["name the feature that shipped blind and why it matters for measurement"],
+  "opportunities": [{ "idea": "specific, buildable product idea", "outcomeType": "retention|revenue|efficiency|risk|migration", "fromPR": "which PR surfaced this", "estimatedEffort": "1-2 sentence effort estimate" }],
+  "p1Actions": ["verb-first action a PM must take this week — max 3 items"],
+  "execSignal": "One sentence for a VP or board: traffic light + the one number that matters most this week"
 }
 
-Keep it concrete. Don't pad. Return only valid JSON.`
+Suppress noise. If a signal is interesting but requires no PM decision, omit it. Return only valid JSON.`
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
@@ -186,10 +207,13 @@ Keep it concrete. Don't pad. Return only valid JSON.`
     return {
       headline: "Weekly brief unavailable",
       summary: "Could not generate brief.",
+      weekSignal: "amber" as const,
+      weekSignalReason: "Data unavailable",
       regressions: [],
       topRisks: [],
       instrumentationGaps: [],
       opportunities: [],
+      p1Actions: [],
       execSignal: "Data unavailable",
     }
   }

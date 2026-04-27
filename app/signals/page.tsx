@@ -1,4 +1,4 @@
-import { getMergedPRs, getWeeklyEvents, getRegressions, getInstrumentationGaps } from "@/lib/atom-data"
+import { getMergedPRs, getWeeklyEvents, getRegressions, getInstrumentationGaps, type AtomPR } from "@/lib/atom-data"
 import { loadHypotheses } from "@/lib/rice"
 import { wowTrend, wowColor } from "@/lib/utils"
 
@@ -13,6 +13,26 @@ const POD_EVENTS: Record<string, string[]> = {
   "Data Platform": [],
 }
 
+const URGENCY_STYLES = {
+  P1: { badge: "bg-red-600 text-white", row: "border-red-300 bg-red-50" },
+  P2: { badge: "bg-amber-500 text-white", row: "border-amber-200 bg-amber-50" },
+  P3: { badge: "bg-gray-200 text-gray-600", row: "border-gray-200 bg-gray-50" },
+}
+
+const OUTCOME_BADGE: Record<string, string> = {
+  retention: "bg-blue-100 text-blue-700",
+  revenue: "bg-green-100 text-green-700",
+  efficiency: "bg-cyan-100 text-cyan-700",
+  risk: "bg-red-100 text-red-700",
+  migration: "bg-violet-100 text-violet-700",
+}
+
+const LEGACY_BADGE: Record<string, { label: string; style: string }> = {
+  "accelerates-sunset": { label: "↑ sunset", style: "bg-green-100 text-green-700" },
+  "delays-sunset": { label: "↓ blocks sunset", style: "bg-red-100 text-red-700" },
+  neutral: { label: "legacy neutral", style: "bg-gray-100 text-gray-500" },
+}
+
 const SIGNAL_COLORS: Record<string, string> = {
   friction: "bg-red-50 text-red-700 border-red-200",
   "new-capability": "bg-blue-50 text-blue-700 border-blue-200",
@@ -20,11 +40,6 @@ const SIGNAL_COLORS: Record<string, string> = {
   migration: "bg-purple-50 text-purple-700 border-purple-200",
 }
 
-const RISK_DOT: Record<string, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-400",
-  low: "bg-green-400",
-}
 
 export default async function SignalsPage() {
   const prs = getMergedPRs()
@@ -164,23 +179,52 @@ export default async function SignalsPage() {
                 <div className="space-y-2">
                   <p className="text-xs uppercase tracking-wide text-gray-400 font-medium">Shipped (7d)</p>
                   <div className="space-y-2">
-                    {podPRs.map((pr) => {
+                    {podPRs
+                      .sort((a: AtomPR, b: AtomPR) => {
+                        const order = { P1: 0, P2: 1, P3: 2 }
+                        return (order[a.translation.urgencyTier || "P3"]) - (order[b.translation.urgencyTier || "P3"])
+                      })
+                      .map((pr: AtomPR) => {
                       const t = pr.translation
-                      const riskDot = t.productionRisk ? RISK_DOT[t.productionRisk] : null
+                      const tier = t.urgencyTier || "P3"
+                      const { badge, row } = URGENCY_STYLES[tier]
                       return (
-                        <div key={`${pr.repo}-${pr.number}`} className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                        <div key={`${pr.repo}-${pr.number}`} className={`rounded-lg border px-4 py-3 ${row}`}>
                           <div className="flex items-start gap-2">
-                            {riskDot && <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${riskDot}`} title={`${t.productionRisk} risk`} />}
+                            <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${badge}`}>{tier}</span>
                             <div className="flex-1 min-w-0">
                               <a href={`/pr/${pr.repo}/${pr.number}`} className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium leading-snug">
                                 {pr.title}
                               </a>
-                              <p className="text-xs text-gray-600 mt-1 leading-snug">{t.userImpact}</p>
-                              {t.targetPersona && (
-                                <p className="text-xs text-gray-400 mt-0.5">→ {t.targetPersona}</p>
+                              <div className="flex gap-1.5 flex-wrap mt-1">
+                                {t.outcomeType && (
+                                  <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${OUTCOME_BADGE[t.outcomeType] || "bg-gray-100 text-gray-600"}`}>
+                                    {t.outcomeType}
+                                  </span>
+                                )}
+                                {t.legacyImpact && t.legacyImpact !== "neutral" && (
+                                  <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${LEGACY_BADGE[t.legacyImpact]?.style}`}>
+                                    {LEGACY_BADGE[t.legacyImpact]?.label}
+                                  </span>
+                                )}
+                                {t.instrumentationGap && (
+                                  <span className="text-xs px-1.5 py-0.5 rounded font-medium bg-amber-100 text-amber-700">no tracking</span>
+                                )}
+                                {t.targetPersona && (
+                                  <span className="text-xs text-gray-400">{t.targetPersona}</span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-700 mt-1.5 leading-snug">{t.userImpact}</p>
+                              {t.recommendedAction && (
+                                <p className="text-xs font-medium text-gray-900 mt-1.5 border-l-2 border-gray-400 pl-2">
+                                  → {t.recommendedAction}
+                                </p>
+                              )}
+                              {t.ignoreCost && (
+                                <p className="text-xs text-red-600 mt-1">If ignored: {t.ignoreCost}</p>
                               )}
                               {t.reviewerRisks && t.reviewerRisks.length > 0 && (
-                                <div className="mt-2 space-y-0.5">
+                                <div className="mt-1.5 space-y-0.5">
                                   {t.reviewerRisks.slice(0, 2).map((risk: string, i: number) => (
                                     <p key={i} className="text-xs text-amber-700 flex gap-1 items-start">
                                       <span className="shrink-0">⚠</span>{risk}
@@ -189,10 +233,7 @@ export default async function SignalsPage() {
                                 </div>
                               )}
                               {t.nextOpportunity && (
-                                <p className="text-xs text-blue-600 mt-1.5 italic">Next: {t.nextOpportunity}</p>
-                              )}
-                              {t.instrumentationGap && (
-                                <span className="inline-block mt-1 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">no PostHog tracking</span>
+                                <p className="text-xs text-blue-600 mt-1.5 italic">Opportunity: {t.nextOpportunity}</p>
                               )}
                             </div>
                             <span className="text-gray-400 text-xs shrink-0 mt-0.5">{pr.repo}</span>
