@@ -131,11 +131,93 @@ Return only valid JSON.`
   }
 }
 
+// ── Weekly Brief ──────────────────────────────────────────────────────────────
+
+function readJSON(file, fallback) {
+  try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), "utf-8")) } catch { return fallback }
+}
+
+async function generateBrief(prs) {
+  const events = readJSON("weekly-events.json", [])
+  const regressions = []
+  const POD_EVENTS = {
+    "WFM 1": ["employee_task_clicked", "employee_task_saved", "employee_submitted", "employee_created"],
+    "WFM 2": ["addExpense_aiFeedbackBannerShown", "addExpense_upserted", "addExpenseLine_upserted", "expenseDetail_upserted"],
+    "PAY": ["sso_login_attempt", "sso_login_success", "sso_login_failed", "mfa_sms_setup_phone"],
+  }
+  for (const [pod, podEvents] of Object.entries(POD_EVENTS)) {
+    for (const ev of podEvents) {
+      const data = events.find(e => e.event === ev)
+      if (!data || data.lastWeek === 0) continue
+      const drop = Math.round(((data.lastWeek - data.thisWeek) / data.lastWeek) * 100)
+      if (drop >= 20) regressions.push({ event: ev, thisWeek: data.thisWeek, lastWeek: data.lastWeek, pod })
+    }
+  }
+
+  const prSummary = prs.filter(p => p.translation).map(p =>
+    `[${p.team}] ${p.title} → ${p.translation.userImpact || "no translation"} (risk: ${p.translation.productionRisk || "unknown"}, gap: ${p.translation.instrumentationGap ?? false})`
+  ).join("\n")
+
+  const eventSummary = events.slice(0, 12).map(e => {
+    const pct = e.lastWeek > 0 ? Math.round(((e.thisWeek - e.lastWeek) / e.lastWeek) * 100) : 0
+    return `${e.event}: ${e.thisWeek} this week (${pct > 0 ? "+" : ""}${pct}% WoW)`
+  }).join("\n")
+
+  const regressionSummary = regressions.map(r => {
+    const pct = Math.round(((r.thisWeek - r.lastWeek) / r.lastWeek) * 100)
+    return `${r.event} in ${r.pod}: ${pct}% WoW (${r.lastWeek} → ${r.thisWeek})`
+  }).join("\n")
+
+  const prompt = `You are Atom, product intelligence layer for Atlas HXM — global HCM SaaS for 2,600+ WSEs.
+
+Write a weekly product brief for the VP Product. Surface 3–5 signals that require a decision. Cluster themes. Tell PM exactly what to do.
+
+SHIPPED THIS WEEK (${prs.length} PRs):
+${prSummary || "(none)"}
+
+POSTHOG EVENT TRENDS:
+${eventSummary || "(no event data)"}
+
+REGRESSION ALERTS (>20% WoW drop):
+${regressionSummary || "None detected"}
+
+Return JSON only:
+{
+  "headline": "One punchy sentence — the most important thing that happened or needs attention this week",
+  "summary": "2-3 sentences MAX: cluster the week into 1-2 themes, name the data signal that validates or contradicts, state what must be decided",
+  "weekSignal": "green" | "amber" | "red",
+  "weekSignalReason": "Why this color — cite one specific metric or event",
+  "regressions": [{ "event": "event name", "drop": number, "hypothesis": "why this might have dropped" }],
+  "topRisks": [{ "title": "risk title", "reason": "specific consequence", "recommendedAction": "what PM does in 48h" }],
+  "instrumentationGaps": ["feature shipped blind and why it matters"],
+  "opportunities": [{ "idea": "specific buildable idea", "outcomeType": "retention|revenue|efficiency|risk|migration", "fromPR": "which PR", "estimatedEffort": "short estimate" }],
+  "p1Actions": ["verb-first action PM must take this week — max 3"],
+  "execSignal": "One sentence for a VP: traffic light + the one number that matters most"
+}
+
+Suppress noise. Return only valid JSON.`
+
+  try {
+    const message = await anthropic.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 900,
+      messages: [{ role: "user", content: prompt }],
+    })
+    const raw = message.content[0].type === "text" ? message.content[0].text : "{}"
+    const stripped = raw.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim()
+    const match = stripped.match(/\{[\s\S]*\}/)
+    const brief = JSON.parse(match ? match[0] : stripped)
+    return { ...brief, generatedAt: new Date().toISOString() }
+  } catch {
+    return null
+  }
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("Atom refresh starting at", new Date().toISOString())
-  console.log("Scope: merged-prs.json only (Linear + PostHog refreshed via MCP)")
+  const startedAt = new Date().toISOString()
+  console.log("Atom refresh starting at", startedAt)
 
   console.log("Fetching merged PRs from GitHub...")
   const mergedPRs = await getMergedPRs()
@@ -164,7 +246,23 @@ async function main() {
   }
 
   fs.writeFileSync(path.join(DATA_DIR, "merged-prs.json"), JSON.stringify(translatedPRs, null, 2))
-  console.log(`Done — ${translatedPRs.length} PRs written to merged-prs.json`)
+  console.log(`✓ ${translatedPRs.length} PRs written to merged-prs.json`)
+
+  console.log("Generating weekly brief with Claude...")
+  const brief = await generateBrief(translatedPRs)
+  if (brief) {
+    fs.writeFileSync(path.join(DATA_DIR, "brief.json"), JSON.stringify(brief, null, 2))
+    console.log("✓ brief.json written")
+  } else {
+    console.log("✗ Brief generation failed — skipping")
+  }
+
+  fs.writeFileSync(
+    path.join(DATA_DIR, "last-refreshed.json"),
+    JSON.stringify({ refreshedAt: startedAt }, null, 2)
+  )
+  console.log("✓ last-refreshed.json written")
+  console.log("Refresh complete.")
 }
 
 main().catch(err => { console.error("Refresh failed:", err); process.exit(1) })

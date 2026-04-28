@@ -193,6 +193,29 @@ export function getCompetitorIntel(): CompetitorIntel | null {
   return read<CompetitorIntel | null>("competitor-intel.json", null)
 }
 
+export interface WeeklyBriefData {
+  generatedAt: string
+  headline: string
+  summary: string
+  weekSignal: "green" | "amber" | "red"
+  weekSignalReason: string
+  regressions: { event: string; drop: number; hypothesis: string }[]
+  topRisks: { title: string; reason: string; recommendedAction?: string }[]
+  instrumentationGaps: string[]
+  opportunities: { idea: string; outcomeType?: string; fromPR: string; estimatedEffort?: string }[]
+  p1Actions: string[]
+  execSignal: string
+}
+
+export function getBrief(): WeeklyBriefData | null {
+  return read<WeeklyBriefData | null>("brief.json", null)
+}
+
+export function getLastRefreshed(): string | null {
+  const data = read<{ refreshedAt: string } | null>("last-refreshed.json", null)
+  return data?.refreshedAt ?? null
+}
+
 export function getInstrumentationGaps(): InstrumentationGap[] {
   const prs = getMergedPRs()
   const gaps: InstrumentationGap[] = []

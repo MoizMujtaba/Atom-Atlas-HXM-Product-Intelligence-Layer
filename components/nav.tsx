@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import SyncButton from "@/components/sync-button"
 
 const links = [
   { href: "/brief", label: "Weekly Brief" },
@@ -20,22 +21,25 @@ export default function Nav() {
           <span className="text-xs font-mono bg-gray-900 text-white px-2 py-0.5 rounded">ATOM</span>
           <span className="text-gray-400 text-sm">Atlas HXM Product Intelligence</span>
         </div>
-        <nav className="flex gap-1">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={cn(
-                "px-3 py-1.5 rounded text-sm transition-colors",
-                pathname === l.href
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-              )}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-3">
+          <nav className="flex gap-1">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={cn(
+                  "px-3 py-1.5 rounded text-sm transition-colors",
+                  pathname === l.href
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+                )}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <SyncButton />
+        </div>
       </div>
     </header>
   )

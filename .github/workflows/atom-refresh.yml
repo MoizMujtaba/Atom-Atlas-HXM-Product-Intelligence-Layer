@@ -35,7 +35,7 @@ jobs:
         run: |
           git config user.name "Atom Bot"
           git config user.email "atom-bot@atlashxm.com"
-          git add data/atom-output/merged-prs.json
+          git add data/atom-output/merged-prs.json data/atom-output/brief.json data/atom-output/last-refreshed.json
           if git diff --staged --quiet; then
             echo "No changes — skipping commit"
           else

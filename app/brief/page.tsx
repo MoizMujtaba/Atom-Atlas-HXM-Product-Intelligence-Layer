@@ -1,4 +1,4 @@
-import { getMergedPRs, getWeeklyEvents, getRegressions } from "@/lib/atom-data"
+import { getMergedPRs, getWeeklyEvents, getRegressions, getBrief, getLastRefreshed } from "@/lib/atom-data"
 import { generateWeeklyBrief } from "@/lib/claude"
 
 export const dynamic = "force-dynamic"
@@ -18,32 +18,54 @@ const OUTCOME_BADGE: Record<string, string> = {
 }
 
 export default async function BriefPage() {
-  const prs = getMergedPRs()
-  const events = getWeeklyEvents()
-  const regressions = getRegressions(20)
+  let brief = getBrief()
+  let source: "cached" | "live" = "cached"
 
-  const brief = await generateWeeklyBrief(
-    prs.map(p => ({ title: p.title, team: p.team, translation: p.translation as unknown as Record<string, unknown> })),
-    events,
-    regressions
-  )
+  if (!brief) {
+    source = "live"
+    const prs = getMergedPRs()
+    const events = getWeeklyEvents()
+    const regressions = getRegressions(20)
+    const generated = await generateWeeklyBrief(
+      prs.map(p => ({ title: p.title, team: p.team, translation: p.translation as unknown as Record<string, unknown> })),
+      events,
+      regressions
+    )
+    brief = generated as unknown as typeof brief
+  }
 
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+  if (!brief) return <p className="text-gray-500 p-8">Brief unavailable — run a sync to generate.</p>
+
+  const lastRefreshed = getLastRefreshed()
+  const briefDate = brief.generatedAt
+    ? new Date(brief.generatedAt).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+    : new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+
   const signal = SIGNAL_LIGHT[brief.weekSignal || "amber"]
 
   return (
     <div className="max-w-3xl space-y-8">
-      {/* Header */}
       <div>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-xs font-mono bg-gray-900 text-white px-2 py-0.5 rounded">ATOM</span>
-          <span className="text-xs text-gray-400">Weekly Brief · {today}</span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono bg-gray-900 text-white px-2 py-0.5 rounded">ATOM</span>
+            <span className="text-xs text-gray-400">Weekly Brief · {briefDate}</span>
+          </div>
+          <div className="text-right">
+            {lastRefreshed && (
+              <p className="text-xs text-gray-400">
+                Data as of {new Date(lastRefreshed).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+              </p>
+            )}
+            {source === "live" && (
+              <p className="text-xs text-amber-600 mt-0.5">Generated live — click Sync to cache</p>
+            )}
+          </div>
         </div>
         <h1 className="text-2xl font-semibold text-gray-900 leading-snug">{brief.headline}</h1>
         <p className="text-gray-600 mt-3 text-base leading-relaxed">{brief.summary}</p>
       </div>
 
-      {/* Traffic light + exec signal */}
       <div className={`rounded-xl border p-4 flex items-start gap-4 ${signal.bg}`}>
         <div className={`w-4 h-4 rounded-full shrink-0 mt-0.5 ${signal.dot}`} />
         <div>
@@ -54,12 +76,11 @@ export default async function BriefPage() {
         </div>
       </div>
 
-      {/* P1 Actions — must come first */}
       {brief.p1Actions?.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-900">Act This Week</h2>
           <div className="rounded-xl border border-gray-900 bg-gray-900 overflow-hidden">
-            {brief.p1Actions.map((action, i) => (
+            {brief.p1Actions.map((action: string, i: number) => (
               <div key={i} className={`px-4 py-3 flex gap-3 items-start ${i > 0 ? "border-t border-gray-700" : ""}`}>
                 <span className="text-xs font-bold text-red-400 shrink-0 mt-0.5">P1</span>
                 <p className="text-sm text-white">{action}</p>
@@ -69,19 +90,18 @@ export default async function BriefPage() {
         </section>
       )}
 
-      {/* Regressions */}
       {brief.regressions?.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
-            Possible Regressions — Investigate Before Next Sprint
+            Possible Regressions
           </h2>
           <div className="space-y-2">
-            {brief.regressions.map((r, i) => (
+            {brief.regressions.map((r: { event: string; drop: number; hypothesis: string }, i: number) => (
               <div key={i} className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-mono text-red-800">{r.event}</span>
-                  <span className="text-sm font-semibold text-red-700">−{r.drop}%</span>
+                  <span className="text-sm font-semibold text-red-700">-{r.drop}%</span>
                 </div>
                 <p className="text-sm text-red-700">{r.hypothesis}</p>
               </div>
@@ -90,7 +110,6 @@ export default async function BriefPage() {
         </section>
       )}
 
-      {/* Top Risks */}
       {brief.topRisks?.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
@@ -98,13 +117,13 @@ export default async function BriefPage() {
             Production Risks
           </h2>
           <div className="space-y-2">
-            {brief.topRisks.map((r, i) => (
+            {brief.topRisks.map((r: { title: string; reason: string; recommendedAction?: string }, i: number) => (
               <div key={i} className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 space-y-1">
                 <p className="text-sm font-medium text-amber-800">{r.title}</p>
                 <p className="text-sm text-amber-700">{r.reason}</p>
                 {r.recommendedAction && (
                   <p className="text-xs font-medium text-amber-900 border-l-2 border-amber-400 pl-2 mt-1">
-                    → {r.recommendedAction}
+                    {r.recommendedAction}
                   </p>
                 )}
               </div>
@@ -113,17 +132,16 @@ export default async function BriefPage() {
         </section>
       )}
 
-      {/* Instrumentation Gaps */}
       {brief.instrumentationGaps?.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-            Shipped Blind — You Cannot Measure These
+            Shipped Blind
           </h2>
           <div className="rounded-xl border border-gray-200 bg-white divide-y divide-gray-100 overflow-hidden">
-            {brief.instrumentationGaps.map((gap, i) => (
+            {brief.instrumentationGaps.map((gap: string, i: number) => (
               <div key={i} className="px-4 py-3 text-sm text-gray-700 flex gap-2 items-start">
-                <span className="text-amber-400 shrink-0">◎</span>
+                <span className="text-amber-400 shrink-0">o</span>
                 <span>{gap}</span>
               </div>
             ))}
@@ -131,7 +149,6 @@ export default async function BriefPage() {
         </section>
       )}
 
-      {/* PM Opportunities */}
       {brief.opportunities?.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
@@ -139,7 +156,7 @@ export default async function BriefPage() {
             Product Opportunities
           </h2>
           <div className="space-y-2">
-            {brief.opportunities.map((o, i) => (
+            {brief.opportunities.map((o: { idea: string; outcomeType?: string; fromPR: string; estimatedEffort?: string }, i: number) => (
               <div key={i} className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 space-y-1">
                 <div className="flex items-start gap-2">
                   {o.outcomeType && (
@@ -149,9 +166,7 @@ export default async function BriefPage() {
                   )}
                   <p className="text-sm font-medium text-blue-900">{o.idea}</p>
                 </div>
-                {o.estimatedEffort && (
-                  <p className="text-xs text-blue-600">{o.estimatedEffort}</p>
-                )}
+                {o.estimatedEffort && <p className="text-xs text-blue-600">{o.estimatedEffort}</p>}
                 <p className="text-xs text-blue-500">Surfaced by: {o.fromPR}</p>
               </div>
             ))}
@@ -159,76 +174,11 @@ export default async function BriefPage() {
         </section>
       )}
 
-      {/* PM Playbook — hard-coded based on current data */}
-      <section className="space-y-4 border-t border-gray-200 pt-6">
-        <h2 className="text-sm font-semibold text-gray-900">PM Calibration Questions — Pod by Pod</h2>
-        <p className="text-xs text-gray-400">Ask these before your next sprint planning. Each question targets a signal in this week&apos;s data.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            {
-              pod: "WFM 1",
-              questions: [
-                "Are WSEs actually seeing their auto-assigned fields — or is the casing bug silently misrouting them?",
-                "Is the useEffect in CommentThreadPopover causing race conditions in prod? Check error logs.",
-                "Are HRSD reviewers using the flag + due date feature? What's the flag submission success rate?",
-              ],
-            },
-            {
-              pod: "WFM 2",
-              questions: [
-                "expenseDetail_upserted dropped 46% WoW with no PR explaining it — is the save flow broken?",
-                "Contribution splits shipped with zero PostHog instrumentation. How will you know if admins adopt it?",
-                "AI feedback dismissal spiked 1500% (1→16 events). Is the banner shown in wrong contexts?",
-              ],
-            },
-            {
-              pod: "PAY",
-              questions: [
-                "SSO failures up 23% — is this new event visibility from PAY-1405 or a real regression? Check pre/post-deploy failure rate.",
-                "Validate all 8 new SSO events are firing. Check PostHog for SSO_SETUP_STARTED and SSO_ENABLED.",
-                "mfa_sms_setup_phone down 24% WoW — is MFA recovery working or are users abandoning?",
-              ],
-            },
-            {
-              pod: "FNM 1",
-              questions: [
-                "Virtual expense cards: are both Stripe and Ramp webhook handlers live? Which provider is actually provisioning?",
-                "THP API change ships a last-sync timestamp — is TakeHomePaySyncLogs ever empty? What's the null rate?",
-                "Check card provisioning queue depth — background worker lag means users wait for card activation.",
-              ],
-            },
-            {
-              pod: "FNM 2",
-              questions: [
-                "GTN mapping has no PostHog events — add gtn_mapping_triggered and recon_file_imported before next sprint.",
-                "Partner Connect fix is unlabeled — what regression did it fix? Get the PR description filled in.",
-              ],
-            },
-            {
-              pod: "Data Platform",
-              questions: [
-                "No PRs this week — is the pod blocked, on planned infra work, or supporting other pods?",
-                "What data pipeline jobs ran this week? Any sync failures or schema drift on external data sources?",
-              ],
-            },
-          ].map((block) => (
-            <div key={block.pod} className="rounded-lg border border-gray-200 bg-white px-4 py-4">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{block.pod}</p>
-              <ul className="space-y-2">
-                {block.questions.map((q, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex gap-2 items-start">
-                    <span className="text-gray-300 shrink-0 mt-0.5">?</span>
-                    {q}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="text-xs text-gray-400 border-t border-gray-100 pt-4">
-        Generated by Atom · {prs.length} PRs analyzed · {events.length} events tracked · {regressions.length} regressions detected
+      <div className="text-xs text-gray-400 border-t border-gray-100 pt-4 flex items-center justify-between">
+        <span>Atom · {source === "cached" ? "pre-generated by daily refresh" : "live generation"}</span>
+        {lastRefreshed && (
+          <span>Last sync: {new Date(lastRefreshed).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+        )}
       </div>
     </div>
   )
