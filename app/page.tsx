@@ -370,9 +370,9 @@ export default async function ExecPage() {
                         <span className="text-gray-500 tabular-nums">{e.thisWeek.toLocaleString()}</span>
                       </div>
                     </div>
-                    <div className="flex gap-0.5 h-1.5">
-                      <div className="bg-gray-200 h-full rounded" style={{ width: `${prevPct}%`, flex: "none" }} />
-                      <div className={`h-full rounded ${barColor}`} style={{ width: `${barPct}%`, flex: "none" }} />
+                    <div className="relative h-1.5 w-full rounded overflow-hidden bg-gray-100">
+                      <div className="absolute inset-y-0 left-0 bg-gray-300 rounded" style={{ width: `${prevPct}%` }} />
+                      <div className={`absolute inset-y-0 left-0 rounded ${barColor} opacity-90`} style={{ width: `${barPct}%` }} />
                     </div>
                   </div>
                 )
