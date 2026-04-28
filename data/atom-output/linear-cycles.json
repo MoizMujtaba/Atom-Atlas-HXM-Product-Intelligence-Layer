@@ -15,15 +15,62 @@
       "slipRisk": "low",
       "slipRiskReason": "Cycle just started Apr 27. Census verification delivery on track with 3 PRs merged this week.",
       "mergedPRsThisWeek": [
-        { "linearId": "WFM1-1112", "prNumber": 617, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": true },
-        { "linearId": "WFM1-1169", "prNumber": 603, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": false },
-        { "linearId": "WFM1-1137", "prNumber": 597, "linearStatus": null, "stale": false, "note": "Not in current cycle — shipped from previous cycle", "hasRoadmapLabel": false }
+        {
+          "linearId": "WFM1-1112",
+          "prNumber": 617,
+          "linearStatus": "In Review",
+          "stale": true,
+          "hasRoadmapLabel": true
+        },
+        {
+          "linearId": "WFM1-1169",
+          "prNumber": 603,
+          "linearStatus": "In Review",
+          "stale": true,
+          "hasRoadmapLabel": false
+        },
+        {
+          "linearId": "WFM1-1137",
+          "prNumber": 597,
+          "linearStatus": null,
+          "stale": false,
+          "note": "Not in current cycle — shipped from previous cycle",
+          "hasRoadmapLabel": false
+        }
       ],
       "keyInProgress": [
-        { "id": "WFM1-1158", "title": "Edit flagged field, see and add comments, and submit round back", "assignee": "Joel de Leon", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Joel de Leon" },
-        { "id": "WFM1-1082", "title": "Capture audit event hooks for all verification actions", "assignee": "Chirag Gupta", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Joel de Leon" },
-        { "id": "WFM1-935", "title": "Build notification orchestration", "assignee": "omarj.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Michael Jones" },
-        { "id": "WFM1-838", "title": "Bulk Onboarding — Bug fixes, API, Switch", "assignee": "Joel de Leon", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Michael Jones" }
+        {
+          "id": "WFM1-1158",
+          "title": "Edit flagged field, see and add comments, and submit round back",
+          "assignee": "Joel de Leon",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-initiated",
+          "createdBy": "Joel de Leon"
+        },
+        {
+          "id": "WFM1-1082",
+          "title": "Capture audit event hooks for all verification actions",
+          "assignee": "Chirag Gupta",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "Joel de Leon"
+        },
+        {
+          "id": "WFM1-935",
+          "title": "Build notification orchestration",
+          "assignee": "omarj.contractor",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "Michael Jones"
+        },
+        {
+          "id": "WFM1-838",
+          "title": "Bulk Onboarding — Bug fixes, API, Switch",
+          "assignee": "Joel de Leon",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "Michael Jones"
+        }
       ],
       "signals": [
         {
@@ -67,13 +114,47 @@
       "slipRisk": "high",
       "slipRiskReason": "Cycle ends TOMORROW at 47% completion. Policies landing page (WFM2-491) and DB schema (WFM2-712) still In Progress with no PR merged yet.",
       "mergedPRsThisWeek": [
-        { "linearId": "WFM2-666", "prNumber": 600, "linearStatus": "Dev Completed", "stale": false, "hasRoadmapLabel": false }
+        {
+          "linearId": "WFM2-666",
+          "prNumber": 600,
+          "linearStatus": "Dev Completed",
+          "stale": false,
+          "hasRoadmapLabel": false
+        }
       ],
       "keyInProgress": [
-        { "id": "WFM2-491", "title": "Policies Landing Page — Table, Search, Filter & Urgency Styling", "assignee": "johnj.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "WFM2-712", "title": "Policies — Database Schema", "assignee": "johnj.contractor", "hasRoadmapLabel": false, "origin": "engineering-sub-task", "createdBy": "johnj.contractor" },
-        { "id": "WFM2-718", "title": "Dev Copy — Country Rules Tab Layout", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Uzair Ahmed" },
-        { "id": "WFM2-722", "title": "Dev Copy — Contribution Splits Collapsable View", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Uzair Ahmed" }
+        {
+          "id": "WFM2-491",
+          "title": "Policies Landing Page — Table, Search, Filter & Urgency Styling",
+          "assignee": "johnj.contractor",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "WFM2-712",
+          "title": "Policies — Database Schema",
+          "assignee": "johnj.contractor",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-sub-task",
+          "createdBy": "johnj.contractor"
+        },
+        {
+          "id": "WFM2-718",
+          "title": "Dev Copy — Country Rules Tab Layout",
+          "assignee": "Uzair Ahmed",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-initiated",
+          "createdBy": "Uzair Ahmed"
+        },
+        {
+          "id": "WFM2-722",
+          "title": "Dev Copy — Contribution Splits Collapsable View",
+          "assignee": "Uzair Ahmed",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-initiated",
+          "createdBy": "Uzair Ahmed"
+        }
       ],
       "signals": [
         {
@@ -116,15 +197,62 @@
       "slipRisk": "medium",
       "slipRiskReason": "5% completion with cycle ending May 2. MFA features nearly shipped but QA regression test (PAY-1287) is Todo with no assignee. SQL migration and MFA running in parallel — context switching risk.",
       "mergedPRsThisWeek": [
-        { "linearId": "PAY-1093", "prNumber": 610, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": false },
-        { "linearId": "PAY-1405", "prNumber": 598, "linearStatus": "Dev Completed", "stale": false, "hasRoadmapLabel": false }
+        {
+          "linearId": "PAY-1093",
+          "prNumber": 610,
+          "linearStatus": "In Review",
+          "stale": true,
+          "hasRoadmapLabel": false
+        },
+        {
+          "linearId": "PAY-1405",
+          "prNumber": 598,
+          "linearStatus": "Dev Completed",
+          "stale": false,
+          "hasRoadmapLabel": false
+        }
       ],
       "keyInProgress": [
-        { "id": "PAY-1088", "title": "MFA — Configurable OTP Method Selection (Story)", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "PAY-1090", "title": "FE — OTP Verification Screen", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "PAY-1089", "title": "FE — MFA Method Selection Screen", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "PAY-271", "title": "Customer Service — Mongo to SQL Migration (Top Story)", "assignee": "Lin Yu Han", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "PAY-911", "title": "PROD — Enable Step 2 SQL-only", "assignee": "alexandrom.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
+        {
+          "id": "PAY-1088",
+          "title": "MFA — Configurable OTP Method Selection (Story)",
+          "assignee": "henriquev",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "PAY-1090",
+          "title": "FE — OTP Verification Screen",
+          "assignee": "henriquev",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "PAY-1089",
+          "title": "FE — MFA Method Selection Screen",
+          "assignee": "henriquev",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "PAY-271",
+          "title": "Customer Service — Mongo to SQL Migration (Top Story)",
+          "assignee": "Lin Yu Han",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "PAY-911",
+          "title": "PROD — Enable Step 2 SQL-only",
+          "assignee": "alexandrom.contractor",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        }
       ],
       "signals": [
         {
@@ -168,14 +296,56 @@
       "slipRisk": "medium",
       "slipRiskReason": "Two PROD customer-blocking issues (Sage sync, Megagen Implantt) in progress alongside active feature development. Virtual expense card epic has a PR merged but feature is incomplete.",
       "mergedPRsThisWeek": [
-        { "linearId": "FNM1-805", "prNumber": 221, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": true },
-        { "linearId": "FNM1-653", "prNumber": 215, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": false }
+        {
+          "linearId": "FNM1-805",
+          "prNumber": 221,
+          "linearStatus": "In Review",
+          "stale": true,
+          "hasRoadmapLabel": true
+        },
+        {
+          "linearId": "FNM1-653",
+          "prNumber": 215,
+          "linearStatus": "In Review",
+          "stale": true,
+          "hasRoadmapLabel": false
+        }
       ],
       "keyInProgress": [
-        { "id": "FNM1-815", "title": "PROD: Sage sync — Megagen Implantt (Customer 10437) invoice export blocked", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false, "origin": "pm-escalated", "createdBy": "Moiz Mujtaba" },
-        { "id": "FNM1-807", "title": "Invoice export to Sage fails with invalid customer ID", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false, "origin": "pm-escalated", "createdBy": "Moiz Mujtaba" },
-        { "id": "FNM1-830", "title": "Virtual Expense Cards hosted in Payroll Service", "assignee": "Raul Grimaldi", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Raul Grimaldi" },
-        { "id": "FNM1-760", "title": "Submit for Disbursement Flow — Review Payments Tab", "assignee": "Jasmine Kaur", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
+        {
+          "id": "FNM1-815",
+          "title": "PROD: Sage sync — Megagen Implantt (Customer 10437) invoice export blocked",
+          "assignee": "Ernesto de Loayza",
+          "isProdBlocker": true,
+          "hasRoadmapLabel": false,
+          "origin": "pm-escalated",
+          "createdBy": "Moiz Mujtaba"
+        },
+        {
+          "id": "FNM1-807",
+          "title": "Invoice export to Sage fails with invalid customer ID",
+          "assignee": "Ernesto de Loayza",
+          "isProdBlocker": true,
+          "hasRoadmapLabel": false,
+          "origin": "pm-escalated",
+          "createdBy": "Moiz Mujtaba"
+        },
+        {
+          "id": "FNM1-830",
+          "title": "Virtual Expense Cards hosted in Payroll Service",
+          "assignee": "Raul Grimaldi",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-initiated",
+          "createdBy": "Raul Grimaldi"
+        },
+        {
+          "id": "FNM1-760",
+          "title": "Submit for Disbursement Flow — Review Payments Tab",
+          "assignee": "Jasmine Kaur",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        }
       ],
       "signals": [
         {
@@ -218,13 +388,48 @@
       "slipRisk": "low",
       "slipRiskReason": "Cycle just started. GTN acceleration to PROD (FNM2-983) is In Progress and is the primary delivery this cycle.",
       "mergedPRsThisWeek": [
-        { "linearId": "FNM2-788", "prNumber": 110, "linearStatus": null, "stale": false, "note": "Label change — minor, not in current cycle", "hasRoadmapLabel": false },
-        { "linearId": "FNM2-778", "prNumber": 109, "linearStatus": null, "stale": false, "note": "GTN buttons — not in current cycle 16", "hasRoadmapLabel": false }
+        {
+          "linearId": "FNM2-788",
+          "prNumber": 110,
+          "linearStatus": null,
+          "stale": false,
+          "note": "Label change — minor, not in current cycle",
+          "hasRoadmapLabel": false
+        },
+        {
+          "linearId": "FNM2-778",
+          "prNumber": 109,
+          "linearStatus": null,
+          "stale": false,
+          "note": "GTN buttons — not in current cycle 16",
+          "hasRoadmapLabel": false
+        }
       ],
       "keyInProgress": [
-        { "id": "FNM2-983", "title": "Deploy GTN Acceleration to PROD (subset test)", "assignee": "Marcelo Mallmann", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Marcelo Mallmann" },
-        { "id": "FNM2-855", "title": "Create Setting By Pay Group to Control GTN Processing", "assignee": "Jose Morales", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
-        { "id": "FNM2-956", "title": "Evaluate ITOS API vs Atlas Payroll Input File — Gap Analysis", "assignee": "Tom Jegou", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
+        {
+          "id": "FNM2-983",
+          "title": "Deploy GTN Acceleration to PROD (subset test)",
+          "assignee": "Marcelo Mallmann",
+          "hasRoadmapLabel": false,
+          "origin": "engineering-initiated",
+          "createdBy": "Marcelo Mallmann"
+        },
+        {
+          "id": "FNM2-855",
+          "title": "Create Setting By Pay Group to Control GTN Processing",
+          "assignee": "Jose Morales",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        },
+        {
+          "id": "FNM2-956",
+          "title": "Evaluate ITOS API vs Atlas Payroll Input File — Gap Analysis",
+          "assignee": "Tom Jegou",
+          "hasRoadmapLabel": true,
+          "origin": "pm-scoped",
+          "createdBy": "PM"
+        }
       ],
       "signals": [
         {
@@ -266,7 +471,9 @@
           "title": "Data Platform cycle has 1 issue — is the pod blocked or supporting others?",
           "detail": "DATA-74 (Gather gateway endpoint information) is Todo with no PR activity this week. Either the pod is supporting other teams, blocked on access, or the cycle wasn't properly populated. Confirm before quarterly planning."
         }
-      ]
+      ],
+      "keyInProgress": [],
+      "mergedPRsThisWeek": []
     }
   ],
   "crossPodSignals": [
@@ -274,25 +481,40 @@
       "urgency": "P1",
       "title": "5 merged PRs are stale in Linear — velocity data is wrong",
       "detail": "WFM1-1112, WFM1-1169, PAY-1093, FNM1-805, FNM1-653 all have merged PRs but Linear still shows 'In Review'. Cycle completion metrics are understated across 3 pods. Close these tickets now.",
-      "affectedPods": ["WFM 1", "PAY", "FNM 1"]
+      "affectedPods": [
+        "WFM 1",
+        "PAY",
+        "FNM 1"
+      ]
     },
     {
       "urgency": "P2",
       "title": "5 of 16 active tickets are off-roadmap — 3 engineering-initiated, 2 PM-escalated PROD fires",
       "detail": "Off-roadmap breakdown: WFM1-1158 (engineer self-created, empty description), WFM2-718 and WFM2-722 (engineer self-created sub-tasks, no PM), FNM1-830 (engineer architecture ADR, no PM), FNM2-983 (engineer self-created PROD deployment, no PM requirements). FNM1-815 and FNM1-807 are PM-escalated from Zendesk — reactive but product-directed. PAY is 100% roadmap. WFM1 is 75% roadmap (3 of 4 have RoadMap2026 + PM specs).",
-      "affectedPods": ["WFM 1", "WFM 2", "FNM 1", "FNM 2"]
+      "affectedPods": [
+        "WFM 1",
+        "WFM 2",
+        "FNM 1",
+        "FNM 2"
+      ]
     },
     {
       "urgency": "P1",
       "title": "Atlas-Frontend PR 112 has no Linear ticket",
       "detail": "The 'partnerconnectfe fix' PR was merged with no linked issue. Unknown what regression it fixed. Add a Linear ticket retroactively so the fix is traceable to a user issue.",
-      "affectedPods": ["Platform"]
+      "affectedPods": [
+        "Platform"
+      ]
     },
     {
       "urgency": "P2",
       "title": "3 pods have zero PostHog instrumentation — blind to user behavior",
       "detail": "FNM 1, FNM 2, and Data Platform have shipped features this cycle with no PostHog events. The GTN PROD rollout (FNM2-983) and virtual expense card launch (FNM1-653) are going live this week with no behavioral telemetry.",
-      "affectedPods": ["FNM 1", "FNM 2", "Data Platform"]
+      "affectedPods": [
+        "FNM 1",
+        "FNM 2",
+        "Data Platform"
+      ]
     }
   ],
   "plannedVsShipped": {

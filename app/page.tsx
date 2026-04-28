@@ -34,8 +34,9 @@ export default async function ExecPage() {
 
   // ── Roadmap fidelity per pod ──────────────────────────────────────────────
   const podFidelity = (cycles?.pods ?? []).map(pod => {
-    const total = pod.keyInProgress.length
-    const onRoadmap = pod.keyInProgress.filter(i => i.hasRoadmapLabel === true).length
+    const ki = pod.keyInProgress ?? []
+    const total = ki.length
+    const onRoadmap = ki.filter(i => i.hasRoadmapLabel === true).length
     const pct = total > 0 ? Math.round((onRoadmap / total) * 100) : 0
     return { pod: pod.pod, pct, onRoadmap, total, slipRisk: pod.slipRisk, completionPct: pod.completionPct, cycleEnds: pod.cycleEnds }
   }).filter(p => p.total > 0).sort((a, b) => b.pct - a.pct)
@@ -45,7 +46,7 @@ export default async function ExecPage() {
     : null
 
   // ── Work origin breakdown ─────────────────────────────────────────────────
-  const allIssues = (cycles?.pods ?? []).flatMap(p => p.keyInProgress)
+  const allIssues = (cycles?.pods ?? []).flatMap(p => p.keyInProgress ?? [])
   const originCounts = {
     "pm-scoped": allIssues.filter(i => i.origin === "pm-scoped").length,
     "pm-escalated": allIssues.filter(i => i.origin === "pm-escalated").length,
@@ -56,7 +57,7 @@ export default async function ExecPage() {
 
   // ── P1 signals ────────────────────────────────────────────────────────────
   const p1Signals = [
-    ...(cycles?.pods ?? []).flatMap(p => p.signals.filter(s => s.urgency === "P1").map(s => ({ ...s, pod: p.pod }))),
+    ...(cycles?.pods ?? []).flatMap(p => (p.signals ?? []).filter(s => s.urgency === "P1").map(s => ({ ...s, pod: p.pod }))),
     ...(cycles?.crossPodSignals ?? []).filter(s => s.urgency === "P1").map(s => ({ ...s, pod: s.affectedPods.join(", ") })),
   ]
 
@@ -230,7 +231,7 @@ export default async function ExecPage() {
               const slipStyle = pod.slipRisk === "high" ? "border-red-200 bg-red-50" : pod.slipRisk === "medium" ? "border-amber-200 bg-amber-50" : "border-gray-200"
               const pctColor = pod.completionPct >= 70 ? "text-green-700" : pod.completionPct >= 40 ? "text-amber-700" : "text-red-700"
               const barColor = pod.completionPct >= 70 ? "bg-green-500" : pod.completionPct >= 40 ? "bg-amber-400" : "bg-red-400"
-              const p1Count = pod.signals.filter(s => s.urgency === "P1").length
+              const p1Count = (pod.signals ?? []).filter(s => s.urgency === "P1").length
               return (
                 <div key={pod.pod} className={`rounded-lg border p-3 space-y-2 ${slipStyle}`}>
                   <div className="flex items-center justify-between">
