@@ -27,16 +27,16 @@ export default async function RicePage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-xl font-semibold text-gray-900">RICE Backlog</h1>
-        <p className="text-gray-500 text-sm mt-1">Signal-derived hypotheses scored by pod PMs · Formula: (Reach × Impact × Confidence%) / Effort</p>
+        <p className="text-gray-500 text-sm mt-1">Signal-derived hypotheses · (Reach × Impact% × Confidence%) ÷ Effort · Effort scale: 1w=÷1, 2w=÷3, 3w=÷5, 4w=÷7</p>
       </div>
 
       <div className="flex gap-4 text-xs">
         {[
-          { label: "Ship it", range: "300+", color: "text-green-600" },
-          { label: "Strong", range: "200–299", color: "text-emerald-600" },
-          { label: "Validate", range: "100–199", color: "text-amber-600" },
-          { label: "Monitor", range: "50–99", color: "text-orange-500" },
-          { label: "Hypothesis", range: "<50", color: "text-gray-400" },
+          { label: "Ship it", range: "600+", color: "text-green-600" },
+          { label: "Strong", range: "300–599", color: "text-emerald-600" },
+          { label: "Validate", range: "100–299", color: "text-amber-600" },
+          { label: "Monitor", range: "40–99", color: "text-orange-500" },
+          { label: "Hypothesis", range: "<40", color: "text-gray-400" },
         ].map((s) => (
           <div key={s.label} className="flex items-center gap-1.5">
             <span className={`font-semibold ${s.color}`}>{s.label}</span>
@@ -53,9 +53,9 @@ export default async function RicePage() {
               <th className="text-left px-4 py-3 text-gray-500 font-medium">Pod</th>
               <th className="text-left px-4 py-3 text-gray-500 font-medium">Type</th>
               <th className="text-right px-4 py-3 text-gray-500 font-medium">R</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">I</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium">I%</th>
               <th className="text-right px-4 py-3 text-gray-500 font-medium">C%</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">E</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium">÷E</th>
               <th className="text-right px-4 py-3 text-gray-500 font-medium">Score</th>
               <th className="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
             </tr>
@@ -81,9 +81,9 @@ export default async function RicePage() {
                   </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{TYPE_LABELS[h.signalType]}</td>
                   <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.reach.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.impact}</td>
+                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.impact}%</td>
                   <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.confidence}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.effort}w</td>
+                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">÷{h.effort}</td>
                   <td className={`px-4 py-3 text-right font-bold tabular-nums ${lightColor}`}>{score}</td>
                   <td className="px-4 py-3 text-center">
                     <span className={`text-xs px-2 py-0.5 rounded font-medium ${STATUS_COLORS[h.status]}`}>

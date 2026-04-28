@@ -37,5 +37,5 @@ export function saveHypotheses(hypotheses: RiceHypothesis[]) {
 
 export function calcScore(r: number, i: number, c: number, e: number): number {
   if (e === 0) return 0
-  return Math.round((r * i * (c / 100)) / e)
+  return Math.round((r * (i / 100) * (c / 100)) / e)
 }
