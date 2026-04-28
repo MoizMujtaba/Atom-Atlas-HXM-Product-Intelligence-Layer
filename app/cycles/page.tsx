@@ -164,8 +164,11 @@ export default function CyclesPage() {
       <section className="space-y-4">
         <h2 className="text-xs uppercase tracking-widest text-gray-400 font-medium">Pod Cycles</h2>
         {pods.map((pod) => {
-          const p1Signals = pod.signals.filter(s => s.urgency === "P1")
-          const otherSignals = pod.signals.filter(s => s.urgency !== "P1")
+          const signals = pod.signals || []
+          const keyInProgress = pod.keyInProgress || []
+          const mergedPRsThisWeek = pod.mergedPRsThisWeek || []
+          const p1Signals = signals.filter(s => s.urgency === "P1")
+          const otherSignals = signals.filter(s => s.urgency !== "P1")
           const daysLeft = Math.ceil((new Date(pod.cycleEnds).getTime() - Date.now()) / 86400000)
 
           return (
@@ -223,11 +226,11 @@ export default function CyclesPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Key In Progress */}
-                  {pod.keyInProgress.length > 0 && (
+                  {keyInProgress.length > 0 && (
                     <div>
                       <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2">Key In Progress</p>
                       <div className="space-y-1.5">
-                        {pod.keyInProgress.map((item) => (
+                        {keyInProgress.map((item) => (
                           <div key={item.id} className={`rounded-lg px-3 py-2 text-sm ${item.isProdBlocker ? "bg-red-50 border border-red-200" : "bg-gray-50 border border-gray-200"}`}>
                             <div className="flex items-start gap-1.5">
                               {item.isProdBlocker && <span className="text-red-500 text-xs shrink-0 mt-0.5">PROD</span>}
@@ -246,11 +249,11 @@ export default function CyclesPage() {
                   {/* Merged PRs */}
                   <div>
                     <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2">PRs Merged This Week</p>
-                    {pod.mergedPRsThisWeek.length === 0 ? (
+                    {mergedPRsThisWeek.length === 0 ? (
                       <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">No PRs merged</p>
                     ) : (
                       <div className="space-y-1.5">
-                        {pod.mergedPRsThisWeek.map((pr, i) => (
+                        {mergedPRsThisWeek.map((pr, i) => (
                           <div key={i} className={`rounded-lg px-3 py-2 text-sm border ${pr.stale ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
                             <div className="flex items-center gap-2">
                               <a href={`/pr/${pod.pod === "PAY" || pod.pod === "WFM 1" || pod.pod === "WFM 2" ? "Atlas-Webapp" : pod.pod === "FNM 1" ? "Payments-Backend" : "Atlas-Frontend"}/${pr.prNumber}`}
