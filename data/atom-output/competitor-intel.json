@@ -1,0 +1,344 @@
+{
+  "generatedAt": "2026-04-28T00:00:00Z",
+  "competitors": [
+    {
+      "name": "Deel",
+      "recentMoves": [
+        {
+          "date": "2026-03-20",
+          "type": "product-launch",
+          "title": "AI-native HRIS with workforce planning, ATS, and automated onboarding-to-payroll flow",
+          "detail": "Deel HR relaunched as fully AI-native: headcount planning shared between HR and Finance in real-time, ATS where approved roles auto-flow to job openings, AI screening and scoring. When offer accepted, data flows automatically into HRIS then into payroll. Onboarding triggers IT device provisioning, app access, and learning journeys automatically.",
+          "atlasImplication": "Deel is building the end-to-end lifecycle atlas is still piecing together. Their ATS→HRIS→Payroll automation is what Atlas's WFM + PAY pods are working toward separately."
+        },
+        {
+          "date": "2026-03-24",
+          "type": "product-launch",
+          "title": "Structured monthly release cadence — features ship on 2nd Wednesday, 1-week advance notice",
+          "detail": "Deel introduced a predictable release framework: enterprise/mid-market customers get 1-week notice before changes go live. Monthly cadence, multiple quality gates, early access opt-in. Positioned as stability for enterprise buyers.",
+          "atlasImplication": "Atlas has no release communication process. Clients find out about changes when they log in."
+        },
+        {
+          "date": "2025-08-21",
+          "type": "product-launch",
+          "title": "Deel AI Workforce — 7 AI agents for HR, payroll, talent, finance, ops",
+          "detail": "AI agents built on 2,000+ in-country experts' knowledge, deployable across HR, payroll, talent acquisition, finance, and operations. Tracks hours saved, tasks completed, errors reduced. Custom agent builder included. Slack and Zapier integration coming.",
+          "atlasImplication": "None of Atlas's pods have an AI agent layer. Competitors are shipping AI that replaces the support tickets Atlas resolves manually."
+        },
+        {
+          "date": "2025-12-01",
+          "type": "product-launch",
+          "title": "Free global HRIS launched — land-and-expand strategy",
+          "detail": "Deel HR made free for the entire workforce (contractors, EOR, direct employees). 1,624 product updates shipped in 2025 (~4.4/day). Positions Deel as the system of record to then upsell payroll, IT, compliance.",
+          "atlasImplication": "Deel is using free HRIS to own the data layer. Atlas charges for everything. Risk: clients evaluate Deel as a free alternative to Atlas's HRIS functionality."
+        }
+      ],
+      "g2Complaints": [
+        "True cost runs 30-50% above the $599 headline when taxes, FX, and deposits are factored in",
+        "Payroll error corrections route through support, not self-service — multi-week delays for non-enterprise",
+        "Platform UX has become cluttered and difficult to navigate as product has grown",
+        "Payment blocks and account freezes for flagged transactions — entire accounts suspended while international teams go unpaid",
+        "Withdrawal method restrictions for international contractors",
+        "AI triage handles volume but creates bottlenecks for compliance-risk queries",
+        "Immigration services quality described as 'worst on the market' by some Gartner reviewers",
+        "Ongoing Rippling RICO and trade-secret litigation (federal judge allowed claims to proceed, DOJ investigation opened)"
+      ],
+      "atlasOpportunity": "Deel's support quality is its biggest vulnerability for mid-market clients. Atlas can win on 'you get a human, not an AI triage bot' for compliance-sensitive payroll questions. Also: Deel's true pricing is opaque — Atlas should make total cost of ownership transparent in sales."
+    },
+    {
+      "name": "Remote",
+      "recentMoves": [
+        {
+          "date": "2026-04-28",
+          "type": "product-launch",
+          "title": "US benefits embedded in payroll — health, dental, vision, retirement via Clasp",
+          "detail": "US employers on Remote Global Payroll can now offer and manage health, dental, vision, and retirement benefits directly inside Remote. Enrollment built into the platform — employees manage coverage in the same place as payroll. Employers see enrollments, approvals, and contribution changes alongside payroll data.",
+          "atlasImplication": "DIRECT OVERLAP. Atlas WFM2 is building Benefits Creation & Management (WFM2-491 is in current cycle). Remote just shipped this in the US. Atlas needs to accelerate benefits and differentiate on multi-country coverage, not just US."
+        },
+        {
+          "date": "2026-04-28",
+          "type": "product-launch",
+          "title": "Conditional workflow branching — non-linear automation logic",
+          "detail": "Automations now feature conditional routing: trigger specific actions based on unique hire criteria. Complex, non-linear logic within a single workflow. Consolidates multiple workflows into one intelligent flow.",
+          "atlasImplication": "Atlas has no workflow automation builder. Manual processes that Atlas's ops team handles manually are being automated by competitors."
+        },
+        {
+          "date": "2026-01-01",
+          "type": "acquisition",
+          "title": "Remote acquired Atlas (expense management platform)",
+          "detail": "Remote officially acquired Atlas, described as 'the AI-native expense management platform', as a step toward a more holistic modern experience for global teams.",
+          "atlasImplication": "Different 'Atlas' — this is an expense management company, not Atlas HXM. But it signals Remote is filling the expense gap. Atlas HXM has expense features in WFM2 that are directly in this competitive space."
+        },
+        {
+          "date": "2025-05-06",
+          "type": "product-launch",
+          "title": "AI-driven payroll expanded to 100+ countries with in-house engine",
+          "detail": "In-house payroll engine (no third-party processors), AI-powered workflows, automated statutory payments, payroll variance reports that flag anomalies. Benefits via SimplyInsured (US) and Kota (international) embedded.",
+          "atlasImplication": "Remote's in-house payroll engine with anomaly detection is ahead of Atlas's payroll infrastructure. Atlas PAY pod is focused on MFA and SQL migration — not payroll intelligence."
+        }
+      ],
+      "g2Complaints": [
+        "Response time too slow for some users",
+        "Some payroll errors not always corrected correctly",
+        "Platform less feature-rich than Deel for complex enterprise needs"
+      ],
+      "atlasOpportunity": "Remote's customer support is praised as its top differentiator vs Deel. Atlas competes in the same tier. The benefits-in-payroll launch is a direct threat to WFM2's roadmap — ship Atlas Benefits before Remote expands beyond US."
+    },
+    {
+      "name": "Oyster HR",
+      "recentMoves": [
+        {
+          "date": "2026-04-27",
+          "type": "product-launch",
+          "title": "People Partner Services — embedded HR advisory for global teams",
+          "detail": "New service: HR experts embedded in the platform for guidance on global employment questions. Combined with Workforce Insights dashboard (new) and bulk payroll changes for multiple team members simultaneously.",
+          "atlasImplication": "Oyster is positioning against G-P Gia by offering human HR advisory as a managed service. Atlas has neither an AI HR advisor nor a human advisory service."
+        },
+        {
+          "date": "2026-03-26",
+          "type": "integration",
+          "title": "ADP Workforce Now integration — ADP Marketplace partner",
+          "detail": "Oyster now integrates with ADP Workforce Now. Companies using ADP as HRIS can expand globally through Oyster without changing HR stack. Available on ADP Marketplace.",
+          "atlasImplication": "Atlas has no marketplace presence and no ADP integration. Clients using ADP for domestic HR cannot extend to Atlas for global — they can extend to Oyster."
+        },
+        {
+          "date": "2025-05-01",
+          "type": "product-launch",
+          "title": "Oyster AI — global employment assistant (beta)",
+          "detail": "AI assistant for global employment questions. Beta launched May 2025.",
+          "atlasImplication": "Even Oyster (smallest of the 5) has shipped an AI compliance assistant. Atlas has zero AI in-product."
+        }
+      ],
+      "g2Complaints": [
+        "Support wait times measured in weeks — worst-rated support of the five competitors",
+        "When response comes, 50% of the time it's a generic FAQ that didn't address the question",
+        "Salaries not always paid correctly on first attempt",
+        "Off-cycle payment issues and delays",
+        "High fees with opaque currency conversion",
+        "Onboarding process pushed multiple times with last-minute notifications to employees",
+        "Platform described as basic with limited customization"
+      ],
+      "atlasOpportunity": "Oyster's support is the worst in the category by a significant margin. Any Atlas customer evaluating Oyster can be shown G2 evidence. Atlas's mid-market white-glove support is a direct win over Oyster."
+    },
+    {
+      "name": "Rippling",
+      "recentMoves": [
+        {
+          "date": "2026-04-09",
+          "type": "marketing",
+          "title": "First UK brand campaign — 'The juiciest thing to happen to HR and Payroll'",
+          "detail": "Rippling launched its first UK brand campaign with Stink Studios as AOR. Integrated campaign across London out-of-home. Character-led stories inspired by real workplace HR incidents. Signals Rippling accelerating UK/European expansion.",
+          "atlasImplication": "Rippling is aggressively entering the UK/Europe market where Atlas has EOR clients. Brand awareness campaign will increase Rippling's inbound in the region."
+        },
+        {
+          "date": "2026-01-28",
+          "type": "product-launch",
+          "title": "Payroll expansion: Brazil, Mexico, Philippines, Spain",
+          "detail": "Rippling now runs payroll compliantly in 4 new countries. Also added point-in-time Supergroups (historical employee data for policies), LMS learning journey personalization, and advanced Microsoft 365 offboarding.",
+          "atlasImplication": "Rippling's global payroll footprint is expanding rapidly. Their workflow automation (Supergroups, conditional logic) is significantly ahead of Atlas."
+        },
+        {
+          "date": "2025-12-31",
+          "type": "product-launch",
+          "title": "Rippling Recruiting — AI-powered ATS built into core HR",
+          "detail": "Full ATS with AI Application Review, Interview Assistant, onboarding tracker. AI-powered resume parsing in English and non-English. Native integration with HR platform via Employee Graph — approved headcount flows to job openings automatically.",
+          "atlasImplication": "Atlas has no recruiting capability. Rippling's Employee Graph connecting recruiting → HR → payroll → IT is the unified vision Atlas doesn't have."
+        }
+      ],
+      "g2Complaints": [
+        "Device management: computers ordered through Rippling IT arrive late or not at all for new employees",
+        "Zero customer service for IT/device product area",
+        "Products available in device catalog are inaccurate",
+        "Expensive relative to point solutions",
+        "Complexity for smaller teams — features built for companies 10x their size"
+      ],
+      "atlasOpportunity": "Rippling is clearly an enterprise play — SMB and mid-market clients find it overwhelming. Atlas can win on simplicity and dedicated support in the mid-market. Rippling's device management is a consistent failure point — avoid competing on IT."
+    },
+    {
+      "name": "Globalization Partners",
+      "recentMoves": [
+        {
+          "date": "2026-02-23",
+          "type": "product-launch",
+          "title": "New G-P Contractor experience — redesigned UX for speed",
+          "detail": "Full redesign of contractor hiring and payment workflows. Faster review and approval process, fewer steps from hire to paid. Phased rollout. Core functionality unchanged but UX rebuilt for lower friction.",
+          "atlasImplication": "GP is investing in contractor UX. If Atlas has clients using both EOR and contractor workflows, GP is improving the contractor experience Atlas doesn't have."
+        },
+        {
+          "date": "2025-09-16",
+          "type": "product-launch",
+          "title": "G-P Gia GA — agentic AI for global HR compliance, now available to everyone",
+          "detail": "G-P Gia launched publicly. Built on 1M+ real-world scenarios, 100K+ legally vetted articles, 1,500+ government sources. Answers compliance questions 10x better than industry standard per GP's benchmarks. Recognized as Top HR Product of 2025 by HR Executive. Thinks like a lawyer, provides G-P Verified Sources for every response.",
+          "atlasImplication": "G-P Gia is the most advanced compliance AI in the category. Atlas clients asking compliance questions are either calling Atlas support or going to Gia directly. This is a retention risk."
+        },
+        {
+          "date": "2025-08-19",
+          "type": "product-launch",
+          "title": "Next-gen AI-powered EOR — serverless, event-driven, agentic AI",
+          "detail": "Rebuilt EOR on serverless architecture. G-P Assist embedded in product for in-workflow compliance guidance. API-first with developer portal for HCM/ERP integration. Real-time compliance engine across 180 countries.",
+          "atlasImplication": "GP's API-first EOR makes it easy to embed into any enterprise stack. Atlas's integration story is weak by comparison — no public API, no developer portal."
+        },
+        {
+          "date": "2026-01-21",
+          "type": "milestone",
+          "title": "Record 2025: highest annual revenue, 30% YoY customer growth",
+          "detail": "GP declared record performance citing AI innovation as primary growth driver. Positioned as 'undisputed leader in global employment' per analyst reports.",
+          "atlasImplication": "GP is growing fast on AI positioning. Companies evaluating global EOR are choosing GP for compliance AI (Gia). Atlas has no equivalent."
+        }
+      ],
+      "g2Complaints": [
+        "Unresolved payment issues lasting 3+ weeks with no ownership or escalation from support",
+        "Platform hard to navigate due to extensive content",
+        "Support responses sometimes brief or incomplete, requiring multiple follow-ups",
+        "Pricing on the higher end and not transparent",
+        "More complex than what smaller businesses need",
+        "Some local services outsourced — compliance checks can slow hiring"
+      ],
+      "atlasOpportunity": "GP's pricing is the highest in the category and is opaque. Atlas can win on pricing transparency and mid-market fit. GP's payment reliability complaints (3+ week unresolved issues) are a direct trust signal Atlas can use in competitive deals."
+    }
+  ],
+  "crossCompetitorThemes": [
+    {
+      "theme": "AI compliance advisor",
+      "status": "All 5 competitors have shipped or are shipping AI compliance/HR advisors",
+      "leaders": ["G-P (Gia — GA, most advanced)", "Deel (AI Workforce agents)", "Oyster (Oyster AI beta)"],
+      "atlasStatus": "None. Zero AI in-product.",
+      "riceScore": null,
+      "urgency": "P1"
+    },
+    {
+      "theme": "Benefits embedded in payroll",
+      "status": "Remote shipped US benefits in payroll April 2026. Oyster has global benefits tools. Deel has benefits via partners.",
+      "leaders": ["Remote (US, just shipped)", "Oyster (global)"],
+      "atlasStatus": "In progress — WFM2-491 (Policies Landing Page) in current cycle. Not on RoadMap2026 label yet.",
+      "riceScore": null,
+      "urgency": "P1"
+    },
+    {
+      "theme": "Workflow automation (no-code)",
+      "status": "Rippling (Workflow Studio), Deel (no-code automation builder shipping), Remote (conditional branching shipped April 2026)",
+      "leaders": ["Rippling (most mature)", "Deel (imminent)"],
+      "atlasStatus": "None.",
+      "riceScore": null,
+      "urgency": "P2"
+    },
+    {
+      "theme": "ATS integrated with HR and payroll",
+      "status": "Rippling and Deel both have full ATS. Remote has Recruit.",
+      "leaders": ["Rippling (most integrated via Employee Graph)", "Deel"],
+      "atlasStatus": "None.",
+      "riceScore": null,
+      "urgency": "P3"
+    },
+    {
+      "theme": "Contractor management",
+      "status": "All 5 have contractor management. GP redesigned theirs Feb 2026.",
+      "leaders": ["Deel (largest contractor base)", "G-P (redesigned UX)"],
+      "atlasStatus": "Unknown — not visible in current cycle work.",
+      "riceScore": null,
+      "urgency": "P2"
+    },
+    {
+      "theme": "ERP/HRIS integrations (ADP, NetSuite, Workday)",
+      "status": "Remote (NetSuite GL sync, Workday), Oyster (ADP, NetSuite, Expensify), Rippling (native to major ERPs)",
+      "leaders": ["Rippling (deepest integration layer)", "Remote"],
+      "atlasStatus": "None visible.",
+      "riceScore": null,
+      "urgency": "P2"
+    },
+    {
+      "theme": "Bulk onboarding",
+      "status": "All competitors have smooth bulk onboarding. Remote has AI-powered smart bulk uploader.",
+      "leaders": ["Remote (AI validation and error flagging)", "Rippling"],
+      "atlasStatus": "WFM1-838 is fixing 7 known bugs in Atlas's bulk onboarding (validation mismatches, submission errors, UI issues). This is a parity fix, not a differentiator.",
+      "riceScore": null,
+      "urgency": "P2"
+    }
+  ],
+  "riceGapAnalysis": [
+    {
+      "id": "gap-001",
+      "title": "In-product AI compliance advisor — answer employment law questions instantly",
+      "competitor": "G-P Gia, Oyster AI, Deel AI",
+      "reach": 2600,
+      "impact": 50,
+      "confidence": 85,
+      "effort": 5,
+      "score": 221,
+      "label": "Validate",
+      "rationale": "Every Atlas client dealing with multi-country employment asks compliance questions. Currently these go to Atlas support or leave the platform entirely. G-P Gia recognized as Top HR Product of 2025. High confidence because this is a proven category, not a hypothesis."
+    },
+    {
+      "id": "gap-002",
+      "title": "Benefits in payroll — employer contributions, enrollment, and deductions in one flow",
+      "competitor": "Remote (just shipped US), Oyster (global)",
+      "reach": 1200,
+      "impact": 60,
+      "confidence": 80,
+      "effort": 7,
+      "score": 137,
+      "label": "Validate",
+      "rationale": "WFM2 is building Benefits Creation & Management (roadmap). Remote shipped US benefits in payroll April 28 — the day we're writing this. The window to differentiate on multi-country benefits is open but closing. Effort is high because benefits calculations + payroll integration is complex."
+    },
+    {
+      "id": "gap-003",
+      "title": "No-code workflow automation — if/then triggers across onboarding, offboarding, payroll",
+      "competitor": "Rippling (Workflow Studio), Deel (coming), Remote (conditional branching shipped)",
+      "reach": 800,
+      "impact": 40,
+      "confidence": 70,
+      "effort": 7,
+      "score": 64,
+      "label": "Monitor",
+      "rationale": "Workflow automation is a retention driver for ops-heavy clients. Rippling's is the most mature. Atlas clients currently do these steps manually or via Atlas support. Medium confidence because Atlas's mid-market clients may not demand this yet."
+    },
+    {
+      "id": "gap-004",
+      "title": "ERP integration layer — NetSuite GL sync, ADP data connector, Workday bi-directional",
+      "competitor": "Remote (NetSuite), Oyster (ADP + NetSuite), Rippling (native)",
+      "reach": 400,
+      "impact": 70,
+      "confidence": 75,
+      "effort": 5,
+      "score": 168,
+      "label": "Validate",
+      "rationale": "Enterprise clients won't replace their ERP. They need Atlas to connect to it. Without ADP or NetSuite integration, Atlas loses deals to Oyster in evaluations. High impact for the segment that has ERPs — lower reach because this is enterprise-only."
+    },
+    {
+      "id": "gap-005",
+      "title": "Contractor management — hire, classify, and pay international contractors compliantly",
+      "competitor": "Deel, Remote, Oyster, G-P (all have this)",
+      "reach": 600,
+      "impact": 50,
+      "confidence": 65,
+      "effort": 7,
+      "score": 93,
+      "label": "Monitor",
+      "rationale": "Atlas clients often have a mix of employees and contractors. If Atlas can't manage contractors, clients use Deel for contractors and Atlas for employees — or switch entirely. Confidence is moderate because we don't know if Atlas's current client base has significant contractor usage."
+    },
+    {
+      "id": "gap-006",
+      "title": "Predictable release cadence with advance notice — monthly schedule, 1-week heads-up",
+      "competitor": "Deel (just launched March 2026)",
+      "reach": 2600,
+      "impact": 25,
+      "confidence": 90,
+      "effort": 0.5,
+      "score": 585,
+      "label": "Strong",
+      "rationale": "Deel is explicitly differentiating on 'no more surprises' for enterprise. Atlas has no release communication process. This is a process change, not a product build. Effort is minimal — write a changelog, send monthly email, create a release calendar. Confidence is high because clients universally want this."
+    },
+    {
+      "id": "gap-007",
+      "title": "Sage/accounting system health dashboard in PostHog — proactive sync failure detection",
+      "competitor": "None — this is Atlas-specific from FNM1-807 root cause",
+      "reach": 300,
+      "impact": 80,
+      "confidence": 90,
+      "effort": 1,
+      "score": 2160,
+      "label": "Ship it",
+      "rationale": "FNM1-807 surfaced a Sage sync failure (invalid customer ID mismatch) discovered via a customer support ticket, not telemetry. The root cause analysis in Linear explicitly proposed a PostHog dashboard for Sage sync health. This is a PROD-quality issue Atlas can fix before competitors even know it's a gap. Extremely high RICE because it prevents reactive PROD fires."
+    }
+  ]
+}

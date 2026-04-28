@@ -20,10 +20,10 @@
         { "linearId": "WFM1-1137", "prNumber": 597, "linearStatus": null, "stale": false, "note": "Not in current cycle — shipped from previous cycle", "hasRoadmapLabel": false }
       ],
       "keyInProgress": [
-        { "id": "WFM1-1158", "title": "Edit flagged field, see and add comments, and submit round back", "assignee": "Joel de Leon", "hasRoadmapLabel": false },
-        { "id": "WFM1-1082", "title": "Capture audit event hooks for all verification actions", "assignee": "Joel de Leon", "hasRoadmapLabel": false },
-        { "id": "WFM1-935", "title": "Build notification orchestration", "assignee": "omarj.contractor", "hasRoadmapLabel": false },
-        { "id": "WFM1-838", "title": "Bulk Onboarding — Bug fixes, API, Switch", "assignee": "Joel de Leon", "hasRoadmapLabel": false }
+        { "id": "WFM1-1158", "title": "Edit flagged field, see and add comments, and submit round back", "assignee": "Joel de Leon", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Joel de Leon" },
+        { "id": "WFM1-1082", "title": "Capture audit event hooks for all verification actions", "assignee": "Chirag Gupta", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Joel de Leon" },
+        { "id": "WFM1-935", "title": "Build notification orchestration", "assignee": "omarj.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Michael Jones" },
+        { "id": "WFM1-838", "title": "Bulk Onboarding — Bug fixes, API, Switch", "assignee": "Joel de Leon", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "Michael Jones" }
       ],
       "signals": [
         {
@@ -46,9 +46,9 @@
         },
         {
           "type": "off-roadmap",
-          "urgency": "P2",
-          "title": "All 4 in-progress tickets are off-roadmap",
-          "detail": "WFM1-1158, WFM1-1082, WFM1-935, WFM1-838 are all In Progress this cycle but none have the RoadMap2026 label. Only WFM1-1112 (merged) is roadmap work. The pod is spending current capacity on non-roadmap items — confirm this is intentional."
+          "urgency": "P3",
+          "title": "WFM1-1158 has no roadmap label and no PM requirements",
+          "detail": "WFM1-1158 was created and self-assigned by Joel de Leon with an empty description. No PM requirements written. The other 3 in-progress items (WFM1-1082, WFM1-935, WFM1-838) all have RoadMap2026 labels and PM-authored specs. Clarify what WFM1-1158 maps to."
         }
       ]
     },
@@ -70,10 +70,10 @@
         { "linearId": "WFM2-666", "prNumber": 600, "linearStatus": "Dev Completed", "stale": false, "hasRoadmapLabel": false }
       ],
       "keyInProgress": [
-        { "id": "WFM2-491", "title": "Policies Landing Page — Table, Search, Filter & Urgency Styling", "assignee": "johnj.contractor", "hasRoadmapLabel": true },
-        { "id": "WFM2-712", "title": "Policies — Database Schema", "assignee": "johnj.contractor", "hasRoadmapLabel": false },
-        { "id": "WFM2-718", "title": "Dev Copy — Country Rules Tab Layout", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false },
-        { "id": "WFM2-722", "title": "Dev Copy — Contribution Splits Collapsable View", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false }
+        { "id": "WFM2-491", "title": "Policies Landing Page — Table, Search, Filter & Urgency Styling", "assignee": "johnj.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "WFM2-712", "title": "Policies — Database Schema", "assignee": "johnj.contractor", "hasRoadmapLabel": false, "origin": "engineering-sub-task", "createdBy": "johnj.contractor" },
+        { "id": "WFM2-718", "title": "Dev Copy — Country Rules Tab Layout", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Uzair Ahmed" },
+        { "id": "WFM2-722", "title": "Dev Copy — Contribution Splits Collapsable View", "assignee": "Uzair Ahmed", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Uzair Ahmed" }
       ],
       "signals": [
         {
@@ -120,11 +120,11 @@
         { "linearId": "PAY-1405", "prNumber": 598, "linearStatus": "Dev Completed", "stale": false, "hasRoadmapLabel": false }
       ],
       "keyInProgress": [
-        { "id": "PAY-1088", "title": "MFA — Configurable OTP Method Selection (Story)", "assignee": "henriquev", "hasRoadmapLabel": true },
-        { "id": "PAY-1090", "title": "FE — OTP Verification Screen", "assignee": "henriquev", "hasRoadmapLabel": true },
-        { "id": "PAY-1089", "title": "FE — MFA Method Selection Screen", "assignee": "henriquev", "hasRoadmapLabel": true },
-        { "id": "PAY-271", "title": "Customer Service — Mongo to SQL Migration (Top Story)", "assignee": "Lin Yu Han", "hasRoadmapLabel": true },
-        { "id": "PAY-911", "title": "PROD — Enable Step 2 SQL-only", "assignee": "alexandrom.contractor", "hasRoadmapLabel": true }
+        { "id": "PAY-1088", "title": "MFA — Configurable OTP Method Selection (Story)", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "PAY-1090", "title": "FE — OTP Verification Screen", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "PAY-1089", "title": "FE — MFA Method Selection Screen", "assignee": "henriquev", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "PAY-271", "title": "Customer Service — Mongo to SQL Migration (Top Story)", "assignee": "Lin Yu Han", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "PAY-911", "title": "PROD — Enable Step 2 SQL-only", "assignee": "alexandrom.contractor", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
       ],
       "signals": [
         {
@@ -172,10 +172,10 @@
         { "linearId": "FNM1-653", "prNumber": 215, "linearStatus": "In Review", "stale": true, "hasRoadmapLabel": false }
       ],
       "keyInProgress": [
-        { "id": "FNM1-815", "title": "PROD: Sage sync — Megagen Implantt (Customer 10437) invoice export blocked", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false },
-        { "id": "FNM1-807", "title": "Invoice export to Sage fails with invalid customer ID", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false },
-        { "id": "FNM1-830", "title": "Virtual Expense Cards hosted in Payroll Service", "assignee": "Raul Grimaldi", "hasRoadmapLabel": false },
-        { "id": "FNM1-760", "title": "Submit for Disbursement Flow — Review Payments Tab", "assignee": "Jasmine Kaur", "hasRoadmapLabel": true }
+        { "id": "FNM1-815", "title": "PROD: Sage sync — Megagen Implantt (Customer 10437) invoice export blocked", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false, "origin": "pm-escalated", "createdBy": "Moiz Mujtaba" },
+        { "id": "FNM1-807", "title": "Invoice export to Sage fails with invalid customer ID", "assignee": "Ernesto de Loayza", "isProdBlocker": true, "hasRoadmapLabel": false, "origin": "pm-escalated", "createdBy": "Moiz Mujtaba" },
+        { "id": "FNM1-830", "title": "Virtual Expense Cards hosted in Payroll Service", "assignee": "Raul Grimaldi", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Raul Grimaldi" },
+        { "id": "FNM1-760", "title": "Submit for Disbursement Flow — Review Payments Tab", "assignee": "Jasmine Kaur", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
       ],
       "signals": [
         {
@@ -222,9 +222,9 @@
         { "linearId": "FNM2-778", "prNumber": 109, "linearStatus": null, "stale": false, "note": "GTN buttons — not in current cycle 16", "hasRoadmapLabel": false }
       ],
       "keyInProgress": [
-        { "id": "FNM2-983", "title": "Deploy GTN Acceleration to PROD (subset test)", "assignee": "Marcelo Mallmann", "hasRoadmapLabel": false },
-        { "id": "FNM2-855", "title": "Create Setting By Pay Group to Control GTN Processing", "assignee": "Jose Morales", "hasRoadmapLabel": true },
-        { "id": "FNM2-956", "title": "Evaluate ITOS API vs Atlas Payroll Input File — Gap Analysis", "assignee": "Tom Jegou", "hasRoadmapLabel": true }
+        { "id": "FNM2-983", "title": "Deploy GTN Acceleration to PROD (subset test)", "assignee": "Marcelo Mallmann", "hasRoadmapLabel": false, "origin": "engineering-initiated", "createdBy": "Marcelo Mallmann" },
+        { "id": "FNM2-855", "title": "Create Setting By Pay Group to Control GTN Processing", "assignee": "Jose Morales", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" },
+        { "id": "FNM2-956", "title": "Evaluate ITOS API vs Atlas Payroll Input File — Gap Analysis", "assignee": "Tom Jegou", "hasRoadmapLabel": true, "origin": "pm-scoped", "createdBy": "PM" }
       ],
       "signals": [
         {
@@ -277,9 +277,9 @@
       "affectedPods": ["WFM 1", "PAY", "FNM 1"]
     },
     {
-      "urgency": "P1",
-      "title": "Off-roadmap work is consuming 60%+ of active capacity across pods",
-      "detail": "WFM 1: 4/4 in-progress off-roadmap. WFM 2: 3/4 off-roadmap. FNM 1: 3/4 off-roadmap (2 are PROD blockers). FNM 2: primary delivery (FNM2-983) off-roadmap. Only PAY has all key in-progress items on the 2026 roadmap. Confirm whether this unplanned work represents intentional exceptions or roadmap drift.",
+      "urgency": "P2",
+      "title": "5 of 16 active tickets are off-roadmap — 3 engineering-initiated, 2 PM-escalated PROD fires",
+      "detail": "Off-roadmap breakdown: WFM1-1158 (engineer self-created, empty description), WFM2-718 and WFM2-722 (engineer self-created sub-tasks, no PM), FNM1-830 (engineer architecture ADR, no PM), FNM2-983 (engineer self-created PROD deployment, no PM requirements). FNM1-815 and FNM1-807 are PM-escalated from Zendesk — reactive but product-directed. PAY is 100% roadmap. WFM1 is 75% roadmap (3 of 4 have RoadMap2026 + PM specs).",
       "affectedPods": ["WFM 1", "WFM 2", "FNM 1", "FNM 2"]
     },
     {
@@ -301,7 +301,7 @@
     "mappedToLinear": 8,
     "unmapped": 3,
     "staleTickets": 5,
-    "offRoadmapInProgress": 11,
+    "offRoadmapInProgress": 5,
     "totalInProgress": 16,
     "p1Signals": 5,
     "p2Signals": 9,
