@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { translatePRDiff } from "@/lib/claude"
+import { getLinearContext, getPostHogContext } from "@/lib/linear-context"
+import { getWeeklyEvents } from "@/lib/atom-data"
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
 
@@ -83,6 +85,10 @@ export async function GET(req: NextRequest) {
     allComments
   )
 
+  const linearContext = getLinearContext(pr.title)
+  const weeklyEvents = getWeeklyEvents()
+  const posthogContext = getPostHogContext(linearContext.pod, weeklyEvents)
+
   return NextResponse.json({
     pr: {
       number: pr.number,
@@ -105,5 +111,7 @@ export async function GET(req: NextRequest) {
     comments: diffComments,
     ciChecks: ciSummary,
     translation,
+    linearContext,
+    posthogContext,
   })
 }

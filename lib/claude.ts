@@ -102,34 +102,41 @@ Return only valid JSON, no markdown.`
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 700,
+    max_tokens: 1024,
     messages: [{ role: "user", content: prompt }],
   })
 
-  const text = message.content[0].type === "text" ? message.content[0].text : "{}"
+  const raw = message.content[0].type === "text" ? message.content[0].text : "{}"
+
+  // Strip markdown fences if present, then extract the first {...} block
+  const stripped = raw.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim()
+  const jsonMatch = stripped.match(/\{[\s\S]*\}/)
+  const text = jsonMatch ? jsonMatch[0] : stripped
+
   try {
     return JSON.parse(text)
   } catch {
     return {
-      signalType: "infrastructure",
-      userImpact: "Could not parse translation.",
+      signalType: "infrastructure" as const,
+      userImpact: "Translation parse failed — Claude response was not valid JSON.",
       targetPersona: "Unknown",
       podConfirmed: "Unknown",
       migrationSignal: false,
       frictionFixed: null,
       newCapability: null,
-      productionRisk: "low",
-      productionRiskReason: "Parse error",
+      productionRisk: "low" as const,
+      productionRiskReason: "Parse error — raw response saved for debug",
       reviewerRisks: [],
       instrumentationGap: false,
       nextOpportunity: null,
       watchItems: [],
-      urgencyTier: "P3",
-      recommendedAction: "Review this PR manually — translation failed.",
-      outcomeType: "efficiency",
-      ignoreCost: "Unknown — translation failed.",
-      legacyImpact: "neutral",
-    }
+      urgencyTier: "P3" as const,
+      recommendedAction: "Review this PR manually — Claude returned malformed JSON. Check token limits or retry.",
+      outcomeType: "efficiency" as const,
+      ignoreCost: "Unknown until manual review.",
+      legacyImpact: "neutral" as const,
+      _rawResponse: raw.slice(0, 500),
+    } as AtomTranslation & { _rawResponse?: string }
   }
 }
 
