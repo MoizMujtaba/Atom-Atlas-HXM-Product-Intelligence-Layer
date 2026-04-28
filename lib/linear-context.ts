@@ -23,7 +23,7 @@ interface CyclePod {
   completionPct: number
   slipRisk: "high" | "medium" | "low"
   slipRiskReason?: string
-  mergedPRsThisWeek: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean }[]
+  mergedPRsThisWeek: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean; hasRoadmapLabel?: boolean }[]
   keyInProgress: LinearIssue[]
   signals: CycleSignal[]
 }
@@ -62,7 +62,7 @@ export function podFromLinearId(id: string): string {
 export interface PRLinearContext {
   linearId: string | null
   pod: string
-  matchedIssue: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean } | null
+  matchedIssue: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean; hasRoadmapLabel?: boolean } | null
   cycleNumber: number | null
   cycleEnds: string | null
   completionPct: number | null
@@ -142,6 +142,17 @@ export function getLinearContext(prTitle: string): PRLinearContext {
 
   const matchedIssue = podCycle.mergedPRsThisWeek.find(m => m.linearId === linearId) || null
 
+  const isRoadmap = matchedIssue?.hasRoadmapLabel === true
+
+  let roadmapNote: string
+  if (!matchedIssue) {
+    roadmapNote = `${linearId} was not found in ${pod} cycle ${podCycle.cycleNumber}'s merged PR list. It may belong to a previous cycle.`
+  } else if (isRoadmap) {
+    roadmapNote = `${linearId} is on the 2026 Roadmap.${matchedIssue.stale ? ` PR is merged but Linear still shows "${matchedIssue.linearStatus}" — close the ticket.` : " Status matches."}`
+  } else {
+    roadmapNote = `${linearId} is NOT on the 2026 Roadmap (RoadMap2026 label missing). This PR is off-roadmap work — confirm this was intentional and not roadmap drift.`
+  }
+
   return {
     linearId,
     pod,
@@ -153,10 +164,8 @@ export function getLinearContext(prTitle: string): PRLinearContext {
     slipRiskReason: podCycle.slipRiskReason || null,
     relatedInFlight: podCycle.keyInProgress,
     cycleSignals: podCycle.signals,
-    linkedToRoadmap: matchedIssue !== null,
-    roadmapNote: matchedIssue
-      ? `${linearId} is tracked in ${pod} cycle ${podCycle.cycleNumber}${matchedIssue.stale ? " — PR is merged but Linear ticket still shows \"" + matchedIssue.linearStatus + "\". Close the ticket." : " — status matches."}`
-      : `${linearId} was not found in ${pod} cycle ${podCycle.cycleNumber}'s merged PR list. It may belong to a previous cycle.`,
+    linkedToRoadmap: isRoadmap,
+    roadmapNote,
   }
 }
 

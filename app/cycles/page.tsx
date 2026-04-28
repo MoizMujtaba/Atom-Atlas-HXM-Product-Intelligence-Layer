@@ -25,8 +25,8 @@ interface CyclePod {
   completionPct: number
   slipRisk: "high" | "medium" | "low"
   slipRiskReason?: string
-  mergedPRsThisWeek: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean; note?: string }[]
-  keyInProgress: { id: string; title: string; assignee: string; isProdBlocker?: boolean }[]
+  mergedPRsThisWeek: { linearId: string; prNumber: number; linearStatus: string | null; stale: boolean; note?: string; hasRoadmapLabel?: boolean }[]
+  keyInProgress: { id: string; title: string; assignee: string; isProdBlocker?: boolean; hasRoadmapLabel?: boolean }[]
   signals: CycleSignal[]
 }
 
@@ -47,6 +47,8 @@ interface LinearCycles {
     mappedToLinear: number
     unmapped: number
     staleTickets: number
+    offRoadmapInProgress?: number
+    totalInProgress?: number
     p1Signals: number
     p2Signals: number
     p3Signals: number
@@ -122,7 +124,7 @@ export default function CyclesPage() {
         {[
           { label: "Pods tracked", value: pods.length },
           { label: "PRs mapped to cycle", value: `${plannedVsShipped.mappedToLinear}/${plannedVsShipped.totalMergedPRs}` },
-          { label: "Stale Linear tickets", value: plannedVsShipped.staleTickets, alert: true },
+          { label: "Off-roadmap in-progress", value: plannedVsShipped.offRoadmapInProgress != null ? `${plannedVsShipped.offRoadmapInProgress}/${plannedVsShipped.totalInProgress}` : "—", alert: (plannedVsShipped.offRoadmapInProgress ?? 0) > 0 },
           { label: "P1 signals this cycle", value: plannedVsShipped.p1Signals, alert: plannedVsShipped.p1Signals > 0 },
         ].map((m) => (
           <div key={m.label} className={`rounded-xl border px-4 py-4 ${m.alert ? "border-red-200 bg-red-50" : "border-gray-200 bg-white"}`}>
@@ -169,6 +171,8 @@ export default function CyclesPage() {
           const mergedPRsThisWeek = pod.mergedPRsThisWeek || []
           const p1Signals = signals.filter(s => s.urgency === "P1")
           const otherSignals = signals.filter(s => s.urgency !== "P1")
+          const offRoadmapInProgress = keyInProgress.filter(i => i.hasRoadmapLabel === false).length
+          const offRoadmapMerged = mergedPRsThisWeek.filter(p => p.hasRoadmapLabel === false).length
           const daysLeft = Math.ceil((new Date(pod.cycleEnds).getTime() - Date.now()) / 86400000)
 
           return (
@@ -183,8 +187,11 @@ export default function CyclesPage() {
                       {p1Signals.length > 0 && (
                         <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded font-bold">{p1Signals.length} P1</span>
                       )}
+                      {offRoadmapInProgress > 0 && (
+                        <span className="text-xs bg-amber-500 text-white px-1.5 py-0.5 rounded font-medium">{offRoadmapInProgress} off-roadmap</span>
+                      )}
                     </div>
-                    <div className="flex gap-3 mt-2 text-xs text-gray-500">
+                    <div className="flex gap-3 mt-2 text-xs text-gray-500 flex-wrap">
                       <span className="text-green-600 font-medium">{pod.completedIssues} done</span>
                       <span>{pod.devCompleted} dev complete</span>
                       <span>{pod.inReview} in review</span>
@@ -192,6 +199,9 @@ export default function CyclesPage() {
                       <span>{pod.todo} todo</span>
                       <span>·</span>
                       <span>{pod.totalIssues} total</span>
+                      {(offRoadmapInProgress > 0 || offRoadmapMerged > 0) && (
+                        <span className="text-amber-600 font-medium">· {offRoadmapInProgress + offRoadmapMerged} off-roadmap</span>
+                      )}
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
@@ -234,8 +244,16 @@ export default function CyclesPage() {
                           <div key={item.id} className={`rounded-lg px-3 py-2 text-sm ${item.isProdBlocker ? "bg-red-50 border border-red-200" : "bg-gray-50 border border-gray-200"}`}>
                             <div className="flex items-start gap-1.5">
                               {item.isProdBlocker && <span className="text-red-500 text-xs shrink-0 mt-0.5">PROD</span>}
-                              <div>
-                                <span className="font-mono text-xs text-gray-400">{item.id}</span>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="font-mono text-xs text-gray-400">{item.id}</span>
+                                  {item.hasRoadmapLabel === false && (
+                                    <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1 py-0 rounded font-medium leading-4">off-roadmap</span>
+                                  )}
+                                  {item.hasRoadmapLabel === true && (
+                                    <span className="text-xs bg-green-100 text-green-700 border border-green-200 px-1 py-0 rounded font-medium leading-4">2026</span>
+                                  )}
+                                </div>
                                 <p className={`text-xs mt-0.5 leading-snug ${item.isProdBlocker ? "text-red-800 font-medium" : "text-gray-700"}`}>{item.title}</p>
                                 <p className="text-xs text-gray-400 mt-0.5">{item.assignee}</p>
                               </div>
@@ -255,16 +273,22 @@ export default function CyclesPage() {
                       <div className="space-y-1.5">
                         {mergedPRsThisWeek.map((pr, i) => (
                           <div key={i} className={`rounded-lg px-3 py-2 text-sm border ${pr.stale ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <a href={`/pr/${pod.pod === "PAY" || pod.pod === "WFM 1" || pod.pod === "WFM 2" ? "Atlas-Webapp" : pod.pod === "FNM 1" ? "Payments-Backend" : "Atlas-Frontend"}/${pr.prNumber}`}
                                 className="font-mono text-xs text-blue-600 hover:underline">
                                 #{pr.prNumber}
                               </a>
                               <span className="font-mono text-xs text-gray-700">{pr.linearId}</span>
+                              {pr.hasRoadmapLabel === true && (
+                                <span className="text-xs bg-green-100 text-green-700 border border-green-200 px-1 rounded font-medium">2026</span>
+                              )}
+                              {pr.hasRoadmapLabel === false && (
+                                <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1 rounded font-medium">off-roadmap</span>
+                              )}
                               {pr.stale ? (
                                 <span className="text-xs text-amber-700 font-medium">Linear still &quot;{pr.linearStatus}&quot; — close ticket</span>
                               ) : (
-                                <span className="text-xs text-green-700">✓ {pr.linearStatus}</span>
+                                <span className="text-xs text-green-700">✓ {pr.linearStatus || "no status"}</span>
                               )}
                             </div>
                             {pr.note && <p className="text-xs text-gray-400 mt-0.5">{pr.note}</p>}
