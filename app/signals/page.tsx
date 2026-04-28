@@ -2,7 +2,7 @@ import { getMergedPRs, getWeeklyEvents, getRegressions, getInstrumentationGaps, 
 import { loadHypotheses } from "@/lib/rice"
 import { wowTrend, wowColor } from "@/lib/utils"
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-static"
 
 const POD_EVENTS: Record<string, string[]> = {
   "WFM 1": ["employee_task_clicked", "employee_task_saved", "employee_submitted", "employee_created"],

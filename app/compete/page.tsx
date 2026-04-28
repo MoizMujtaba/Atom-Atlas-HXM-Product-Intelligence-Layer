@@ -1,6 +1,6 @@
 import { getCompetitorIntel } from "@/lib/atom-data"
 
-export const revalidate = 3600
+export const dynamic = "force-static"
 
 const URGENCY_COLOR: Record<string, string> = {
   critical: "bg-red-100 text-red-700",

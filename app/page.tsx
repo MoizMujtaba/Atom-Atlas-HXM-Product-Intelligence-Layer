@@ -1,7 +1,7 @@
 import { getExecMetrics, getWeeklyEvents, getMergedPRs, getLinearCycles, getCompetitorIntel } from "@/lib/atom-data"
 import { wowTrend, wowColor } from "@/lib/utils"
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-static"
 
 function Bar({ pct, color }: { pct: number; color: string }) {
   return (

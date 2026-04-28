@@ -2,7 +2,7 @@ import { loadHypotheses } from "@/lib/rice"
 import { calcRICE, riceLabel } from "@/lib/utils"
 import RiceForm from "@/components/rice-form"
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-static"
 
 const STATUS_COLORS: Record<string, string> = {
   active: "bg-blue-100 text-blue-700",
