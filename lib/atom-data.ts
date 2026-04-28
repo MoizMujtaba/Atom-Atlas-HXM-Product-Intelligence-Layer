@@ -128,6 +128,71 @@ export function getRegressions(threshold = 20): RegressionSignal[] {
   return regressions.sort((a, b) => b.dropPct - a.dropPct)
 }
 
+export interface CycleIssue {
+  id: string
+  title: string
+  assignee: string
+  isProdBlocker?: boolean
+  hasRoadmapLabel?: boolean
+  origin?: string
+  createdBy?: string
+}
+
+export interface CyclePodData {
+  pod: string
+  cycleNumber: number
+  cycleEnds: string
+  completionPct: number
+  slipRisk: "high" | "medium" | "low"
+  slipRiskReason?: string
+  keyInProgress: CycleIssue[]
+  mergedPRsThisWeek: { linearId: string; prNumber: number; hasRoadmapLabel?: boolean }[]
+  signals: { type: string; urgency: "P1" | "P2" | "P3"; title: string; detail: string }[]
+}
+
+export interface LinearCyclesData {
+  generatedAt: string
+  pods: CyclePodData[]
+  crossPodSignals: { urgency: string; title: string; detail: string; affectedPods: string[] }[]
+  plannedVsShipped: {
+    totalMergedPRs: number
+    offRoadmapInProgress?: number
+    totalInProgress?: number
+    p1Signals: number
+    staleTickets: number
+  }
+}
+
+export function getLinearCycles(): LinearCyclesData | null {
+  return read<LinearCyclesData | null>("linear-cycles.json", null)
+}
+
+export interface CompetitorMove {
+  date: string
+  type: string
+  title: string
+  detail: string
+  atlasImplication: string
+}
+
+export interface CompetitorData {
+  name: string
+  recentMoves: CompetitorMove[]
+  g2Complaints: string[]
+  atlasOpportunity: string
+}
+
+export interface CompetitorIntel {
+  generatedAt: string
+  competitors: CompetitorData[]
+  crossCompetitorThemes: { theme: string; status: string; atlasStatus: string; urgency: string }[]
+  riceGapAnalysis: { id: string; title: string; competitor: string; score: number; label: string; rationale: string }[]
+}
+
+export function getCompetitorIntel(): CompetitorIntel | null {
+  return read<CompetitorIntel | null>("competitor-intel.json", null)
+}
+
 export function getInstrumentationGaps(): InstrumentationGap[] {
   const prs = getMergedPRs()
   const gaps: InstrumentationGap[] = []
