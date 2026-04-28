@@ -6,21 +6,21 @@
 
 ## The problem
 
-Atlas HXM's CPO and PMs operate across 6 product pods, 4 GitHub repos, multiple Linear cycles, and PostHog event streams. The information exists — but it's fragmented across tools and in a format that requires engineering context to interpret.
+Atlas HXM operates across 6 product pods, 4 GitHub repos, multiple Linear cycles, and PostHog event streams. The information needed to make good decisions exists — but it's fragmented across tools and requires significant manual effort to correlate.
 
 Today:
-- A PR merges. A PM has no idea what it changed, who it affects, or whether it broke something.
-- A PostHog event drops 40% week-over-week. No one knows if it's a regression or expected behavior.
-- A sprint ends. Half the tickets are "off-roadmap" reactive work. No one caught it until planning.
-- A feature ships. There are zero PostHog events. Adoption is invisible.
+- A PR merges. Its user impact and production risk aren't visible until someone reads the diff.
+- A PostHog event drops 40% week-over-week. It's unclear if it's a regression, a data issue, or expected behavior from a recent change.
+- A cycle ends. Work that wasn't on the original roadmap gets surfaced in retrospect rather than in real time.
+- A feature ships. There are no PostHog events. Whether it's being adopted — or working at all — is unknown.
 
-The result: PMs make prioritization decisions without the signal. Engineers make architectural calls without PM context. The gap between "what we shipped" and "what it means for users" grows every sprint.
+The result: decisions get made with incomplete information on all sides. The gap between "what shipped" and "what it means for the product and users" compounds over time.
 
 ---
 
 ## What Atom does
 
-Atom is a product intelligence layer that closes this gap. It reads GitHub, PostHog, and Linear — and translates raw engineering activity into decisions.
+Atom is a product intelligence layer that closes this gap. It reads GitHub, PostHog, and Linear — and translates raw engineering activity into shared context for the whole team.
 
 Every signal Atom surfaces answers four questions:
 1. **What happened?** (in plain language, not diff syntax)
@@ -28,7 +28,7 @@ Every signal Atom surfaces answers four questions:
 3. **What is the risk if we ignore it?** (explicit ignore cost, 2-week horizon)
 4. **What should we do right now?** (one verb-first recommended action)
 
-Atom also tells you when work is off the 2026 roadmap, when a feature shipped with zero observability, and when a cycle is slipping before the sprint review.
+Atom also surfaces when work falls outside the 2026 roadmap (so the team can make an informed call on whether it's intentional), when a feature shipped with zero PostHog observability, and when a cycle is slipping before the sprint review.
 
 ---
 
@@ -84,12 +84,12 @@ Atom writes static JSON. The Vercel app reads them — no PostHog or Linear API 
 
 ## Roadmap alignment
 
-Linear issues with the `RoadMap2026` label are considered roadmap work. Every in-progress ticket and merged PR in the Cycles view is tagged:
+Linear issues with the `RoadMap2026` label are considered roadmap work. Every in-progress ticket and merged PR in the Cycles view is tagged to give the team a shared view of planned vs reactive work:
 
-- **`2026`** (green) — has the RoadMap2026 label, planned work
-- **`off-roadmap`** (amber) — no label, unplanned or reactive work
+- **`2026`** (green) — has the RoadMap2026 label, planned roadmap work
+- **`off-roadmap`** (amber) — no label; may be reactive, a PROD fire, an engineering architecture decision, or work that needs a label added
 
-The PR detail page shows a prominent roadmap note for every PR with a detected Linear ID. Cross-pod signals fire when off-roadmap work exceeds a threshold across multiple pods (currently 11/16 active tickets are off-roadmap).
+The intent is not to penalise unplanned work — PROD blockers, customer escalations, and engineering improvements are often the right call. The goal is to make the split visible so leadership can have an informed conversation about trade-offs, rather than discovering the picture at sprint review.
 
 ---
 
