@@ -379,11 +379,12 @@ export default async function PRPage({
               </div>
               <div className="mt-3 rounded-lg bg-gray-900 text-gray-100 px-4 py-3 text-xs space-y-1">
                 <p className="font-semibold text-white">RICE: Instrument {linearContext?.pod} flows</p>
-                <p><span className="text-gray-400">Reach:</span> 2,600+ WSEs — entire payments/THP flow is dark</p>
-                <p><span className="text-gray-400">Impact:</span> 3 — cannot detect regressions, validate shipped features, or quantify adoption</p>
-                <p><span className="text-gray-400">Confidence:</span> 90% — 0 events tracked + payment page exceptions confirm the blindspot</p>
-                <p><span className="text-gray-400">Effort:</span> 1 sprint — add PostHog client calls to existing view renders and submit handlers</p>
-                <p className="mt-2 text-green-400 font-semibold">Score ≈ 7,020 — highest-leverage untracked work in {linearContext?.pod}</p>
+                <p className="text-gray-400 text-xs mb-1">Score = (Reach × Impact% × Confidence%) ÷ Effort (person-weeks)</p>
+                <p><span className="text-gray-400">Reach:</span> 2,600 WSEs</p>
+                <p><span className="text-gray-400">Impact:</span> 40% — significant: every shipped feature in this pod is unvalidatable without tracking</p>
+                <p><span className="text-gray-400">Confidence:</span> 90% — zero events confirmed in PostHog + payment page exceptions corroborate</p>
+                <p><span className="text-gray-400">Effort:</span> 2.0 person-weeks — add PostHog calls to existing view renders and submit handlers</p>
+                <p className="mt-2 text-green-400 font-semibold">Score = (2,600 × 0.40 × 0.90) ÷ 2.0 = <span className="text-white">468</span> — highest-leverage untracked work in {linearContext?.pod}</p>
               </div>
             </div>
           )}
