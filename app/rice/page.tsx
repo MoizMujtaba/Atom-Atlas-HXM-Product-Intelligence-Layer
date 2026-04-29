@@ -45,17 +45,17 @@ export default async function RicePage() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-gray-200 overflow-hidden bg-white">
+      <div className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50">
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Hypothesis</th>
+              <th className="text-left px-4 py-3 text-gray-500 font-medium w-1/3">Hypothesis</th>
               <th className="text-left px-4 py-3 text-gray-500 font-medium">Pod</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Type</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">R</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">I%</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">C%</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">÷E</th>
+              <th className="text-left px-4 py-3 text-gray-500 font-medium hidden md:table-cell">Type</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium hidden lg:table-cell">R</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium hidden lg:table-cell">I%</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium hidden lg:table-cell">C%</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium hidden lg:table-cell">÷E</th>
               <th className="text-right px-4 py-3 text-gray-500 font-medium">Score</th>
               <th className="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
             </tr>
@@ -71,21 +71,26 @@ export default async function RicePage() {
                 .replace("text-orange-400", "text-orange-500")
                 .replace("text-zinc-500", "text-gray-400")
               return (
-                <tr key={h.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 max-w-xs">
-                    <p className="text-gray-900 leading-snug">{h.title}</p>
+                <tr key={h.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-4 max-w-xs">
+                    <p className="text-gray-900 font-medium leading-snug">{h.title}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{h.source}</p>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-4">
                     <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-medium">{h.pod}</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{TYPE_LABELS[h.signalType]}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.reach.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.impact}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">{h.confidence}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-gray-700">÷{h.effort}</td>
-                  <td className={`px-4 py-3 text-right font-bold tabular-nums ${lightColor}`}>{score}</td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-4 text-gray-500 text-xs hidden md:table-cell">{TYPE_LABELS[h.signalType]}</td>
+                  <td className="px-4 py-4 text-right tabular-nums text-gray-700 hidden lg:table-cell">{h.reach.toLocaleString()}</td>
+                  <td className="px-4 py-4 text-right tabular-nums text-gray-700 hidden lg:table-cell">{h.impact}%</td>
+                  <td className="px-4 py-4 text-right tabular-nums text-gray-700 hidden lg:table-cell">{h.confidence}%</td>
+                  <td className="px-4 py-4 text-right tabular-nums text-gray-700 hidden lg:table-cell">÷{h.effort}</td>
+                  <td className="px-4 py-4 text-right">
+                    <div className="flex flex-col items-end gap-0.5">
+                      <span className={`text-2xl font-black tabular-nums leading-none ${lightColor}`}>{score}</span>
+                      <span className={`text-xs font-semibold ${lightColor} opacity-75`}>{label}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-center">
                     <span className={`text-xs px-2 py-0.5 rounded font-medium ${STATUS_COLORS[h.status]}`}>
                       {h.status}
                     </span>
@@ -97,7 +102,7 @@ export default async function RicePage() {
         </table>
       </div>
 
-      <section className="rounded-xl border border-gray-200 bg-white p-5">
+      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         <h2 className="font-semibold text-gray-900 mb-4">Add Hypothesis</h2>
         <RiceForm />
       </section>

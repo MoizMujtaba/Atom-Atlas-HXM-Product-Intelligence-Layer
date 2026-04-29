@@ -62,11 +62,11 @@ export default async function BriefPage() {
             )}
           </div>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-900 leading-snug">{brief.headline}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 leading-tight mt-2">{brief.headline}</h1>
         <p className="text-gray-600 mt-3 text-base leading-relaxed">{brief.summary}</p>
       </div>
 
-      <div className={`rounded-xl border p-4 flex items-start gap-4 ${signal.bg}`}>
+      <div className={`rounded-xl border p-4 flex items-start gap-4 shadow-sm ${signal.bg}`}>
         <div className={`w-4 h-4 rounded-full shrink-0 mt-0.5 ${signal.dot}`} />
         <div>
           <p className={`text-sm font-semibold ${signal.text}`}>{brief.execSignal}</p>
@@ -98,12 +98,12 @@ export default async function BriefPage() {
           </h2>
           <div className="space-y-2">
             {brief.regressions.map((r: { event: string; drop: number; hypothesis: string }, i: number) => (
-              <div key={i} className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+              <div key={i} className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 shadow-sm">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-mono text-red-800">{r.event}</span>
-                  <span className="text-sm font-semibold text-red-700">-{r.drop}%</span>
+                  <code className="text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-mono">{r.event}</code>
+                  <span className="text-sm font-bold text-red-700">−{r.drop}%</span>
                 </div>
-                <p className="text-sm text-red-700">{r.hypothesis}</p>
+                <p className="text-sm text-red-700 mt-1">{r.hypothesis}</p>
               </div>
             ))}
           </div>
@@ -138,10 +138,10 @@ export default async function BriefPage() {
             <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
             Shipped Blind
           </h2>
-          <div className="rounded-xl border border-gray-200 bg-white divide-y divide-gray-100 overflow-hidden">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 divide-y divide-amber-100 overflow-hidden shadow-sm">
             {brief.instrumentationGaps.map((gap: string, i: number) => (
-              <div key={i} className="px-4 py-3 text-sm text-gray-700 flex gap-2 items-start">
-                <span className="text-amber-400 shrink-0">o</span>
+              <div key={i} className="px-4 py-3 text-sm text-amber-800 flex gap-2 items-start">
+                <span className="text-amber-400 shrink-0 mt-0.5">◎</span>
                 <span>{gap}</span>
               </div>
             ))}

@@ -71,7 +71,7 @@ const URGENCY_STYLES = {
 }
 
 const SLIP_STYLES = {
-  high: "bg-red-100 text-red-700 border-red-200",
+  high: "bg-red-100 text-red-700 border-red-400 border-2",
   medium: "bg-amber-100 text-amber-700 border-amber-200",
   low: "bg-green-100 text-green-700 border-green-200",
 }
@@ -176,7 +176,7 @@ export default function CyclesPage() {
           const daysLeft = Math.ceil((new Date(pod.cycleEnds).getTime() - Date.now()) / 86400000)
 
           return (
-            <div key={pod.pod} className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div key={pod.pod} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
               {/* Pod header */}
               <div className="px-5 py-4 bg-gray-50 border-b border-gray-200">
                 <div className="flex items-start justify-between gap-4">

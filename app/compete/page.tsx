@@ -84,7 +84,7 @@ export default function CompetePage() {
       {/* Competitor cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         {intel.competitors.map((c) => (
-          <div key={c.name} className="rounded-xl border border-gray-200 bg-white overflow-hidden flex flex-col">
+          <div key={c.name} className="rounded-xl border border-gray-200 bg-white overflow-hidden flex flex-col shadow-sm">
             <div className="px-5 py-4 bg-gray-50 border-b border-gray-200">
               <h2 className="font-semibold text-gray-900">{c.name}</h2>
               <p className="text-xs text-gray-500 mt-1 italic leading-relaxed">{c.atlasOpportunity}</p>

@@ -47,69 +47,78 @@ function ageColor(mergedAt: string, tier: string): string {
   return "text-gray-400"
 }
 
+const TIER_LEFT_BORDER = {
+  P1: "border-l-4 border-l-red-500",
+  P2: "border-l-4 border-l-amber-400",
+  P3: "border-l-4 border-l-gray-200",
+}
+
 function PRCard({ pr }: { pr: AtomPR }) {
   const t = pr.translation
-  const tier = t.urgencyTier || "P3"
-  const { badge, row } = URGENCY_STYLES[tier as keyof typeof URGENCY_STYLES]
+  const tier = (t.urgencyTier || "P3") as "P1" | "P2" | "P3"
+  const { badge, row } = URGENCY_STYLES[tier]
   const age = signalAge(pr.mergedAt)
   const ageStyle = ageColor(pr.mergedAt, tier)
 
   return (
-    <div className={`rounded-lg border px-4 py-3 ${row}`}>
-      <div className="flex items-start gap-2">
-        <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${badge}`}>{tier}</span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <a href={`/pr/${pr.repo}/${pr.number}`} className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium leading-snug">
-              {pr.title}
-            </a>
-            <div className="flex items-center gap-2 shrink-0 text-xs">
-              <span className={ageStyle}>{age}</span>
-              <span className="text-gray-300">·</span>
-              <span className="text-gray-400">{pr.team}</span>
+    <div className={`rounded-lg border bg-white shadow-sm overflow-hidden ${TIER_LEFT_BORDER[tier]}`}>
+      <div className={`px-4 py-3 ${row}`}>
+        <div className="flex items-start gap-2">
+          <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${badge}`}>{tier}</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <a href={`/pr/${pr.repo}/${pr.number}`} className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium leading-snug transition-colors">
+                {pr.title}
+              </a>
+              <div className="flex items-center gap-2 shrink-0 text-xs">
+                <span className={ageStyle}>{age}</span>
+                <span className="text-gray-300">·</span>
+                <span className="text-gray-400">{pr.team}</span>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-1.5 flex-wrap mt-1">
-            {t.outcomeType && (
-              <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${OUTCOME_BADGE[t.outcomeType] || "bg-gray-100 text-gray-600"}`}>
-                {t.outcomeType}
-              </span>
-            )}
-            {t.legacyImpact && t.legacyImpact !== "neutral" && (
-              <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${LEGACY_BADGE[t.legacyImpact]?.style}`}>
-                {LEGACY_BADGE[t.legacyImpact]?.label}
-              </span>
-            )}
-            {t.instrumentationGap && (
-              <span className="text-xs px-1.5 py-0.5 rounded font-medium bg-amber-100 text-amber-700">no tracking</span>
-            )}
-            {t.targetPersona && (
-              <span className="text-xs text-gray-400">{t.targetPersona}</span>
-            )}
-          </div>
-          <p className="text-xs text-gray-700 mt-1.5 leading-snug">{t.userImpact}</p>
-          {t.recommendedAction && (
-            <p className="text-xs font-medium text-gray-900 mt-1.5 border-l-2 border-gray-400 pl-2">
-              → {t.recommendedAction}
-            </p>
-          )}
-          {t.ignoreCost && (
-            <p className="text-xs text-red-600 mt-1">If ignored: {t.ignoreCost}</p>
-          )}
-          {t.reviewerRisks && t.reviewerRisks.length > 0 && (
-            <div className="mt-1.5 space-y-0.5">
-              {t.reviewerRisks.slice(0, 2).map((risk: string, i: number) => (
-                <p key={i} className="text-xs text-amber-700 flex gap-1 items-start">
-                  <span className="shrink-0">⚠</span>{risk}
-                </p>
-              ))}
+            <div className="flex gap-1.5 flex-wrap mt-1.5">
+              {t.outcomeType && (
+                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${OUTCOME_BADGE[t.outcomeType] || "bg-gray-100 text-gray-600"}`}>
+                  {t.outcomeType}
+                </span>
+              )}
+              {t.legacyImpact && t.legacyImpact !== "neutral" && (
+                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${LEGACY_BADGE[t.legacyImpact]?.style}`}>
+                  {LEGACY_BADGE[t.legacyImpact]?.label}
+                </span>
+              )}
+              {t.instrumentationGap && (
+                <span className="text-xs px-1.5 py-0.5 rounded font-medium bg-amber-100 text-amber-700">no tracking</span>
+              )}
+              {t.targetPersona && (
+                <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{t.targetPersona}</span>
+              )}
             </div>
-          )}
-          {t.nextOpportunity && (
-            <p className="text-xs text-blue-600 mt-1.5 italic">Opportunity: {t.nextOpportunity}</p>
-          )}
+            <p className="text-xs text-gray-600 mt-2 leading-relaxed">{t.userImpact}</p>
+          </div>
         </div>
       </div>
+      {/* Recommended action — visually distinct row */}
+      {t.recommendedAction && (
+        <div className="flex items-start gap-2 px-4 py-2.5 bg-gray-900 border-t border-gray-800">
+          <span className="text-gray-400 text-xs shrink-0 mt-0.5 font-mono">→</span>
+          <p className="text-xs font-semibold text-white leading-relaxed">{t.recommendedAction}</p>
+        </div>
+      )}
+      {(t.ignoreCost || (t.reviewerRisks && t.reviewerRisks.length > 0)) && (
+        <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 space-y-1">
+          {t.ignoreCost && (
+            <p className="text-xs text-red-600 leading-snug">
+              <span className="font-medium">If ignored:</span> {t.ignoreCost}
+            </p>
+          )}
+          {t.reviewerRisks?.slice(0, 1).map((risk: string, i: number) => (
+            <p key={i} className="text-xs text-amber-700 flex gap-1 items-start">
+              <span className="shrink-0">⚠</span>{risk}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -163,7 +172,7 @@ export default async function SignalsPage() {
 
       {/* Regression Alerts */}
       {regressions.length > 0 && (
-        <div className="rounded-xl border border-red-200 bg-red-50 overflow-hidden">
+        <div className="rounded-xl border border-red-200 bg-red-50 overflow-hidden shadow-sm">
           <div className="px-5 py-3 border-b border-red-200 flex items-center gap-2">
             <span className="text-red-700 font-semibold text-sm">Regression Alerts</span>
             <span className="text-xs bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded font-medium">
@@ -174,10 +183,10 @@ export default async function SignalsPage() {
             {regressions.map((r) => (
               <div key={r.event} className="px-5 py-3 flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-mono text-red-800">{r.event}</p>
-                  <p className="text-xs text-red-600 mt-0.5">{r.pod} · dropped {r.dropPct}% — {r.lastWeek.toLocaleString()} → {r.thisWeek.toLocaleString()}</p>
+                  <code className="text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-mono">{r.event}</code>
+                  <p className="text-xs text-red-600 mt-1">{r.pod} · dropped {r.dropPct}% — {r.lastWeek.toLocaleString()} → {r.thisWeek.toLocaleString()}</p>
                 </div>
-                <span className="text-sm font-semibold text-red-700">−{r.dropPct}%</span>
+                <span className="text-sm font-bold text-red-700">−{r.dropPct}%</span>
               </div>
             ))}
           </div>
@@ -211,6 +220,17 @@ export default async function SignalsPage() {
           </div>
           <div className="px-5 py-2 border-t border-amber-100">
             <p className="text-xs text-amber-600">These features shipped with no user behavior tracking. You cannot measure adoption or detect failures.</p>
+          </div>
+        </div>
+      )}
+
+      {/* No P1s — good news state */}
+      {p1s.length === 0 && regressions.length === 0 && (
+        <div className="rounded-xl border border-green-200 bg-green-50 px-5 py-4 flex items-center gap-3 shadow-sm">
+          <span className="text-green-500 text-xl shrink-0">✓</span>
+          <div>
+            <p className="text-sm font-semibold text-green-800">No P1 signals this week</p>
+            <p className="text-xs text-green-600 mt-0.5">No regressions or critical issues detected. All clear.</p>
           </div>
         </div>
       )}
