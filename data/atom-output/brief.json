@@ -1,0 +1,63 @@
+{
+  "generatedAt": "2026-04-30T09:00:00Z",
+  "headline": "Expense Submissions +58%, Exceptions Halved — PAY Cycle Crunch Ahead",
+  "summary": "Week of Apr 24–30: Atlas-HXM shows its strongest expense submission week this quarter — addExpense_upserted up 58% and addExpenseLine_upserted up 80% WoW, signaling the AI expense extraction feature is gaining real traction. Exceptions collapsed 52% (2,332 vs 4,835) — the best error health in 6 weeks. SSO success rate holds at 93%. On the risk side: PAY cycle 26 closes in 2 days with only 20% done and MFA shipping without a QA regression test assigned. Rageclicks ticked up 16%, suggesting a new friction point to investigate.",
+  "weekSignal": "amber",
+  "weekSignalReason": "Strong product signals (expenses, error health) but PAY cycle at critical risk and rageclicks rising.",
+  "execSignal": "AMBER — product metrics improving but PAY delivery risk requires immediate triage before May 2 cycle close.",
+  "p1Actions": [
+    "PAY cycle 26 closes May 2 with 80% of scope undone — run scope triage today: what ships, what carries over, what drops.",
+    "Assign PAY-1287 (MFA QA regression test) before MFA ships — auth flow breakage would affect all WSE logins.",
+    "Add PostHog observability to GTN PROD rollout (FNM2-983) before it goes live — zero telemetry on the primary FNM 2 delivery.",
+    "Confirm FNM1-815/807 (Megagen Implantt Sage export blocker) is resolved — customer is blocked from exporting invoices."
+  ],
+  "regressions": [
+    {
+      "event": "employee_task_saved",
+      "drop": 21,
+      "hypothesis": "WFM 1 shipped census verification changes (WFM1-1112) — possible flow disruption to task save. Monitor whether the new flagged-field architecture changed the save trigger path."
+    }
+  ],
+  "topRisks": [
+    {
+      "title": "PAY cycle 26 ends May 2 at 20% completion",
+      "reason": "Scope grew from 44 to 66 issues mid-cycle. MFA, tokenization, and SQL migration all in flight simultaneously. Current trajectory suggests major carry-over.",
+      "recommendedAction": "Run scope triage immediately — cut to MFA + critical SQL migration only, defer tokenization to cycle 27."
+    },
+    {
+      "title": "Rageclicks up 16% (1,603 vs 1,381)",
+      "reason": "Rageclick volume is rising despite lower overall pageviews. A new friction point was introduced this week — likely in an area without strong PostHog coverage (FNM or PAY flows).",
+      "recommendedAction": "Pull a rageclick session recording sample to identify the affected component before next week."
+    },
+    {
+      "title": "SSO login failures up 19% (156 vs 131)",
+      "reason": "Despite 93% overall SSO success rate, raw failure count increased. MFA refactor (PAY-1093) shipped this week — confirm it didn't introduce edge-case failures for certain country codes.",
+      "recommendedAction": "Check sso_login_failed breakdown by error type in PostHog against last week's baseline."
+    }
+  ],
+  "instrumentationGaps": [
+    "FNM2-983 (GTN Acceleration to PROD) — zero PostHog events for GTN mapping or recon approval. Blind to production behavior.",
+    "FNM1-653 (Virtual Expense Cards epic) — PR 215 merged, card transactions flow shipping soon, no tracking events defined.",
+    "WFM1-1082 (Census verification audit hooks) — in progress but PostHog event for correction completion rate not yet wired."
+  ],
+  "opportunities": [
+    {
+      "idea": "Expense AI extraction is working — addExpense_aiFeedbackBannerShown up 52% to 1,376 shows massive adoption. Build a feedback loop dashboard before competitors catch up.",
+      "outcomeType": "retention",
+      "fromPR": "WFM2 AI expense extraction (multiple PRs)",
+      "estimatedEffort": "1 week"
+    },
+    {
+      "idea": "Census verification comment threads (WFM1-1112) shipped — track flagged field correction completion rate in PostHog to measure workflow improvement.",
+      "outcomeType": "efficiency",
+      "fromPR": "WFM1-1112: Re-architecture of assignee flow + comments",
+      "estimatedEffort": "2 days instrumentation"
+    },
+    {
+      "idea": "MFA phone setup up 122% (20 vs 9) — strong early signal. Define target success metric before QA regression test ships.",
+      "outcomeType": "retention",
+      "fromPR": "PAY-1093: MFA phone form refactor",
+      "estimatedEffort": "1 day"
+    }
+  ]
+}

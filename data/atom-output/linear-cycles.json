@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-04-27T22:00:00Z",
+  "generatedAt": "2026-04-30T09:00:00Z",
   "pods": [
     {
       "pod": "WFM 1",
       "cycleNumber": 26,
       "cycleEnds": "2026-05-04",
-      "totalIssues": 80,
-      "completedIssues": 11,
-      "devCompleted": 11,
+      "totalIssues": 104,
+      "completedIssues": 30,
+      "devCompleted": 30,
       "inReview": 15,
       "inProgress": 11,
-      "todo": 32,
-      "completionPct": 14,
+      "todo": 48,
+      "completionPct": 29,
       "slipRisk": "low",
-      "slipRiskReason": "Cycle just started Apr 27. Census verification delivery on track with 3 PRs merged this week.",
+      "slipRiskReason": "Good momentum — 30 of 104 done by day 3. Census verification and notification work progressing.",
       "mergedPRsThisWeek": [
         {
           "linearId": "WFM1-1112",
@@ -101,18 +101,17 @@
     },
     {
       "pod": "WFM 2",
-      "cycleNumber": 25,
-      "cycleName": "Apr26'WK4",
-      "cycleEnds": "2026-04-28",
-      "totalIssues": 60,
-      "completedIssues": 28,
-      "devCompleted": 4,
-      "inReview": 10,
+      "cycleNumber": 26,
+      "cycleEnds": "2026-05-05",
+      "totalIssues": 39,
+      "completedIssues": 10,
+      "devCompleted": 10,
+      "inReview": 8,
       "inProgress": 6,
-      "todo": 4,
-      "completionPct": 47,
-      "slipRisk": "high",
-      "slipRiskReason": "Cycle ends TOMORROW at 47% completion. Policies landing page (WFM2-491) and DB schema (WFM2-712) still In Progress with no PR merged yet.",
+      "todo": 15,
+      "completionPct": 26,
+      "slipRisk": "medium",
+      "slipRiskReason": "New cycle started Apr 28. Policies feature carried over from cycle 25. 10/39 completed on day 2 — watch whether WFM2-491 (Policies Landing Page) gets unblocked this week.",
       "mergedPRsThisWeek": [
         {
           "linearId": "WFM2-666",
@@ -158,10 +157,10 @@
       ],
       "signals": [
         {
-          "type": "slip",
-          "urgency": "P1",
-          "title": "Cycle ends tomorrow — 53% of issues not done",
-          "detail": "WFM 2 cycle 25 closes Apr 28. Policies feature (WFM2-491, WFM2-712) still in progress with no PR. Contribution splits shipped (WFM2-666 merged), but the policies work will roll into next cycle. PM needs to decide: extend, carry over, or drop scope."
+          "type": "carry-over",
+          "urgency": "P2",
+          "title": "Policies feature carried over from cycle 25 — no PR yet",
+          "detail": "WFM2-491 (Policies Landing Page) and WFM2-712 (DB Schema) rolled into cycle 26 with no PR merged. Now on day 2 of new cycle. If WFM2-491 doesn't have a PR by Apr 30, this will slip again."
         },
         {
           "type": "instrumentation-gap",
@@ -187,15 +186,15 @@
       "pod": "PAY",
       "cycleNumber": 26,
       "cycleEnds": "2026-05-02",
-      "totalIssues": 44,
-      "completedIssues": 2,
-      "devCompleted": 4,
+      "totalIssues": 66,
+      "completedIssues": 13,
+      "devCompleted": 13,
       "inReview": 4,
       "inProgress": 13,
-      "todo": 19,
-      "completionPct": 5,
-      "slipRisk": "medium",
-      "slipRiskReason": "5% completion with cycle ending May 2. MFA features nearly shipped but QA regression test (PAY-1287) is Todo with no assignee. SQL migration and MFA running in parallel — context switching risk.",
+      "todo": 36,
+      "completionPct": 20,
+      "slipRisk": "high",
+      "slipRiskReason": "20% completion with 80% of issues not done and cycle ending May 2 — 2 days away. MFA QA test (PAY-1287) still unassigned. Scope has grown from 44 to 66 issues mid-cycle.",
       "mergedPRsThisWeek": [
         {
           "linearId": "PAY-1093",
@@ -256,6 +255,12 @@
       ],
       "signals": [
         {
+          "type": "slip",
+          "urgency": "P1",
+          "title": "PAY cycle ends May 2 — 80% of scope not done",
+          "detail": "Cycle 26 closes in 2 days with 13/66 issues done. Scope grew from 44 to 66 mid-cycle. MFA QA regression test (PAY-1287) still unassigned. Need immediate triage: what ships May 2 vs carries over?"
+        },
+        {
           "type": "qa-gap",
           "urgency": "P1",
           "title": "MFA shipping without regression test",
@@ -286,15 +291,15 @@
       "cycleNumber": 28,
       "cycleName": "Apr26'WK5",
       "cycleEnds": "2026-05-04",
-      "totalIssues": 37,
-      "completedIssues": 0,
-      "devCompleted": 4,
+      "totalIssues": 44,
+      "completedIssues": 18,
+      "devCompleted": 18,
       "inReview": 8,
       "inProgress": 9,
-      "todo": 15,
-      "completionPct": 0,
+      "todo": 9,
+      "completionPct": 41,
       "slipRisk": "medium",
-      "slipRiskReason": "Two PROD customer-blocking issues (Sage sync, Megagen Implantt) in progress alongside active feature development. Virtual expense card epic has a PR merged but feature is incomplete.",
+      "slipRiskReason": "Good velocity — 18/44 done. Two PROD customer-blocking issues (Sage sync) in progress alongside feature work. Virtual expense card epic still incomplete end-to-end.",
       "mergedPRsThisWeek": [
         {
           "linearId": "FNM1-805",
@@ -378,15 +383,15 @@
       "pod": "FNM 2",
       "cycleNumber": 16,
       "cycleEnds": "2026-05-04",
-      "totalIssues": 51,
-      "completedIssues": 6,
-      "devCompleted": 6,
+      "totalIssues": 66,
+      "completedIssues": 25,
+      "devCompleted": 25,
       "inReview": 3,
       "inProgress": 12,
-      "todo": 24,
-      "completionPct": 12,
+      "todo": 26,
+      "completionPct": 38,
       "slipRisk": "low",
-      "slipRiskReason": "Cycle just started. GTN acceleration to PROD (FNM2-983) is In Progress and is the primary delivery this cycle.",
+      "slipRiskReason": "Strong momentum — 25/66 done by day 3. GTN PROD deployment (FNM2-983) is the key delivery this cycle.",
       "mergedPRsThisWeek": [
         {
           "linearId": "FNM2-788",
@@ -518,14 +523,14 @@
     }
   ],
   "plannedVsShipped": {
-    "totalPlannedThisWeek": 239,
+    "totalPlannedThisWeek": 279,
     "totalMergedPRs": 11,
     "mappedToLinear": 8,
     "unmapped": 3,
     "staleTickets": 5,
     "offRoadmapInProgress": 5,
     "totalInProgress": 16,
-    "p1Signals": 5,
+    "p1Signals": 6,
     "p2Signals": 9,
     "p3Signals": 3
   }
