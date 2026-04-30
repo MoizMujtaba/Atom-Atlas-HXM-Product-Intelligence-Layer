@@ -53,9 +53,8 @@ Every signal Atom surfaces includes:
 
 | View | Purpose |
 |------|---------|
-| **Exec** | SSO health, exceptions, rage clicks, pod PR velocity — 7-day WoW |
-| **Weekly Brief** | Claude-generated narrative: traffic light, P1 actions this week, regressions, production risks, instrumentation gaps, product opportunities |
-| **Signals** | Per-pod PRs sorted by urgency. Regression alerts (events down >20% WoW with no PR explaining the drop). Instrumentation gap warnings. |
+| **Weekly Brief** | Pre-generated narrative: traffic light, P1 actions this week, regressions, production risks, instrumentation gaps, product opportunities |
+| **Signals** | Per-pod PRs sorted by urgency (P1→P2→P3). Regression alerts (events down >20% WoW with no PR explaining the drop). Instrumentation gap warnings. |
 | **Cycles** | Linear cycle state per pod: completion %, slip risk, key in-progress items, merged PRs, stale tickets — with roadmap alignment badges on every issue |
 | **RICE Backlog** | Hypothesis scoring: (Reach × Impact% × Confidence%) ÷ Effort, calibrated to 2,600+ WSE base. Non-linear effort scale: 1w=÷1, 2w=÷3, 3w=÷5, 4w=÷7 |
 | **Compete** | Deel, Remote, Globalization Partners — signals, Atlas advantages, watch items |
@@ -68,17 +67,18 @@ Every signal Atom surfaces includes:
 ```
 Atom (Claude Code + MCP sessions)     Vercel App (Next.js App Router)
 ─────────────────────────────────     ───────────────────────────────
-PostHog MCP  ──┐                      /          Exec
-GitHub CLI   ──┤──► data/             /brief     Weekly Brief
-Linear MCP   ──┘    atom-output/      /signals   Signal Feed
-                    exec-metrics.json /cycles    Cycle Intelligence
+PostHog MCP  ──┐                      /          → redirect to /brief
+GitHub CLI   ──┤──► data/             /brief     Weekly Brief (cached)
+Linear MCP   ──┘    atom-output/      /signals   Signal Feed (P1→P2→P3)
+                    brief.json        /cycles    Cycle Intelligence
 GitHub Actions ───► merged-prs.json  /rice       RICE Backlog
 (daily 6pm EST)     weekly-events.json /compete  Competitive Intel
                     linear-cycles.json /pr/[r]/[n] PR Detail (live)
-                    rice-scores.json
+                    exec-metrics.json
+                    last-refreshed.json
 ```
 
-Atom writes static JSON. The Vercel app reads them — no PostHog or Linear API keys needed in the deployed app. PR detail pages call the GitHub API live via `/api/translate-pr` and use Claude for real-time translation. GitHub Actions runs `scripts/refresh.mjs` daily to pull merged PRs and re-translate with Claude, committing only `merged-prs.json`.
+Atom writes static JSON. The Vercel app reads them at build time — no PostHog or Linear API keys needed in the deployed app. The Weekly Brief loads instantly from `brief.json` (pre-generated during refresh) rather than calling Claude on each page load. PR detail pages call the GitHub API live via `/api/translate-pr`. A Sync button in the nav triggers the GitHub Actions workflow on demand via `workflow_dispatch`. GitHub Actions runs `scripts/refresh.mjs` daily to pull merged PRs, translate with Claude, and generate `brief.json` + `last-refreshed.json`.
 
 ---
 
@@ -183,7 +183,10 @@ Open http://localhost:3000.
 ## Data refresh
 
 ### Automated (GitHub Actions)
-`scripts/refresh.mjs` runs daily at 6pm EST via `.github/workflows/atom-refresh.yml`. It fetches merged PRs from all Atlas repos for the past 7 days, translates each with Claude, and commits updated `data/atom-output/merged-prs.json`. Only `ANTHROPIC_API_KEY` is required (the `GITHUB_TOKEN` is provided automatically by Actions).
+`scripts/refresh.mjs` runs daily at 6pm EST via `.github/workflows/atom-refresh.yml`. It fetches merged PRs from all Atlas repos for the past 7 days, translates each with Claude, generates `brief.json` and `last-refreshed.json`, then commits all updated files. Only `ANTHROPIC_API_KEY` is required (the `GITHUB_TOKEN` is provided automatically by Actions).
+
+### On-demand (Sync button)
+The **Sync** button in the top nav triggers `workflow_dispatch` on the same GitHub Actions workflow. Status is polled every 8 seconds (queued → running → done). Page auto-reloads 30 seconds after the workflow completes with fresh data.
 
 ### Manual (Claude Code + MCP)
 Open a Claude Code session with PostHog, Linear, and GitHub MCPs active. Atom queries each source, runs Claude translations, and writes updated `data/atom-output/*.json` files. Commit and push — Vercel auto-deploys. Recommended: weekly before sprint planning, or after Linear cycle rollover.
