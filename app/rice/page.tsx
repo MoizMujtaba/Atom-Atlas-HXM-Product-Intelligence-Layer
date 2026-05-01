@@ -40,7 +40,7 @@ export default async function RicePage() {
         ].map((s) => (
           <div key={s.label} className="flex items-center gap-1.5">
             <span className={`font-semibold ${s.color}`}>{s.label}</span>
-            <span className="text-gray-400">{s.range}</span>
+            <span className="text-gray-500">{s.range}</span>
           </div>
         ))}
       </div>
@@ -74,7 +74,7 @@ export default async function RicePage() {
                 <tr key={h.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-4 max-w-xs">
                     <p className="text-gray-900 font-medium leading-snug">{h.title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{h.source}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{h.source}</p>
                   </td>
                   <td className="px-4 py-4">
                     <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-medium">{h.pod}</span>

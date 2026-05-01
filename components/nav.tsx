@@ -36,7 +36,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-xs font-mono bg-gray-900 text-white px-2 py-0.5 rounded tracking-wider">ATOM</span>
-          <span className="text-gray-400 text-sm hidden sm:block">Atlas HXM Product Intelligence</span>
+          <span className="text-gray-500 text-sm hidden sm:block">Atlas HXM Product Intelligence</span>
         </div>
         <div className="flex items-center gap-3">
           <nav className="flex gap-0.5">

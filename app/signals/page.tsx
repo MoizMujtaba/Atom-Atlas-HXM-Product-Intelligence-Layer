@@ -44,13 +44,7 @@ function ageColor(mergedAt: string, tier: string): string {
   const days = Math.floor((Date.now() - new Date(mergedAt).getTime()) / 86400000)
   if (tier === "P1" && days >= 2) return "text-red-600 font-semibold"
   if (tier === "P1" && days >= 1) return "text-amber-600 font-medium"
-  return "text-gray-400"
-}
-
-const TIER_LEFT_BORDER = {
-  P1: "border-l-4 border-l-red-500",
-  P2: "border-l-4 border-l-amber-400",
-  P3: "border-l-4 border-l-gray-200",
+  return "text-gray-500"
 }
 
 function PRCard({ pr }: { pr: AtomPR }) {
@@ -61,7 +55,7 @@ function PRCard({ pr }: { pr: AtomPR }) {
   const ageStyle = ageColor(pr.mergedAt, tier)
 
   return (
-    <div className={`rounded-lg border bg-white shadow-sm overflow-hidden ${TIER_LEFT_BORDER[tier]}`}>
+    <div className="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
       <div className={`px-4 py-3 ${row}`}>
         <div className="flex items-start gap-2">
           <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${badge}`}>{tier}</span>
@@ -73,7 +67,7 @@ function PRCard({ pr }: { pr: AtomPR }) {
               <div className="flex items-center gap-2 shrink-0 text-xs">
                 <span className={ageStyle}>{age}</span>
                 <span className="text-gray-300">·</span>
-                <span className="text-gray-400">{pr.team}</span>
+                <span className="text-gray-500">{pr.team}</span>
               </div>
             </div>
             <div className="flex gap-1.5 flex-wrap mt-1.5">

@@ -94,7 +94,7 @@ export default function CompetePage() {
               {/* Recent moves */}
               {c.recentMoves.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2.5">Recent Moves</p>
+                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2.5">Recent Moves</p>
                   <div className="space-y-3">
                     {c.recentMoves.map((move, i) => (
                       <div key={i} className="space-y-1">
@@ -102,7 +102,7 @@ export default function CompetePage() {
                           <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${TYPE_BADGE[move.type] ?? "bg-gray-100 text-gray-600"}`}>
                             {move.type.replace("-", " ")}
                           </span>
-                          <span className="text-xs text-gray-400">{move.date}</span>
+                          <span className="text-xs text-gray-500">{move.date}</span>
                         </div>
                         <p className="text-sm font-medium text-gray-800">{move.title}</p>
                         <p className="text-xs text-gray-500 leading-relaxed">{move.detail}</p>
@@ -118,7 +118,7 @@ export default function CompetePage() {
               {/* G2 complaints */}
               {c.g2Complaints.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2">G2 Complaints (Atlas Opportunity)</p>
+                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">G2 Complaints (Atlas Opportunity)</p>
                   <ul className="space-y-1.5">
                     {c.g2Complaints.map((complaint, i) => (
                       <li key={i} className="text-xs text-green-700 flex gap-1.5">
@@ -155,7 +155,7 @@ export default function CompetePage() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium text-gray-900">{item.title}</p>
-                      <span className="text-xs text-gray-400">{item.competitor}</span>
+                      <span className="text-xs text-gray-500">{item.competitor}</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{item.rationale}</p>
                   </div>

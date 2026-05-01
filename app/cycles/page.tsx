@@ -103,7 +103,7 @@ export default function CyclesPage() {
 
   if (!data) {
     return (
-      <div className="text-center py-20 text-gray-400">
+      <div className="text-center py-20 text-gray-500">
         No cycle data available. Run Atom to pull Linear cycle data.
       </div>
     )
@@ -116,7 +116,7 @@ export default function CyclesPage() {
       <div>
         <h1 className="text-xl font-semibold text-gray-900">Cycle Intelligence</h1>
         <p className="text-gray-500 text-sm mt-1">Linear cycles × GitHub PRs — planned vs shipped, slip risks, stale tickets</p>
-        <p className="text-xs text-gray-400 mt-0.5">Last synced {new Date(generatedAt).toLocaleString()}</p>
+        <p className="text-xs text-gray-500 mt-0.5">Last synced {new Date(generatedAt).toLocaleString()}</p>
       </div>
 
       {/* Summary row */}
@@ -137,7 +137,7 @@ export default function CyclesPage() {
       {/* Cross-pod signals */}
       {crossPodSignals.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-xs uppercase tracking-widest text-gray-400 font-medium">Cross-Pod Signals</h2>
+          <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium">Cross-Pod Signals</h2>
           <div className="space-y-2">
             {crossPodSignals.map((s, i) => {
               const style = URGENCY_STYLES[s.urgency]
@@ -164,7 +164,7 @@ export default function CyclesPage() {
 
       {/* Per-pod sections */}
       <section className="space-y-4">
-        <h2 className="text-xs uppercase tracking-widest text-gray-400 font-medium">Pod Cycles</h2>
+        <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium">Pod Cycles</h2>
         {pods.map((pod) => {
           const signals = pod.signals || []
           const keyInProgress = pod.keyInProgress || []
@@ -183,7 +183,7 @@ export default function CyclesPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-gray-900">{pod.pod}</h3>
-                      <span className="text-xs text-gray-400">Cycle {pod.cycleNumber}{pod.cycleName ? ` · ${pod.cycleName}` : ""}</span>
+                      <span className="text-xs text-gray-500">Cycle {pod.cycleNumber}{pod.cycleName ? ` · ${pod.cycleName}` : ""}</span>
                       {p1Signals.length > 0 && (
                         <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded font-bold">{p1Signals.length} P1</span>
                       )}
@@ -208,7 +208,7 @@ export default function CyclesPage() {
                     <span className={`text-xs font-medium px-2 py-0.5 rounded border ${SLIP_STYLES[pod.slipRisk]}`}>
                       {pod.slipRisk} slip risk
                     </span>
-                    <p className="text-xs text-gray-400 mt-1">ends {new Date(pod.cycleEnds).toLocaleDateString()}</p>
+                    <p className="text-xs text-gray-500 mt-1">ends {new Date(pod.cycleEnds).toLocaleDateString()}</p>
                   </div>
                 </div>
                 <div className="mt-3">
@@ -238,7 +238,7 @@ export default function CyclesPage() {
                   {/* Key In Progress */}
                   {keyInProgress.length > 0 && (
                     <div>
-                      <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2">Key In Progress</p>
+                      <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">Key In Progress</p>
                       <div className="space-y-1.5">
                         {keyInProgress.map((item) => (
                           <div key={item.id} className={`rounded-lg px-3 py-2 text-sm ${item.isProdBlocker ? "bg-red-50 border border-red-200" : "bg-gray-50 border border-gray-200"}`}>
@@ -246,7 +246,7 @@ export default function CyclesPage() {
                               {item.isProdBlocker && <span className="text-red-500 text-xs shrink-0 mt-0.5">PROD</span>}
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                  <span className="font-mono text-xs text-gray-400">{item.id}</span>
+                                  <span className="font-mono text-xs text-gray-500">{item.id}</span>
                                   {item.hasRoadmapLabel === false && (
                                     <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1 py-0 rounded font-medium leading-4">off-roadmap</span>
                                   )}
@@ -255,7 +255,7 @@ export default function CyclesPage() {
                                   )}
                                 </div>
                                 <p className={`text-xs mt-0.5 leading-snug ${item.isProdBlocker ? "text-red-800 font-medium" : "text-gray-700"}`}>{item.title}</p>
-                                <p className="text-xs text-gray-400 mt-0.5">{item.assignee}</p>
+                                <p className="text-xs text-gray-500 mt-0.5">{item.assignee}</p>
                               </div>
                             </div>
                           </div>
@@ -266,7 +266,7 @@ export default function CyclesPage() {
 
                   {/* Merged PRs */}
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-gray-400 font-medium mb-2">PRs Merged This Week</p>
+                    <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">PRs Merged This Week</p>
                     {mergedPRsThisWeek.length === 0 ? (
                       <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">No PRs merged</p>
                     ) : (
@@ -291,7 +291,7 @@ export default function CyclesPage() {
                                 <span className="text-xs text-green-700">✓ {pr.linearStatus || "no status"}</span>
                               )}
                             </div>
-                            {pr.note && <p className="text-xs text-gray-400 mt-0.5">{pr.note}</p>}
+                            {pr.note && <p className="text-xs text-gray-500 mt-0.5">{pr.note}</p>}
                           </div>
                         ))}
                       </div>
