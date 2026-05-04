@@ -1,0 +1,267 @@
+{
+  "generatedAt": "2026-05-04T06:00:00Z",
+  "reviewedSourceCount": 15,
+  "approvedSignalCount": 11,
+  "draftHeldBackCount": 4,
+  "signals": [
+    {
+      "id": "agc-qualification-canada",
+      "title": "AGC qualification call surfaced expense, commission, and fast-offer expectations for a Canada EOR hire",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma qualification call",
+          "url": "https://app.avoma.com/meetings/bbdde668-37d7-4388-9941-e14dec9e19e9/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/58134530461?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "AGC Biologics",
+      "dealOutcome": "Closed won: Best Service / Capability against Remote, Deel, and another confidential provider.",
+      "theme": "Qualification expectations",
+      "roadmapOverlap": "aligned",
+      "productSignal": "Prospects expect commissions, expenses, benefits, and reimbursements to work in one Canada EOR flow from day one.",
+      "marketingSignal": "Use this as a Canada case-study proof point: Atlas handled complex compensation and candidate urgency better than generic EOR positioning.",
+      "recommendedAction": "Turn the Canada compensation-and-expense story into a reusable qualification checklist and sales proof point.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-03-18T16:30:00Z"
+    },
+    {
+      "id": "agc-demo-canada",
+      "title": "AGC demo validated demand for end-to-end payroll, onboarding, self-service, and expense visibility",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma demo call",
+          "url": "https://app.avoma.com/meetings/cba70e5d-d711-4d21-afef-fdcd4cd1687d/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/58134530461?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "AGC Biologics",
+      "dealOutcome": "Closed won: Best Service / Capability against Remote, Deel, and another confidential provider.",
+      "theme": "Platform demo and proposal",
+      "roadmapOverlap": "aligned",
+      "productSignal": "The platform demo needed payroll, benefits, onboarding, time off, and expense modules to feel connected instead of separate workflows.",
+      "marketingSignal": "Package the AGC win into a demo narrative that leads with platform breadth plus white-glove service against Deel and Remote.",
+      "recommendedAction": "Create a Canada demo track that leads with expenses, self-service, and benefits before contract review.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-03-18T19:00:00Z"
+    },
+    {
+      "id": "aemc-qualification-canada",
+      "title": "AEMC qualification call showed compliance relief and attorney-ready pricing as the buying triggers",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma qualification call",
+          "url": "https://app.avoma.com/meetings/e5041009-6a0c-4f60-ac84-452d6028d69c/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/57941167415?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "AEMC Instruments",
+      "dealOutcome": "Closed won: Need to be Compliant against Local EOR, Globalization Partners, Velocity Global, and Deel.",
+      "theme": "Qualification expectations",
+      "roadmapOverlap": "aligned",
+      "productSignal": "Buyers wanted a direct-employment model, legal clarity, and a complete cost scenario before attorney review.",
+      "marketingSignal": "This is a strong compliance-led case study for mid-market Canada opportunities where Atlas wins on direct model credibility.",
+      "recommendedAction": "Codify the Canada qualification pattern into a compliance-first discovery template with legal-review talking points.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-03-12T14:30:00Z"
+    },
+    {
+      "id": "aemc-demo-canada",
+      "title": "AEMC demo made payroll cadence, benefits detail, and deposit mechanics part of the product conversation",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma demo call",
+          "url": "https://app.avoma.com/meetings/88501206-5454-4500-abca-1bf9c5fda5a7/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/57941167415?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "AEMC Instruments",
+      "dealOutcome": "Closed won: Need to be Compliant against Local EOR, Globalization Partners, Velocity Global, and Deel.",
+      "theme": "Demo and proposal detail",
+      "roadmapOverlap": "aligned",
+      "productSignal": "The demo had to connect modules to real operations details like benefits configuration, reimbursements, payroll, reporting, and deposit flow.",
+      "marketingSignal": "Build an AEMC-style demo leave-behind that explains pricing structure and benefit options without making buyers reverse-engineer the model.",
+      "recommendedAction": "Ship a demo companion asset that translates Canada onboarding, benefits, and deposit mechanics into plain-language buyer guidance.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-03-13T17:00:00Z"
+    },
+    {
+      "id": "huberta-discovery-loss",
+      "title": "Huberta loss points to a pre-pricing story gap before commercial review ever happens",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma discovery call",
+          "url": "https://app.avoma.com/meetings/07230e09-af3b-4ffe-a60a-935724459969/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/59273225881?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "Huberta",
+      "dealOutcome": "Closed lost: competitor win before Atlas could complete full pricing review or position direct-EOR cost structure.",
+      "theme": "Lost after early alignment",
+      "roadmapOverlap": "gap",
+      "productSignal": "The product story did not surface enough commercial clarity early, especially around employer burden, operational ownership, and invoicing fit.",
+      "marketingSignal": "Build a fast competitive comparison and invoicing/accounting narrative for deals that align in discovery but are not yet committed to pricing.",
+      "recommendedAction": "Introduce a pre-price comparison artifact that quantifies direct EOR, employer-burden accuracy, and invoicing fit before the SOW stage.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-17T13:00:00Z"
+    },
+    {
+      "id": "crosslines-discovery-colombia",
+      "title": "Crosslines discovery exposed localization, payment, and payroll-explainer gaps in Colombia buying journeys",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma discovery call",
+          "url": "https://app.avoma.com/meetings/a7b3d136-8137-4abd-96be-87b9e80b2aae/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/55639793835?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "Comercial Crosslines Limitada",
+      "dealOutcome": "Closed lost: tax and payment constraints plus early English-to-Spanish friction contributed to the loss.",
+      "theme": "Country-specific payroll explanation",
+      "roadmapOverlap": "gap",
+      "productSignal": "Buyers needed clearer in-language explanations of Colombian pay components, withholding, and contractor-to-employee conversion steps.",
+      "marketingSignal": "Create Spanish-language Colombia explainers and payment-method positioning so Atlas does not lose credibility on local nuance.",
+      "recommendedAction": "Prioritize a Colombia hiring explainer covering gross-to-net, statutory extras, onboarding steps, and supported payment methods.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-03-27T18:00:00Z"
+    },
+    {
+      "id": "crosslines-proposal-colombia",
+      "title": "Crosslines proposal call shows that pricing clarity alone does not solve payment-method and tax trust gaps",
+      "sourceType": "avoma+hubspot",
+      "sourceLinks": [
+        {
+          "label": "Avoma proposal call",
+          "url": "https://app.avoma.com/meetings/3f430fbd-9656-4770-9570-f545335ec3df/notes"
+        },
+        {
+          "label": "HubSpot deal",
+          "url": "https://app.hubspot.com/contacts/20072142/record/0-3/55639793835?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch"
+        }
+      ],
+      "company": "Comercial Crosslines Limitada",
+      "dealOutcome": "Closed lost: the buying journey still broke on payment-method support and country-specific tax confidence.",
+      "theme": "Proposal friction",
+      "roadmapOverlap": "gap",
+      "productSignal": "Even after detailed payroll explanation, the journey still failed on payment-method support and confidence in statutory tax treatment.",
+      "marketingSignal": "Enable reps with a payment-method objection path and a localized proposal format that answers tax and statutory questions before finance escalations.",
+      "recommendedAction": "Add supported-payment guidance and statutory-tax FAQs directly into proposal workflows for Latin America EOR deals.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-07T19:00:00Z"
+    },
+    {
+      "id": "cpeg-netherlands-qualification",
+      "title": "CPEG qualification call highlighted sick-leave exposure, visa validation, and insurance as blockers to Netherlands expansion",
+      "sourceType": "avoma",
+      "sourceLinks": [
+        {
+          "label": "Avoma qualification call",
+          "url": "https://app.avoma.com/meetings/40134fbb-e170-4c3b-b013-0f0156e7ec3d/notes"
+        }
+      ],
+      "company": "CPEG / Slyinc",
+      "dealOutcome": "Open signal: pre-sales evaluation focused on Netherlands sick-leave liability, visa eligibility, and insurance coverage.",
+      "theme": "Risk and liability assessment",
+      "roadmapOverlap": "adjacent",
+      "productSignal": "Prospects want country-level liability modeling, visa eligibility checks, and insurance guidance before they trust the EOR route.",
+      "marketingSignal": "Turn the Netherlands risk conversation into an enablement asset that explains sick-leave exposure and how Atlas helps teams navigate it.",
+      "recommendedAction": "Prototype a country risk snapshot for pre-sales that surfaces long-term leave exposure, visa gating, and employer-cost watchouts.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-29T15:00:00Z"
+    },
+    {
+      "id": "msf-oca-ecuador-qualification",
+      "title": "MSF qualification call surfaced a role-feasibility matrix need before pricing can even start",
+      "sourceType": "avoma",
+      "sourceLinks": [
+        {
+          "label": "Avoma qualification call",
+          "url": "https://app.avoma.com/meetings/4ae43c24-e9cb-4485-a805-cd72e3f945d8/notes"
+        }
+      ],
+      "company": "MSF / Oca",
+      "dealOutcome": "Open signal: regulated medical-role feasibility had to be resolved before Atlas could move the opportunity forward.",
+      "theme": "Compliance feasibility pre-check",
+      "roadmapOverlap": "adjacent",
+      "productSignal": "Atlas needs a faster way to tell prospects which regulated roles are supported, blocked, or need legal review.",
+      "marketingSignal": "Position Atlas as rigorous and fast on feasibility by giving reps a clean role-support story instead of ad hoc follow-up.",
+      "recommendedAction": "Design a pre-pricing role-feasibility matrix for regulated hires, travel-heavy roles, and sensitive-data positions.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-13T12:30:00Z"
+    },
+    {
+      "id": "syniti-oman-quote-review",
+      "title": "Syniti quote review shows buyers want transparent country cost components, not bundled EOR pricing",
+      "sourceType": "avoma",
+      "sourceLinks": [
+        {
+          "label": "Avoma quote review",
+          "url": "https://app.avoma.com/meetings/619103dc-0928-4029-ab76-ef231b6c5346/notes"
+        }
+      ],
+      "company": "Syniti",
+      "dealOutcome": "Open signal: pricing review depended on salary, employer-services, FX, admin-fee, and visa-cost breakdowns.",
+      "theme": "Pricing transparency",
+      "roadmapOverlap": "adjacent",
+      "productSignal": "Buyers asked for line-item salary, employer-services, FX, admin, and visa costs before they could socialize the proposal internally.",
+      "marketingSignal": "Reps need a standardized cost-breakdown artifact for multi-country and visa-heavy opportunities.",
+      "recommendedAction": "Create a country cost breakdown pattern that exposes employer-services rate logic, visa costs, FX, and setup fees.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-08T19:00:00Z"
+    },
+    {
+      "id": "pioneer-saudi-qualification",
+      "title": "Pioneer qualification call surfaced Saudization, sponsorship, and insurance as early-stage decision blockers",
+      "sourceType": "avoma",
+      "sourceLinks": [
+        {
+          "label": "Avoma qualification call",
+          "url": "https://app.avoma.com/meetings/9a14f859-f0b6-4bd1-b497-16b8c76a5b6b/notes"
+        }
+      ],
+      "company": "Pioneer",
+      "dealOutcome": "Open signal: the buyer needed credible guidance on Saudi sponsorship offsets, timelines, and insurance before choosing a route.",
+      "theme": "Country rule complexity",
+      "roadmapOverlap": "adjacent",
+      "productSignal": "Teams need localized pre-sales guidance on sponsorship offsets, dependent coverage, and realistic start timelines.",
+      "marketingSignal": "Build a Saudi hiring battlecard that frames Atlas as the guide through Saudization rather than just the employer of record.",
+      "recommendedAction": "Package Saudi-specific sponsorship, timeline, and insurance logic into a reusable qualification asset and estimator.",
+      "approvalStatus": "approved",
+      "confidence": "high",
+      "capturedAt": "2026-04-28T09:30:00Z"
+    }
+  ]
+}
