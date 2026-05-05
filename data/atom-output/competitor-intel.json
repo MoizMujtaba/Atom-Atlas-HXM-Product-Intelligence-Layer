@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T00:00:00Z",
+  "generatedAt": "2026-05-05T00:00:00Z",
   "competitors": [
     {
       "name": "Deel",
@@ -31,6 +31,20 @@
           "title": "Free global HRIS launched — land-and-expand strategy",
           "detail": "Deel HR made free for the entire workforce (contractors, EOR, direct employees). 1,624 product updates shipped in 2025 (~4.4/day). Positions Deel as the system of record to then upsell payroll, IT, compliance.",
           "atlasImplication": "Deel is using free HRIS to own the data layer. Atlas charges for everything. Risk: clients evaluate Deel as a free alternative to Atlas's HRIS functionality."
+        },
+        {
+          "date": "2025-09-10",
+          "type": "product-launch",
+          "title": "Slack and Microsoft Teams native plugin — HR actions without leaving chat",
+          "detail": "Employees can approve time-off, submit expenses, query pay slips, and trigger onboarding tasks directly from Slack or Teams. Deep integration — not just notifications but two-way action capability.",
+          "atlasImplication": "Atlas has zero messaging-app integrations. Deel is turning Slack/Teams into an HR terminal. Clients who live in Slack will find Deel's friction-to-action significantly lower than Atlas."
+        },
+        {
+          "date": "2025-10-01",
+          "type": "acquisition",
+          "title": "Deel acquired PaySpace — African payroll market entry",
+          "detail": "PaySpace is a leading payroll and HR software provider across sub-Saharan Africa. Acquisition gives Deel in-country payroll infrastructure across 40+ African markets. Combined with existing African EOR coverage.",
+          "atlasImplication": "If Atlas has or wants African EOR/payroll clients, Deel now has the best-in-market infrastructure there. Not an immediate threat but signals Deel's geographic ambition."
         }
       ],
       "g2Complaints": [
@@ -143,6 +157,13 @@
           "title": "Rippling Recruiting — AI-powered ATS built into core HR",
           "detail": "Full ATS with AI Application Review, Interview Assistant, onboarding tracker. AI-powered resume parsing in English and non-English. Native integration with HR platform via Employee Graph — approved headcount flows to job openings automatically.",
           "atlasImplication": "Atlas has no recruiting capability. Rippling's Employee Graph connecting recruiting → HR → payroll → IT is the unified vision Atlas doesn't have."
+        },
+        {
+          "date": "2025-06-15",
+          "type": "product-launch",
+          "title": "Rippling EOR now in 80 countries — UK, Australia, Ireland, Canada added",
+          "detail": "Rippling expanded EOR footprint to 80 countries with specific launches in UK, Australia, Ireland, and Canada. Added Contractor of Record (CoR) service alongside EOR, offering a unified platform for both employee and contractor global hiring.",
+          "atlasImplication": "Rippling's EOR coverage is now comparable to or exceeding Atlas's. Their CoR product fills the contractor gap Atlas doesn't address. Mid-market clients who need both EOR and contractor management can consolidate on Rippling."
         }
       ],
       "g2Complaints": [
@@ -197,6 +218,20 @@
       "atlasOpportunity": "GP's pricing is the highest in the category and is opaque. Atlas can win on pricing transparency and mid-market fit. GP's payment reliability complaints (3+ week unresolved issues) are a direct trust signal Atlas can use in competitive deals."
     }
   ],
+  "pricingIntel": {
+    "asOf": "2026-05-05",
+    "source": "eorHQ + public pricing pages",
+    "landscape": [
+      { "competitor": "Remofirst", "monthlyEOR": 199, "note": "Low-cost leader, limited compliance depth" },
+      { "competitor": "Multiplier", "monthlyEOR": 400, "note": "Mid-market, growing Southeast Asia coverage" },
+      { "competitor": "Atlas HXM", "monthlyEOR": 500, "note": "Listed on eorHQ — positioned between Multiplier and the $599 cluster" },
+      { "competitor": "Rippling", "monthlyEOR": 599, "note": "Enterprise-grade, includes IT/device management" },
+      { "competitor": "Deel", "monthlyEOR": 599, "note": "True cost 30-50% higher after taxes, FX, deposits" },
+      { "competitor": "Remote", "monthlyEOR": 599, "note": "Contractor mgmt $29/mo add-on" },
+      { "competitor": "Globalization Partners", "monthlyEOR": 800, "note": "Custom enterprise pricing, highest in category" }
+    ],
+    "atlasPositioning": "Atlas at $500/mo sits in the sweet spot — $100-200 below the $599 cluster while above the budget tier. The risk is being perceived as 'cheap Deel' rather than 'better value for mid-market'. The $500 price needs to be paired with support quality and multi-country breadth narrative to avoid racing to the bottom."
+  },
   "crossCompetitorThemes": [
     {
       "theme": "AI compliance advisor",
