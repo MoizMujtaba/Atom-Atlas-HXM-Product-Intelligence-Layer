@@ -91,87 +91,91 @@ export default async function BriefPage() {
       )}
 
       {brief.regressions?.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
-            Possible Regressions
-          </h2>
-          <div className="space-y-2">
+        <div className="rounded-xl border border-red-200 overflow-hidden shadow-sm">
+          <div className="px-5 py-3 bg-red-50 border-b border-red-200 flex items-center gap-2">
+            <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-bold">Regressions</span>
+            <span className="text-xs bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded font-medium">
+              {brief.regressions.length} event{brief.regressions.length > 1 ? "s" : ""} down
+            </span>
+          </div>
+          <div className="divide-y divide-red-100">
             {brief.regressions.map((r: { event: string; drop: number; hypothesis: string }, i: number) => (
-              <div key={i} className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 shadow-sm">
-                <div className="flex items-center justify-between mb-1">
+              <div key={i} className="px-5 py-4">
+                <div className="flex items-start justify-between gap-4 mb-1.5">
                   <code className="text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-mono">{r.event}</code>
-                  <span className="text-sm font-bold text-red-700">−{r.drop}%</span>
+                  <span className="text-sm font-bold text-red-700 shrink-0">−{r.drop}%</span>
                 </div>
-                <p className="text-sm text-red-700 mt-1">{r.hypothesis}</p>
+                <p className="text-sm text-red-700">{r.hypothesis}</p>
               </div>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
       {brief.topRisks?.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-            Production Risks
-          </h2>
-          <div className="space-y-2">
+        <div className="rounded-xl border border-amber-200 overflow-hidden shadow-sm">
+          <div className="px-5 py-3 bg-amber-50 border-b border-amber-200 flex items-center gap-2">
+            <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded font-bold">Risks</span>
+            <span className="text-sm font-semibold text-amber-900">Production Risks</span>
+          </div>
+          <div className="divide-y divide-amber-100 bg-white">
             {brief.topRisks.map((r: { title: string; reason: string; recommendedAction?: string }, i: number) => (
-              <div key={i} className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 space-y-1">
-                <p className="text-sm font-medium text-amber-800">{r.title}</p>
-                <p className="text-sm text-amber-700">{r.reason}</p>
+              <div key={i} className="px-5 py-4 space-y-1">
+                <p className="text-sm font-semibold text-gray-900">{r.title}</p>
+                <p className="text-sm text-gray-600">{r.reason}</p>
                 {r.recommendedAction && (
-                  <p className="text-xs font-medium text-amber-900 mt-1">
+                  <p className="text-xs font-medium text-amber-900 mt-1.5">
                     <span className="text-amber-500 mr-1">→</span>{r.recommendedAction}
                   </p>
                 )}
               </div>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
       {brief.instrumentationGaps?.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-            Shipped Blind
-          </h2>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 divide-y divide-amber-100 overflow-hidden shadow-sm">
+        <div className="rounded-xl border border-amber-200 overflow-hidden shadow-sm">
+          <div className="px-5 py-3 bg-amber-50 border-b border-amber-200 flex items-center gap-2">
+            <span className="text-amber-700 font-semibold text-sm">Shipped Blind</span>
+            <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-2 py-0.5 rounded font-medium">
+              {brief.instrumentationGaps.length} gap{brief.instrumentationGaps.length > 1 ? "s" : ""}
+            </span>
+          </div>
+          <div className="divide-y divide-amber-100 bg-amber-50">
             {brief.instrumentationGaps.map((gap: string, i: number) => (
-              <div key={i} className="px-4 py-3 text-sm text-amber-800 flex gap-2 items-start">
+              <div key={i} className="px-5 py-3 text-sm text-amber-800 flex gap-2 items-start">
                 <span className="text-amber-400 shrink-0 mt-0.5">◎</span>
                 <span>{gap}</span>
               </div>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
       {brief.opportunities?.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
-            Product Opportunities
-          </h2>
-          <div className="space-y-2">
+        <div className="rounded-xl border border-blue-200 overflow-hidden shadow-sm">
+          <div className="px-5 py-3 bg-blue-50 border-b border-blue-200 flex items-center gap-2">
+            <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded font-bold">Opportunities</span>
+            <span className="text-sm font-semibold text-blue-900">Product Opportunities</span>
+          </div>
+          <div className="divide-y divide-blue-100 bg-white">
             {brief.opportunities.map((o: { idea: string; outcomeType?: string; fromPR: string; estimatedEffort?: string }, i: number) => (
-              <div key={i} className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 space-y-1">
+              <div key={i} className="px-5 py-4 space-y-1">
                 <div className="flex items-start gap-2">
                   {o.outcomeType && (
                     <span className={`text-xs px-1.5 py-0.5 rounded font-medium shrink-0 ${OUTCOME_BADGE[o.outcomeType] || "bg-gray-100 text-gray-600"}`}>
                       {o.outcomeType}
                     </span>
                   )}
-                  <p className="text-sm font-medium text-blue-900">{o.idea}</p>
+                  <p className="text-sm font-medium text-gray-900">{o.idea}</p>
                 </div>
                 {o.estimatedEffort && <p className="text-xs text-blue-600">{o.estimatedEffort}</p>}
-                <p className="text-xs text-blue-500">Surfaced by: {o.fromPR}</p>
+                <p className="text-xs text-gray-500">Surfaced by: {o.fromPR}</p>
               </div>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
       <div className="text-xs text-gray-500 border-t border-gray-100 pt-4 flex items-center justify-between">

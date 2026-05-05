@@ -30,22 +30,21 @@ export default async function RicePage() {
         <p className="text-gray-500 text-sm mt-1">Signal-derived hypotheses · (Reach × Impact% × Confidence%) ÷ Effort · Effort scale: 1w=÷1, 2w=÷3, 3w=÷5, 4w=÷7</p>
       </div>
 
-      <div className="flex gap-4 text-xs">
-        {[
-          { label: "Ship it", range: "600+", color: "text-green-600" },
-          { label: "Strong", range: "300–599", color: "text-emerald-600" },
-          { label: "Validate", range: "100–299", color: "text-amber-600" },
-          { label: "Monitor", range: "40–99", color: "text-orange-500" },
-          { label: "Hypothesis", range: "<40", color: "text-gray-400" },
-        ].map((s) => (
-          <div key={s.label} className="flex items-center gap-1.5">
-            <span className={`font-semibold ${s.color}`}>{s.label}</span>
-            <span className="text-gray-500">{s.range}</span>
-          </div>
-        ))}
-      </div>
-
       <div className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-4">
+          {[
+            { label: "Ship it", range: "600+", color: "text-green-600" },
+            { label: "Strong", range: "300–599", color: "text-emerald-600" },
+            { label: "Validate", range: "100–299", color: "text-amber-600" },
+            { label: "Monitor", range: "40–99", color: "text-orange-500" },
+            { label: "Hypothesis", range: "<40", color: "text-gray-400" },
+          ].map((s) => (
+            <div key={s.label} className="flex items-center gap-1 text-xs">
+              <span className={`font-semibold ${s.color}`}>{s.label}</span>
+              <span className="text-gray-400">{s.range}</span>
+            </div>
+          ))}
+        </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50">
@@ -87,7 +86,7 @@ export default async function RicePage() {
                   <td className="px-4 py-4 text-right">
                     <div className="flex flex-col items-end gap-0.5">
                       <span className={`text-2xl font-black tabular-nums leading-none ${lightColor}`}>{score}</span>
-                      <span className={`text-xs font-semibold ${lightColor} opacity-75`}>{label}</span>
+                      <span className={`text-xs font-semibold ${lightColor}`}>{label}</span>
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
@@ -102,9 +101,13 @@ export default async function RicePage() {
         </table>
       </div>
 
-      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="font-semibold text-gray-900 mb-4">Add Hypothesis</h2>
-        <RiceForm />
+      <section className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+          <h2 className="text-sm font-semibold text-gray-900">Add Hypothesis</h2>
+        </div>
+        <div className="p-5">
+          <RiceForm />
+        </div>
       </section>
     </div>
   )
