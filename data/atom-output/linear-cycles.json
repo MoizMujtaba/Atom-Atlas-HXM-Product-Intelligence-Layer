@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-04-30T09:00:00Z",
+  "generatedAt": "2026-05-05T00:00:00Z",
   "pods": [
     {
       "pod": "WFM 1",
-      "cycleNumber": 26,
-      "cycleEnds": "2026-05-04",
-      "totalIssues": 104,
-      "completedIssues": 30,
-      "devCompleted": 30,
-      "inReview": 15,
-      "inProgress": 11,
-      "todo": 48,
-      "completionPct": 29,
+      "cycleNumber": 27,
+      "cycleEnds": "2026-05-11",
+      "totalIssues": 89,
+      "completedIssues": 5,
+      "devCompleted": 5,
+      "inReview": 10,
+      "inProgress": 12,
+      "todo": 62,
+      "completionPct": 6,
       "slipRisk": "low",
-      "slipRiskReason": "Good momentum — 30 of 104 done by day 3. Census verification and notification work progressing.",
+      "slipRiskReason": "Cycle just started May 4. 5/89 done on day 1. Watch employee_submitted (−31% WoW) and employee_created (−43% WoW) — both regressing this week.",
       "mergedPRsThisWeek": [
         {
           "linearId": "WFM1-1112",
@@ -74,10 +74,16 @@
       ],
       "signals": [
         {
+          "type": "regression",
+          "urgency": "P1",
+          "title": "employee_submitted −31%, employee_created −43% WoW",
+          "detail": "employee_submitted dropped from 29 to 20 and employee_created from 28 to 16 this week. No WFM 1 PR shipped this cycle explains the drop. Possible causes: census verification flow change (WFM1-1112), broken form path, or data pipeline issue. Investigate before this carries into a second week."
+        },
+        {
           "type": "stale-tickets",
           "urgency": "P2",
-          "title": "2 merged PRs not closed in Linear",
-          "detail": "WFM1-1112 (PR 617) and WFM1-1169 (PR 603) are merged but Linear still shows 'In Review'. Velocity metrics are understated. Close these tickets."
+          "title": "Verify stale Linear tickets from cycle 26 are closed",
+          "detail": "WFM1-1112 (PR 617) and WFM1-1169 (PR 603) were merged in cycle 26 but showed 'In Review'. Confirm these are now closed so cycle 27 velocity data is clean."
         },
         {
           "type": "instrumentation-gap-planned",
@@ -101,17 +107,17 @@
     },
     {
       "pod": "WFM 2",
-      "cycleNumber": 26,
-      "cycleEnds": "2026-05-05",
-      "totalIssues": 39,
-      "completedIssues": 10,
-      "devCompleted": 10,
-      "inReview": 8,
-      "inProgress": 6,
-      "todo": 15,
-      "completionPct": 26,
-      "slipRisk": "medium",
-      "slipRiskReason": "New cycle started Apr 28. Policies feature carried over from cycle 25. 10/39 completed on day 2 — watch whether WFM2-491 (Policies Landing Page) gets unblocked this week.",
+      "cycleNumber": 27,
+      "cycleEnds": "2026-05-12",
+      "totalIssues": 0,
+      "completedIssues": 0,
+      "devCompleted": 0,
+      "inReview": 0,
+      "inProgress": 0,
+      "todo": 0,
+      "completionPct": 0,
+      "slipRisk": "low",
+      "slipRiskReason": "Cycle 27 starts May 5 — just kicked off. addExpense_upserted hit +111% WoW and expenseDetail_upserted +107% — strongest expense week on record. AI extraction adoption accelerating.",
       "mergedPRsThisWeek": [
         {
           "linearId": "WFM2-666",
@@ -184,17 +190,17 @@
     },
     {
       "pod": "PAY",
-      "cycleNumber": 26,
-      "cycleEnds": "2026-05-02",
-      "totalIssues": 66,
-      "completedIssues": 13,
-      "devCompleted": 13,
+      "cycleNumber": 27,
+      "cycleEnds": "2026-05-09",
+      "totalIssues": 58,
+      "completedIssues": 12,
+      "devCompleted": 12,
       "inReview": 4,
       "inProgress": 13,
-      "todo": 36,
-      "completionPct": 20,
-      "slipRisk": "high",
-      "slipRiskReason": "20% completion with 80% of issues not done and cycle ending May 2 — 2 days away. MFA QA test (PAY-1287) still unassigned. Scope has grown from 44 to 66 issues mid-cycle.",
+      "todo": 29,
+      "completionPct": 21,
+      "slipRisk": "medium",
+      "slipRiskReason": "Cycle 27 started May 2, 12/58 done in 3 days. mfa_sms_setup_phone up 135% WoW — MFA adoption accelerating. sso_login_failed up 31% (174 vs 133) alongside MFA rollout — investigate whether MFA is causing edge-case auth failures.",
       "mergedPRsThisWeek": [
         {
           "linearId": "PAY-1093",
@@ -255,10 +261,10 @@
       ],
       "signals": [
         {
-          "type": "slip",
+          "type": "auth-regression",
           "urgency": "P1",
-          "title": "PAY cycle ends May 2 — 80% of scope not done",
-          "detail": "Cycle 26 closes in 2 days with 13/66 issues done. Scope grew from 44 to 66 mid-cycle. MFA QA regression test (PAY-1287) still unassigned. Need immediate triage: what ships May 2 vs carries over?"
+          "title": "SSO login failures up 31% alongside MFA rollout",
+          "detail": "sso_login_failed rose from 133 to 174 this week while mfa_sms_setup_phone surged 135%. MFA adoption is accelerating but may be introducing edge-case failures. Cross-reference failure breakdown by error type — confirm MFA refactor (PAY-1093) is not causing regressions for specific country codes or device types."
         },
         {
           "type": "qa-gap",
@@ -288,18 +294,18 @@
     },
     {
       "pod": "FNM 1",
-      "cycleNumber": 28,
-      "cycleName": "Apr26'WK5",
-      "cycleEnds": "2026-05-04",
-      "totalIssues": 44,
-      "completedIssues": 18,
-      "devCompleted": 18,
+      "cycleNumber": 29,
+      "cycleName": "May26'WK1",
+      "cycleEnds": "2026-05-11",
+      "totalIssues": 86,
+      "completedIssues": 10,
+      "devCompleted": 10,
       "inReview": 8,
       "inProgress": 9,
-      "todo": 9,
-      "completionPct": 41,
-      "slipRisk": "medium",
-      "slipRiskReason": "Good velocity — 18/44 done. Two PROD customer-blocking issues (Sage sync) in progress alongside feature work. Virtual expense card epic still incomplete end-to-end.",
+      "todo": 59,
+      "completionPct": 12,
+      "slipRisk": "low",
+      "slipRiskReason": "Cycle 29 just started May 4. 10/86 on day 1 is solid early progress. Monitor whether Sage sync PROD blocker (FNM1-815/807) carried over into this cycle.",
       "mergedPRsThisWeek": [
         {
           "linearId": "FNM1-805",
@@ -381,17 +387,17 @@
     },
     {
       "pod": "FNM 2",
-      "cycleNumber": 16,
-      "cycleEnds": "2026-05-04",
-      "totalIssues": 66,
-      "completedIssues": 25,
-      "devCompleted": 25,
+      "cycleNumber": 17,
+      "cycleEnds": "2026-05-11",
+      "totalIssues": 61,
+      "completedIssues": 5,
+      "devCompleted": 5,
       "inReview": 3,
       "inProgress": 12,
-      "todo": 26,
-      "completionPct": 38,
+      "todo": 41,
+      "completionPct": 8,
       "slipRisk": "low",
-      "slipRiskReason": "Strong momentum — 25/66 done by day 3. GTN PROD deployment (FNM2-983) is the key delivery this cycle.",
+      "slipRiskReason": "Cycle 17 just started May 4. 5/61 on day 1. GTN PROD deployment should be resolving — confirm FNM2-983 shipped and PostHog observability was added.",
       "mergedPRsThisWeek": [
         {
           "linearId": "FNM2-788",
