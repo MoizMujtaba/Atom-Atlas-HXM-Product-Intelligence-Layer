@@ -12,3 +12,29 @@ body {
   outline-offset: 2px;
   border-radius: 3px;
 }
+
+/* Atlas HXM brand tokens — scoped to .atlas-brand */
+.atlas-brand {
+  --atlas-blue-100: #DAE6FE;
+  --atlas-blue-250: #82ACFC;
+  --atlas-blue-500: #0559FA;
+  --atlas-blue-900: #06195E;
+  --atlas-purple-100: #E6DFFB;
+  --atlas-purple-250: #AB93F1;
+  --atlas-purple-500: #5827E3;
+  --atlas-purple-900: #1E046A;
+  --atlas-magenta-100: #F5E0F7;
+  --atlas-magenta-500: #BA33CA;
+  --atlas-magenta-900: #48114F;
+  --atlas-coral-100: #FFC6C5;
+  --atlas-coral-500: #FF595A;
+  --atlas-orangellow-100: #F6D991;
+  --atlas-orangellow-500: #FF782C;
+  --atlas-gray-50: #F8F8F8;
+  --atlas-gray-300: #E9E9E9;
+  --atlas-gray-900: #160629;
+  font-family: var(--font-brand), 'Poppins', var(--font-sans), -apple-system, sans-serif;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
+  color: var(--atlas-gray-900);
+}

@@ -242,3 +242,91 @@ export function getInstrumentationGaps(): InstrumentationGap[] {
 
   return gaps
 }
+
+export interface ProductIntelligenceSourceLink {
+  label: string
+  url: string
+}
+
+export interface ProductIntelligenceSignal {
+  id: string
+  title: string
+  sourceType: string
+  sourceLinks: ProductIntelligenceSourceLink[]
+  company: string
+  dealOutcome: string
+  theme: string
+  roadmapOverlap: "aligned" | "adjacent" | "gap" | "unknown"
+  productSignal: string
+  marketingSignal: string
+  recommendedAction: string
+  approvalStatus: "approved" | "draft"
+  confidence: "high" | "medium" | "low"
+  capturedAt: string
+}
+
+export interface ProductIntelligenceData {
+  generatedAt: string
+  reviewedSourceCount: number
+  approvedSignalCount: number
+  draftHeldBackCount: number
+  signals: ProductIntelligenceSignal[]
+}
+
+export function getProductIntelligence(): ProductIntelligenceData | null {
+  return read<ProductIntelligenceData | null>("product-intelligence.json", null)
+}
+
+export type SentinelOverlap = "aligned" | "adjacent" | "gap" | "unknown"
+export type SentinelConfidence = "high" | "medium" | "low" | "none"
+
+export interface SentinelSourceRow {
+  row_id: string
+  source_system: "Avoma" | "HubSpot" | "Roadmap" | string
+  source_type: string
+  source_date: string
+  title: string
+  company_or_counterparty: string
+  stage_or_purpose: string
+  owner_or_organizer: string
+  source_link: string
+  secondary_link: string
+  description: string
+  notes: string
+  deal_amount: string | number | null
+  outcome_signal: string
+  roadmap_overlap: SentinelOverlap
+  roadmap_theme: string
+  roadmap_vertical: string
+  roadmap_basis: string
+  confidence: SentinelConfidence | string
+}
+
+export interface SentinelSourceSummary {
+  generated_at: string
+  source_window_start: string
+  source_window_end: string
+  counts: {
+    total_sources: number
+    customer_sources: number
+    avoma_transcripts: number
+    hubspot_deals: number
+    roadmap_items: number
+  }
+  future_dated_customer_sources: number
+  counts_by_system: Record<string, number>
+  overlap_counts: Record<string, number>
+  overlap_rate_percent: number
+  confidence_counts: Record<string, number>
+  top_roadmap_themes: { theme: string; count: number }[]
+  avoma_stage_counts: { stage: string; count: number }[]
+}
+
+export interface SentinelSourceData {
+  summary: SentinelSourceSummary
+  rows: SentinelSourceRow[]
+}
+
+export function getSentinelSources(): SentinelSourceData | null {
+  return read<SentinelSourceData | null>("sentinel-sources.json", null)
+}

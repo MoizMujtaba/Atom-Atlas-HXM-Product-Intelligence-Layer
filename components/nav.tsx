@@ -27,6 +27,7 @@ const links = [
   { href: "/cycles", label: "Cycles" },
   { href: "/rice", label: "RICE Backlog" },
   { href: "/compete", label: "Compete" },
+  { href: "/sentinel", label: "Sentinel" },
 ]
 
 export default function Nav() {
