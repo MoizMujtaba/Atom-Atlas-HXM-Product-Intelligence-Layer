@@ -119,19 +119,20 @@ export default function CyclesPage() {
         <p className="text-xs text-gray-500 mt-0.5">Last synced {new Date(generatedAt).toLocaleString()}</p>
       </div>
 
-      {/* Summary row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "Pods tracked", value: pods.length },
-          { label: "PRs mapped to cycle", value: `${plannedVsShipped.mappedToLinear}/${plannedVsShipped.totalMergedPRs}` },
-          { label: "Off-roadmap in-progress", value: plannedVsShipped.offRoadmapInProgress != null ? `${plannedVsShipped.offRoadmapInProgress}/${plannedVsShipped.totalInProgress}` : "—", alert: (plannedVsShipped.offRoadmapInProgress ?? 0) > 0 },
-          { label: "P1 signals this cycle", value: plannedVsShipped.p1Signals, alert: plannedVsShipped.p1Signals > 0 },
-        ].map((m) => (
-          <div key={m.label} className={`rounded-xl border px-4 py-4 ${m.alert ? "border-red-200 bg-red-50" : "border-gray-200 bg-white"}`}>
-            <p className="text-xs text-gray-500 mb-1">{m.label}</p>
-            <p className={`text-2xl font-bold tabular-nums ${m.alert ? "text-red-700" : "text-gray-900"}`}>{m.value}</p>
-          </div>
-        ))}
+      {/* Summary bar */}
+      <div className="flex flex-wrap gap-6 text-sm border-b border-gray-200 pb-4">
+        <span className="text-gray-500">{pods.length} pods</span>
+        <span className="text-gray-500">
+          <span className="font-semibold text-gray-900">{plannedVsShipped.mappedToLinear}/{plannedVsShipped.totalMergedPRs}</span> PRs mapped
+        </span>
+        {plannedVsShipped.offRoadmapInProgress != null && (
+          <span className={(plannedVsShipped.offRoadmapInProgress ?? 0) > 0 ? "text-amber-700" : "text-gray-500"}>
+            <span className="font-semibold">{plannedVsShipped.offRoadmapInProgress}/{plannedVsShipped.totalInProgress}</span> off-roadmap in progress
+          </span>
+        )}
+        <span className={plannedVsShipped.p1Signals > 0 ? "text-red-700 font-semibold" : "text-gray-500"}>
+          {plannedVsShipped.p1Signals > 0 ? `${plannedVsShipped.p1Signals} P1 signals` : "no P1 signals"}
+        </span>
       </div>
 
       {/* Cross-pod signals */}

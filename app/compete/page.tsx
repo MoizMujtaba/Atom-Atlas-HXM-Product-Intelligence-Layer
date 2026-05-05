@@ -18,12 +18,14 @@ const SCORE_LABEL_COLOR: Record<string, string> = {
 }
 
 const TYPE_BADGE: Record<string, string> = {
-  "product-launch": "bg-purple-100 text-purple-700",
-  "pricing": "bg-blue-100 text-blue-700",
-  "partnership": "bg-teal-100 text-teal-700",
-  "ai-feature": "bg-indigo-100 text-indigo-700",
-  "marketing": "bg-pink-100 text-pink-700",
+  "product-launch": "bg-blue-100 text-blue-700",
+  "ai-feature": "bg-blue-100 text-blue-700",
+  "acquisition": "bg-green-100 text-green-700",
+  "partnership": "bg-green-100 text-green-700",
   "expansion": "bg-green-100 text-green-700",
+  "milestone": "bg-green-100 text-green-700",
+  "pricing": "bg-gray-100 text-gray-600",
+  "marketing": "bg-gray-100 text-gray-600",
 }
 
 export default function CompetePage() {
@@ -81,26 +83,25 @@ export default function CompetePage() {
         </div>
       )}
 
-      {/* Competitor cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+      {/* Competitor cards — full-width stacked */}
+      <div className="space-y-5">
         {intel.competitors.map((c) => (
-          <div key={c.name} className="rounded-xl border border-gray-200 bg-white overflow-hidden flex flex-col shadow-sm">
+          <div key={c.name} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
             <div className="px-5 py-4 bg-gray-50 border-b border-gray-200">
               <h2 className="font-semibold text-gray-900">{c.name}</h2>
-              <p className="text-xs text-gray-500 mt-1 italic leading-relaxed">{c.atlasOpportunity}</p>
             </div>
 
-            <div className="p-5 space-y-5 flex-1">
+            <div className="divide-y divide-gray-100">
               {/* Recent moves */}
               {c.recentMoves.length > 0 && (
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2.5">Recent Moves</p>
-                  <div className="space-y-3">
+                <div className="p-5 space-y-4">
+                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">Recent Moves</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {c.recentMoves.map((move, i) => (
-                      <div key={i} className="space-y-1">
+                      <div key={i} className="space-y-1.5">
                         <div className="flex items-center gap-2">
                           <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${TYPE_BADGE[move.type] ?? "bg-gray-100 text-gray-600"}`}>
-                            {move.type.replace("-", " ")}
+                            {move.type.replace(/-/g, " ")}
                           </span>
                           <span className="text-xs text-gray-500">{move.date}</span>
                         </div>
@@ -117,9 +118,9 @@ export default function CompetePage() {
 
               {/* G2 complaints */}
               {c.g2Complaints.length > 0 && (
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">G2 Complaints (Atlas Opportunity)</p>
-                  <ul className="space-y-1.5">
+                <div className="p-5 space-y-2">
+                  <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">G2 Complaints</p>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5">
                     {c.g2Complaints.map((complaint, i) => (
                       <li key={i} className="text-xs text-green-700 flex gap-1.5">
                         <span className="text-green-500 mt-0.5 shrink-0">✓</span>
@@ -129,6 +130,12 @@ export default function CompetePage() {
                   </ul>
                 </div>
               )}
+
+              {/* Atlas play — most actionable, always last */}
+              <div className="px-5 py-4 bg-gray-900">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Atlas play</p>
+                <p className="text-sm text-white leading-relaxed">{c.atlasOpportunity}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -147,7 +154,7 @@ export default function CompetePage() {
               .map((item) => (
                 <div key={item.id} className="px-5 py-3 flex items-start gap-4">
                   <div className="text-center shrink-0 w-14">
-                    <p className="text-lg font-bold text-gray-900 tabular-nums">{item.score}</p>
+                    <p className="text-2xl font-black text-gray-900 tabular-nums leading-none">{item.score}</p>
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${SCORE_LABEL_COLOR[item.label] ?? "bg-gray-100 text-gray-600"}`}>
                       {item.label}
                     </span>

@@ -3,10 +3,10 @@ import { generateWeeklyBrief } from "@/lib/claude"
 
 export const dynamic = "force-dynamic"
 
-const SIGNAL_LIGHT: Record<string, { bg: string; text: string; dot: string }> = {
-  green: { bg: "bg-green-50 border-green-200", text: "text-green-800", dot: "bg-green-500" },
-  amber: { bg: "bg-amber-50 border-amber-200", text: "text-amber-800", dot: "bg-amber-400" },
-  red: { bg: "bg-red-50 border-red-200", text: "text-red-800", dot: "bg-red-500" },
+const SIGNAL_LIGHT: Record<string, { bg: string; text: string; subtext: string; dot: string }> = {
+  green: { bg: "bg-green-50 border-green-200", text: "text-green-800", subtext: "text-green-700", dot: "bg-green-500" },
+  amber: { bg: "bg-amber-50 border-amber-200", text: "text-amber-800", subtext: "text-amber-700", dot: "bg-amber-400" },
+  red: { bg: "bg-red-50 border-red-200", text: "text-red-800", subtext: "text-red-700", dot: "bg-red-500" },
 }
 
 const OUTCOME_BADGE: Record<string, string> = {
@@ -71,7 +71,7 @@ export default async function BriefPage() {
         <div>
           <p className={`text-sm font-semibold ${signal.text}`}>{brief.execSignal}</p>
           {brief.weekSignalReason && (
-            <p className={`text-xs mt-1 ${signal.text} opacity-75`}>{brief.weekSignalReason}</p>
+            <p className={`text-xs mt-1 ${signal.subtext}`}>{brief.weekSignalReason}</p>
           )}
         </div>
       </div>
@@ -122,8 +122,8 @@ export default async function BriefPage() {
                 <p className="text-sm font-medium text-amber-800">{r.title}</p>
                 <p className="text-sm text-amber-700">{r.reason}</p>
                 {r.recommendedAction && (
-                  <p className="text-xs font-medium text-amber-900 border-l-2 border-amber-400 pl-2 mt-1">
-                    {r.recommendedAction}
+                  <p className="text-xs font-medium text-amber-900 mt-1">
+                    <span className="text-amber-500 mr-1">→</span>{r.recommendedAction}
                   </p>
                 )}
               </div>
