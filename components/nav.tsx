@@ -22,12 +22,9 @@ function P1Badge() {
 }
 
 const links = [
-  { href: "/brief", label: "Weekly Brief" },
-  { href: "/signals", label: "Signals", badge: <P1Badge /> },
-  { href: "/cycles", label: "Cycles" },
-  { href: "/rice", label: "RICE Backlog" },
-  { href: "/compete", label: "Compete" },
+  { href: "/cycles", label: "Cycles", badge: <P1Badge /> },
   { href: "/sentinel", label: "Sentinel" },
+  { href: "/rice", label: "RICE Backlog" },
 ]
 
 export default function Nav() {
@@ -47,7 +44,7 @@ export default function Nav() {
                 href={l.href}
                 className={cn(
                   "flex items-center px-3 py-1.5 rounded text-sm transition-all duration-150",
-                  pathname === l.href
+                  (l.href === "/cycles" ? pathname.startsWith("/cycles") : pathname === l.href)
                     ? "bg-gray-900 text-white font-medium"
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                 )}

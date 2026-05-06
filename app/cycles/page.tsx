@@ -118,7 +118,7 @@ export default function CyclesPage() {
 
   if (!data) {
     return (
-      <div className="atlas-brand">
+      <>
         <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid var(--atlas-gray-300)", background: "white" }}>
           <div className="px-5 py-3 border-b" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
             <h1 className="text-sm font-semibold" style={{ color: "var(--atlas-gray-900)" }}>Cycle Intelligence</h1>
@@ -128,14 +128,14 @@ export default function CyclesPage() {
             <p className="text-[11px] mt-1" style={{ color: "var(--atlas-gray-900)", opacity: 0.4 }}>Click Sync in the top nav to pull Linear cycle data.</p>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 
   const { pods, crossPodSignals, plannedVsShipped, generatedAt } = data
 
   return (
-    <div className="atlas-brand space-y-8">
+    <>
       {/* Hero */}
       <AtomHero
         pill="ATLAS HXM · CYCLE INTELLIGENCE"
@@ -528,6 +528,6 @@ export default function CyclesPage() {
           )
         })}
       </section>
-    </div>
+    </>
   )
 }
