@@ -1,5 +1,7 @@
 import fs from "fs"
 import path from "path"
+import AtomHero from "@/components/atom-hero"
+import StatTile from "@/components/stat-tile"
 
 export const dynamic = "force-static"
 
@@ -64,34 +66,45 @@ function loadCycles(): LinearCycles | null {
   }
 }
 
-const URGENCY_STYLES = {
-  P1: { badge: "bg-red-600 text-white", card: "border-red-200 bg-red-50", title: "text-red-900", detail: "text-red-700" },
-  P2: { badge: "bg-amber-500 text-white", card: "border-amber-200 bg-amber-50", title: "text-amber-900", detail: "text-amber-700" },
-  P3: { badge: "bg-gray-200 text-gray-600", card: "border-gray-200 bg-gray-50", title: "text-gray-700", detail: "text-gray-500" },
+const URGENCY_BADGE: Record<string, { bg: string; fg: string }> = {
+  P1: { bg: "var(--atlas-coral-500)", fg: "white" },
+  P2: { bg: "var(--atlas-orangellow-500)", fg: "white" },
+  P3: { bg: "var(--atlas-gray-300)", fg: "var(--atlas-gray-900)" },
 }
 
-const SLIP_STYLES = {
-  high: "bg-red-100 text-red-700 border-red-400 border-2",
-  medium: "bg-amber-100 text-amber-700 border-amber-200",
-  low: "bg-green-100 text-green-700 border-green-200",
+const URGENCY_CARD: Record<string, { border: string; bg: string; title: string; detail: string }> = {
+  P1: { border: "var(--atlas-coral-100)", bg: "var(--atlas-coral-100)", title: "#7A1818", detail: "#7A1818" },
+  P2: { border: "var(--atlas-orangellow-100)", bg: "var(--atlas-orangellow-100)", title: "#5A3A0B", detail: "#5A3A0B" },
+  P3: { border: "var(--atlas-gray-300)", bg: "var(--atlas-gray-50)", title: "var(--atlas-gray-900)", detail: "var(--atlas-gray-900)" },
+}
+
+const SLIP_STYLE: Record<string, { bg: string; fg: string; border: string }> = {
+  high: { bg: "var(--atlas-coral-100)", fg: "#7A1818", border: "var(--atlas-coral-500)" },
+  medium: { bg: "var(--atlas-orangellow-100)", fg: "#5A3A0B", border: "var(--atlas-orangellow-500)" },
+  low: { bg: "var(--atlas-blue-100)", fg: "var(--atlas-blue-900)", border: "var(--atlas-blue-250)" },
 }
 
 function CompletionBar({ pct, endsAt }: { pct: number; endsAt: string }) {
   const daysLeft = Math.ceil((new Date(endsAt).getTime() - Date.now()) / 86400000)
   const isOverdue = daysLeft < 0
   const isUrgent = daysLeft <= 1
+  const barColor =
+    isUrgent && pct < 60 ? "var(--atlas-coral-500)" :
+    pct >= 70 ? "var(--atlas-blue-500)" :
+    "var(--atlas-purple-500)"
+
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>
         <span>{pct}% complete</span>
-        <span className={isUrgent ? "text-red-600 font-medium" : ""}>
+        <span style={isUrgent ? { color: "var(--atlas-coral-500)", fontWeight: 600, opacity: 1 } : {}}>
           {isOverdue ? "cycle ended" : daysLeft === 0 ? "ends today" : daysLeft === 1 ? "1 day left" : `${daysLeft}d left`}
         </span>
       </div>
-      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--atlas-gray-300)" }}>
         <div
-          className={`h-full rounded-full transition-all ${isUrgent && pct < 60 ? "bg-red-500" : pct >= 70 ? "bg-green-500" : "bg-blue-500"}`}
-          style={{ width: `${Math.min(pct, 100)}%` }}
+          className="h-full rounded-full transition-all"
+          style={{ width: `${Math.min(pct, 100)}%`, background: barColor }}
         />
       </div>
     </div>
@@ -103,13 +116,15 @@ export default function CyclesPage() {
 
   if (!data) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
-          <h1 className="text-sm font-semibold text-gray-900">Cycle Intelligence</h1>
-        </div>
-        <div className="px-5 py-10 text-center">
-          <p className="text-sm text-gray-500">No cycle data available.</p>
-          <p className="text-xs text-gray-400 mt-1">Click Sync in the top nav to pull Linear cycle data.</p>
+      <div className="atlas-brand">
+        <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid var(--atlas-gray-300)", background: "white" }}>
+          <div className="px-5 py-3 border-b" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
+            <h1 className="text-sm font-semibold" style={{ color: "var(--atlas-gray-900)" }}>Cycle Intelligence</h1>
+          </div>
+          <div className="px-5 py-10 text-center">
+            <p className="text-sm" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>No cycle data available.</p>
+            <p className="text-[11px] mt-1" style={{ color: "var(--atlas-gray-900)", opacity: 0.4 }}>Click Sync in the top nav to pull Linear cycle data.</p>
+          </div>
         </div>
       </div>
     )
@@ -118,46 +133,95 @@ export default function CyclesPage() {
   const { pods, crossPodSignals, plannedVsShipped, generatedAt } = data
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-xl font-semibold text-gray-900">Cycle Intelligence</h1>
-        <p className="text-gray-500 text-sm mt-1">Linear cycles × GitHub PRs — planned vs shipped, slip risks, stale tickets</p>
-        <p className="text-xs text-gray-500 mt-0.5">Last synced {new Date(generatedAt).toLocaleString()}</p>
-      </div>
+    <div className="atlas-brand space-y-8">
+      {/* Hero */}
+      <AtomHero
+        pill="ATLAS HXM · CYCLE INTELLIGENCE"
+        date={`Last synced ${new Date(generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`}
+        headline="Linear cycles × GitHub PRs — planned vs shipped."
+        subline="Slip risks, stale tickets, and off-roadmap work surfaced across all pods."
+        stats={
+          <div className="space-y-2 min-w-[160px]">
+            <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-blue-250)" }}>
+              Cycle Summary
+            </p>
+            <p className="text-sm text-white">
+              <span className="font-semibold">{pods.length}</span> pods active
+            </p>
+            <p className="text-sm text-white">
+              <span className="font-semibold">{plannedVsShipped.mappedToLinear}/{plannedVsShipped.totalMergedPRs}</span> PRs mapped
+            </p>
+            {plannedVsShipped.p1Signals > 0 && (
+              <p className="text-sm" style={{ color: "var(--atlas-coral-500)" }}>
+                <span className="font-semibold">{plannedVsShipped.p1Signals}</span> P1 signals
+              </p>
+            )}
+          </div>
+        }
+      />
 
-      {/* Summary bar */}
-      <div className="flex flex-wrap gap-6 text-sm border-b border-gray-200 pb-4">
-        <span className="text-gray-500">{pods.length} pods</span>
-        <span className="text-gray-500">
-          <span className="font-semibold text-gray-900">{plannedVsShipped.mappedToLinear}/{plannedVsShipped.totalMergedPRs}</span> PRs mapped
-        </span>
+      {/* Stat tiles */}
+      <div className="grid gap-3 sm:grid-cols-4">
+        <StatTile
+          label="Pods Active"
+          value={pods.length}
+          accent="var(--atlas-blue-500)"
+          caption="Linear cycles in flight"
+        />
+        <StatTile
+          label="PRs Mapped"
+          value={`${plannedVsShipped.mappedToLinear}/${plannedVsShipped.totalMergedPRs}`}
+          accent="var(--atlas-purple-500)"
+          caption="Linked to Linear tickets"
+        />
         {plannedVsShipped.offRoadmapInProgress != null && (
-          <span className={(plannedVsShipped.offRoadmapInProgress ?? 0) > 0 ? "text-amber-700" : "text-gray-500"}>
-            <span className="font-semibold">{plannedVsShipped.offRoadmapInProgress}/{plannedVsShipped.totalInProgress}</span> off-roadmap in progress
-          </span>
+          <StatTile
+            label="Off-Roadmap"
+            value={`${plannedVsShipped.offRoadmapInProgress}/${plannedVsShipped.totalInProgress}`}
+            accent="var(--atlas-orangellow-500)"
+            caption="In progress but off-plan"
+          />
         )}
-        <span className={plannedVsShipped.p1Signals > 0 ? "text-red-700 font-semibold" : "text-gray-500"}>
-          {plannedVsShipped.p1Signals > 0 ? `${plannedVsShipped.p1Signals} P1 signals` : "no P1 signals"}
-        </span>
+        <StatTile
+          label="P1 Signals"
+          value={plannedVsShipped.p1Signals}
+          accent="var(--atlas-coral-500)"
+          caption="Require immediate action"
+          dark={plannedVsShipped.p1Signals > 0}
+        />
       </div>
 
       {/* Cross-pod signals */}
       {crossPodSignals.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium">Cross-Pod Signals</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.65 }}>
+            Cross-Pod Signals
+          </h2>
           <div className="space-y-2">
             {crossPodSignals.map((s, i) => {
-              const style = URGENCY_STYLES[s.urgency]
+              const style = URGENCY_CARD[s.urgency]
+              const badge = URGENCY_BADGE[s.urgency]
               return (
-                <div key={i} className={`rounded-xl border px-5 py-4 ${style.card}`}>
+                <div key={i} className="rounded-2xl border px-5 py-4" style={{ borderColor: style.border, background: style.bg }}>
                   <div className="flex items-start gap-3">
-                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 ${style.badge}`}>{s.urgency}</span>
+                    <span
+                      className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+                      style={{ background: badge.bg, color: badge.fg }}
+                    >
+                      {s.urgency}
+                    </span>
                     <div>
-                      <p className={`text-sm font-semibold ${style.title}`}>{s.title}</p>
-                      <p className={`text-sm mt-1 ${style.detail}`}>{s.detail}</p>
+                      <p className="text-sm font-semibold" style={{ color: style.title }}>{s.title}</p>
+                      <p className="text-sm mt-1" style={{ color: style.detail, opacity: 0.85 }}>{s.detail}</p>
                       <div className="flex gap-1 mt-2 flex-wrap">
                         {s.affectedPods.map(pod => (
-                          <span key={pod} className="text-xs bg-white bg-opacity-60 border border-current border-opacity-20 px-1.5 py-0.5 rounded">{pod}</span>
+                          <span
+                            key={pod}
+                            className="text-xs px-1.5 py-0.5 rounded"
+                            style={{ background: "rgba(255,255,255,0.6)", color: style.title, border: "1px solid rgba(0,0,0,0.08)" }}
+                          >
+                            {pod}
+                          </span>
                         ))}
                       </div>
                     </div>
@@ -171,7 +235,9 @@ export default function CyclesPage() {
 
       {/* Per-pod sections */}
       <section className="space-y-4">
-        <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium">Pod Cycles</h2>
+        <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.65 }}>
+          Pod Cycles
+        </h2>
         {pods.map((pod) => {
           const signals = pod.signals || []
           const keyInProgress = pod.keyInProgress || []
@@ -180,26 +246,38 @@ export default function CyclesPage() {
           const otherSignals = signals.filter(s => s.urgency !== "P1")
           const offRoadmapInProgress = keyInProgress.filter(i => i.hasRoadmapLabel === false).length
           const offRoadmapMerged = mergedPRsThisWeek.filter(p => p.hasRoadmapLabel === false).length
-          const daysLeft = Math.ceil((new Date(pod.cycleEnds).getTime() - Date.now()) / 86400000)
+          const slip = SLIP_STYLE[pod.slipRisk]
 
           return (
-            <div key={pod.pod} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+            <div key={pod.pod} className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid var(--atlas-gray-300)", background: "white" }}>
               {/* Pod header */}
-              <div className="px-5 py-4 bg-gray-50 border-b border-gray-200">
+              <div className="px-5 py-4 border-b" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-900">{pod.pod}</h3>
-                      <span className="text-xs text-gray-500">Cycle {pod.cycleNumber}{pod.cycleName ? ` · ${pod.cycleName}` : ""}</span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-semibold" style={{ color: "var(--atlas-gray-900)" }}>{pod.pod}</h3>
+                      <span className="text-xs" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>
+                        Cycle {pod.cycleNumber}{pod.cycleName ? ` · ${pod.cycleName}` : ""}
+                      </span>
                       {p1Signals.length > 0 && (
-                        <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded font-bold">{p1Signals.length} P1</span>
+                        <span
+                          className="text-xs font-bold px-1.5 py-0.5 rounded"
+                          style={{ background: "var(--atlas-coral-500)", color: "white" }}
+                        >
+                          {p1Signals.length} P1
+                        </span>
                       )}
                       {offRoadmapInProgress > 0 && (
-                        <span className="text-xs bg-amber-500 text-white px-1.5 py-0.5 rounded font-medium">{offRoadmapInProgress} off-roadmap</span>
+                        <span
+                          className="text-xs font-medium px-1.5 py-0.5 rounded"
+                          style={{ background: "var(--atlas-orangellow-500)", color: "white" }}
+                        >
+                          {offRoadmapInProgress} off-roadmap
+                        </span>
                       )}
                     </div>
-                    <div className="flex gap-3 mt-2 text-xs text-gray-500 flex-wrap">
-                      <span className="text-green-600 font-medium">{pod.completedIssues} done</span>
+                    <div className="flex gap-3 mt-2 text-xs flex-wrap" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+                      <span style={{ color: "var(--atlas-blue-500)", fontWeight: 600, opacity: 1 }}>{pod.completedIssues} done</span>
                       <span>{pod.devCompleted} dev complete</span>
                       <span>{pod.inReview} in review</span>
                       <span>{pod.inProgress} in progress</span>
@@ -207,15 +285,22 @@ export default function CyclesPage() {
                       <span>·</span>
                       <span>{pod.totalIssues} total</span>
                       {(offRoadmapInProgress > 0 || offRoadmapMerged > 0) && (
-                        <span className="text-amber-600 font-medium">· {offRoadmapInProgress + offRoadmapMerged} off-roadmap</span>
+                        <span style={{ color: "var(--atlas-orangellow-500)", fontWeight: 600, opacity: 1 }}>
+                          · {offRoadmapInProgress + offRoadmapMerged} off-roadmap
+                        </span>
                       )}
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded border ${SLIP_STYLES[pod.slipRisk]}`}>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded border"
+                      style={{ background: slip.bg, color: slip.fg, borderColor: slip.border }}
+                    >
                       {pod.slipRisk} slip risk
                     </span>
-                    <p className="text-xs text-gray-500 mt-1">ends {new Date(pod.cycleEnds).toLocaleDateString()}</p>
+                    <p className="text-xs mt-1" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>
+                      ends {new Date(pod.cycleEnds).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-3">
@@ -228,12 +313,17 @@ export default function CyclesPage() {
                 {p1Signals.length > 0 && (
                   <div className="space-y-2">
                     {p1Signals.map((s, i) => (
-                      <div key={i} className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+                      <div key={i} className="rounded-xl border px-4 py-3" style={{ borderColor: "var(--atlas-coral-100)", background: "var(--atlas-coral-100)" }}>
                         <div className="flex items-start gap-2">
-                          <span className="text-xs font-bold bg-red-600 text-white px-1.5 py-0.5 rounded shrink-0">P1</span>
+                          <span
+                            className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+                            style={{ background: "var(--atlas-coral-500)", color: "white" }}
+                          >
+                            P1
+                          </span>
                           <div>
-                            <p className="text-sm font-semibold text-red-900">{s.title}</p>
-                            <p className="text-sm text-red-700 mt-0.5">{s.detail}</p>
+                            <p className="text-sm font-semibold" style={{ color: "#7A1818" }}>{s.title}</p>
+                            <p className="text-sm mt-0.5" style={{ color: "#7A1818", opacity: 0.85 }}>{s.detail}</p>
                           </div>
                         </div>
                       </div>
@@ -245,24 +335,50 @@ export default function CyclesPage() {
                   {/* Key In Progress */}
                   {keyInProgress.length > 0 && (
                     <div>
-                      <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">Key In Progress</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+                        Key In Progress
+                      </p>
                       <div className="space-y-1.5">
                         {keyInProgress.map((item) => (
-                          <div key={item.id} className={`rounded-lg px-3 py-2 text-sm ${item.isProdBlocker ? "bg-red-50 border border-red-200" : "bg-gray-50 border border-gray-200"}`}>
+                          <div
+                            key={item.id}
+                            className="rounded-xl px-3 py-2 text-sm border"
+                            style={{
+                              borderColor: item.isProdBlocker ? "var(--atlas-coral-100)" : "var(--atlas-gray-300)",
+                              background: item.isProdBlocker ? "var(--atlas-coral-100)" : "var(--atlas-gray-50)",
+                            }}
+                          >
                             <div className="flex items-start gap-1.5">
-                              {item.isProdBlocker && <span className="text-red-500 text-xs shrink-0 mt-0.5">PROD</span>}
+                              {item.isProdBlocker && (
+                                <span className="text-xs shrink-0 mt-0.5 font-bold" style={{ color: "var(--atlas-coral-500)" }}>PROD</span>
+                              )}
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                  <span className="font-mono text-xs text-gray-500">{item.id}</span>
+                                  <span className="font-mono text-xs" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>{item.id}</span>
                                   {item.hasRoadmapLabel === false && (
-                                    <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1 py-0 rounded font-medium leading-4">off-roadmap</span>
+                                    <span
+                                      className="text-xs px-1 rounded font-medium leading-4"
+                                      style={{ background: "var(--atlas-orangellow-100)", color: "#5A3A0B", border: "1px solid rgba(255,120,44,0.25)" }}
+                                    >
+                                      off-roadmap
+                                    </span>
                                   )}
                                   {item.hasRoadmapLabel === true && (
-                                    <span className="text-xs bg-green-100 text-green-700 border border-green-200 px-1 py-0 rounded font-medium leading-4">2026</span>
+                                    <span
+                                      className="text-xs px-1 rounded font-medium leading-4"
+                                      style={{ background: "var(--atlas-blue-100)", color: "var(--atlas-blue-900)", border: "1px solid var(--atlas-blue-250)" }}
+                                    >
+                                      2026
+                                    </span>
                                   )}
                                 </div>
-                                <p className={`text-xs mt-0.5 leading-snug ${item.isProdBlocker ? "text-red-800 font-medium" : "text-gray-700"}`}>{item.title}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">{item.assignee}</p>
+                                <p
+                                  className="text-xs mt-0.5 leading-snug"
+                                  style={{ color: item.isProdBlocker ? "#7A1818" : "var(--atlas-gray-900)", fontWeight: item.isProdBlocker ? 600 : 400 }}
+                                >
+                                  {item.title}
+                                </p>
+                                <p className="text-xs mt-0.5" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>{item.assignee}</p>
                               </div>
                             </div>
                           </div>
@@ -273,32 +389,61 @@ export default function CyclesPage() {
 
                   {/* Merged PRs */}
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-gray-500 font-medium mb-2">PRs Merged This Week</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+                      PRs Merged This Week
+                    </p>
                     {mergedPRsThisWeek.length === 0 ? (
-                      <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">No PRs merged</p>
+                      <p
+                        className="text-sm rounded-xl px-3 py-2"
+                        style={{ background: "var(--atlas-gray-50)", border: "1px solid var(--atlas-gray-300)", color: "var(--atlas-gray-900)", opacity: 0.4 }}
+                      >
+                        No PRs merged
+                      </p>
                     ) : (
                       <div className="space-y-1.5">
                         {mergedPRsThisWeek.map((pr, i) => (
-                          <div key={i} className={`rounded-lg px-3 py-2 text-sm border ${pr.stale ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
+                          <div
+                            key={i}
+                            className="rounded-xl px-3 py-2 text-sm border"
+                            style={{
+                              borderColor: pr.stale ? "var(--atlas-orangellow-100)" : "var(--atlas-blue-100)",
+                              background: pr.stale ? "var(--atlas-orangellow-100)" : "var(--atlas-blue-100)",
+                            }}
+                          >
                             <div className="flex items-center gap-2 flex-wrap">
-                              <a href={`/pr/${pod.pod === "PAY" || pod.pod === "WFM 1" || pod.pod === "WFM 2" ? "Atlas-Webapp" : pod.pod === "FNM 1" ? "Payments-Backend" : "Atlas-Frontend"}/${pr.prNumber}`}
-                                className="font-mono text-xs text-blue-600 hover:underline">
+                              <a
+                                href={`/pr/${pod.pod === "PAY" || pod.pod === "WFM 1" || pod.pod === "WFM 2" ? "Atlas-Webapp" : pod.pod === "FNM 1" ? "Payments-Backend" : "Atlas-Frontend"}/${pr.prNumber}`}
+                                className="font-mono text-xs hover:underline"
+                                style={{ color: "var(--atlas-blue-500)" }}
+                              >
                                 #{pr.prNumber}
                               </a>
-                              <span className="font-mono text-xs text-gray-700">{pr.linearId}</span>
+                              <span className="font-mono text-xs" style={{ color: "var(--atlas-gray-900)", opacity: 0.7 }}>{pr.linearId}</span>
                               {pr.hasRoadmapLabel === true && (
-                                <span className="text-xs bg-green-100 text-green-700 border border-green-200 px-1 rounded font-medium">2026</span>
+                                <span
+                                  className="text-xs px-1 rounded font-medium"
+                                  style={{ background: "var(--atlas-blue-500)", color: "white" }}
+                                >
+                                  2026
+                                </span>
                               )}
                               {pr.hasRoadmapLabel === false && (
-                                <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1 rounded font-medium">off-roadmap</span>
+                                <span
+                                  className="text-xs px-1 rounded font-medium"
+                                  style={{ background: "var(--atlas-orangellow-500)", color: "white" }}
+                                >
+                                  off-roadmap
+                                </span>
                               )}
                               {pr.stale ? (
-                                <span className="text-xs text-amber-700 font-medium">Linear still &quot;{pr.linearStatus}&quot; — close ticket</span>
+                                <span className="text-xs font-medium" style={{ color: "#5A3A0B" }}>
+                                  Linear still &quot;{pr.linearStatus}&quot; — close ticket
+                                </span>
                               ) : (
-                                <span className="text-xs text-green-700">✓ {pr.linearStatus || "no status"}</span>
+                                <span className="text-xs" style={{ color: "var(--atlas-blue-900)" }}>✓ {pr.linearStatus || "no status"}</span>
                               )}
                             </div>
-                            {pr.note && <p className="text-xs text-gray-500 mt-0.5">{pr.note}</p>}
+                            {pr.note && <p className="text-xs mt-0.5" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>{pr.note}</p>}
                           </div>
                         ))}
                       </div>
@@ -310,14 +455,20 @@ export default function CyclesPage() {
                 {otherSignals.length > 0 && (
                   <div className="space-y-2">
                     {otherSignals.map((s, i) => {
-                      const style = URGENCY_STYLES[s.urgency]
+                      const style = URGENCY_CARD[s.urgency]
+                      const badge = URGENCY_BADGE[s.urgency]
                       return (
-                        <div key={i} className={`rounded-lg border px-4 py-3 ${style.card}`}>
+                        <div key={i} className="rounded-xl border px-4 py-3" style={{ borderColor: style.border, background: style.bg }}>
                           <div className="flex items-start gap-2">
-                            <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 ${style.badge}`}>{s.urgency}</span>
+                            <span
+                              className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+                              style={{ background: badge.bg, color: badge.fg }}
+                            >
+                              {s.urgency}
+                            </span>
                             <div>
-                              <p className={`text-sm font-semibold ${style.title}`}>{s.title}</p>
-                              <p className={`text-sm mt-0.5 ${style.detail}`}>{s.detail}</p>
+                              <p className="text-sm font-semibold" style={{ color: style.title }}>{s.title}</p>
+                              <p className="text-sm mt-0.5" style={{ color: style.detail, opacity: 0.85 }}>{s.detail}</p>
                             </div>
                           </div>
                         </div>

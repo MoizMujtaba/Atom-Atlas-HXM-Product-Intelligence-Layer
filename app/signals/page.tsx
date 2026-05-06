@@ -1,6 +1,8 @@
 import { getMergedPRs, getWeeklyEvents, getRegressions, getInstrumentationGaps, type AtomPR } from "@/lib/atom-data"
 import { loadHypotheses } from "@/lib/rice"
 import { wowTrend, wowColor } from "@/lib/utils"
+import AtomHero from "@/components/atom-hero"
+import StatTile from "@/components/stat-tile"
 
 export const dynamic = "force-static"
 
@@ -13,24 +15,42 @@ const POD_EVENTS: Record<string, string[]> = {
   "Data Platform": [],
 }
 
-const URGENCY_STYLES = {
-  P1: { badge: "bg-red-600 text-white", row: "border-red-200 bg-red-50", heading: "text-red-800", section: "border-red-200 bg-red-50" },
-  P2: { badge: "bg-amber-500 text-white", row: "border-amber-200 bg-amber-50", heading: "text-amber-800", section: "border-amber-200 bg-amber-50" },
-  P3: { badge: "bg-gray-200 text-gray-600", row: "border-gray-200 bg-white", heading: "text-gray-700", section: "border-gray-200 bg-white" },
+const URGENCY_BADGE: Record<string, { bg: string; fg: string }> = {
+  P1: { bg: "var(--atlas-coral-500)", fg: "white" },
+  P2: { bg: "var(--atlas-orangellow-500)", fg: "white" },
+  P3: { bg: "var(--atlas-gray-300)", fg: "var(--atlas-gray-900)" },
 }
 
-const OUTCOME_BADGE: Record<string, string> = {
-  retention: "bg-blue-100 text-blue-700",
-  revenue: "bg-green-100 text-green-700",
-  efficiency: "bg-cyan-100 text-cyan-700",
-  risk: "bg-red-100 text-red-700",
-  migration: "bg-violet-100 text-violet-700",
+const URGENCY_SECTION: Record<string, { border: string; headerBg: string; headerText: string; label: string; sublabel: string }> = {
+  P1: {
+    border: "var(--atlas-coral-100)",
+    headerBg: "var(--atlas-coral-100)",
+    headerText: "#7A1818",
+    label: "P1",
+    sublabel: "Act within 48 hours",
+  },
+  P2: {
+    border: "var(--atlas-orangellow-100)",
+    headerBg: "var(--atlas-orangellow-100)",
+    headerText: "#5A3A0B",
+    label: "P2",
+    sublabel: "Next sprint",
+  },
+  P3: {
+    border: "var(--atlas-gray-300)",
+    headerBg: "var(--atlas-gray-50)",
+    headerText: "var(--atlas-gray-900)",
+    label: "P3",
+    sublabel: "Monitor — no immediate action",
+  },
 }
 
-const LEGACY_BADGE: Record<string, { label: string; style: string }> = {
-  "accelerates-sunset": { label: "↑ sunset", style: "bg-green-100 text-green-700" },
-  "delays-sunset": { label: "↓ blocks sunset", style: "bg-red-100 text-red-700" },
-  neutral: { label: "legacy neutral", style: "bg-gray-100 text-gray-500" },
+const OUTCOME_BADGE: Record<string, { bg: string; fg: string }> = {
+  retention: { bg: "var(--atlas-blue-100)", fg: "var(--atlas-blue-900)" },
+  revenue: { bg: "var(--atlas-blue-100)", fg: "var(--atlas-blue-500)" },
+  efficiency: { bg: "var(--atlas-purple-100)", fg: "var(--atlas-purple-900)" },
+  risk: { bg: "var(--atlas-coral-100)", fg: "#7A1818" },
+  migration: { bg: "var(--atlas-magenta-100)", fg: "var(--atlas-magenta-900)" },
 }
 
 function signalAge(mergedAt: string): string {
@@ -44,70 +64,105 @@ function ageColor(mergedAt: string, tier: string): string {
   const days = Math.floor((Date.now() - new Date(mergedAt).getTime()) / 86400000)
   if (tier === "P1" && days >= 2) return "text-red-600 font-semibold"
   if (tier === "P1" && days >= 1) return "text-amber-600 font-medium"
-  return "text-gray-500"
+  return ""
 }
 
 function PRCard({ pr }: { pr: AtomPR }) {
   const t = pr.translation
   const tier = (t.urgencyTier || "P3") as "P1" | "P2" | "P3"
-  const { badge, row } = URGENCY_STYLES[tier]
+  const badge = URGENCY_BADGE[tier]
   const age = signalAge(pr.mergedAt)
   const ageStyle = ageColor(pr.mergedAt, tier)
 
+  const rowBg =
+    tier === "P1" ? "var(--atlas-coral-100)" :
+    tier === "P2" ? "var(--atlas-orangellow-100)" :
+    "var(--atlas-gray-50)"
+
+  const rowBorder =
+    tier === "P1" ? "var(--atlas-coral-100)" :
+    tier === "P2" ? "var(--atlas-orangellow-100)" :
+    "var(--atlas-gray-300)"
+
   return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
-      <div className={`px-4 py-3 ${row}`}>
+    <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: `1px solid ${rowBorder}`, background: "white" }}>
+      <div className="px-4 py-3" style={{ background: rowBg }}>
         <div className="flex items-start gap-2">
-          <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${badge}`}>{tier}</span>
+          <span
+            className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5"
+            style={{ background: badge.bg, color: badge.fg }}
+          >
+            {tier}
+          </span>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
-              <a href={`/pr/${pr.repo}/${pr.number}`} className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium leading-snug transition-colors">
+              <a
+                href={`/pr/${pr.repo}/${pr.number}`}
+                className="text-sm font-medium leading-snug hover:underline transition-colors"
+                style={{ color: "var(--atlas-blue-500)" }}
+              >
                 {pr.title}
               </a>
               <div className="flex items-center gap-2 shrink-0 text-xs">
-                <span className={ageStyle}>{age}</span>
-                <span className="text-gray-300">·</span>
-                <span className="text-gray-500">{pr.team}</span>
+                <span
+                  className={ageStyle}
+                  style={ageStyle ? {} : { color: "var(--atlas-gray-900)", opacity: 0.55 }}
+                >
+                  {age}
+                </span>
+                <span style={{ color: "var(--atlas-gray-300)" }}>·</span>
+                <span style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>{pr.team}</span>
               </div>
             </div>
             <div className="flex gap-1.5 flex-wrap mt-1.5">
-              {t.outcomeType && (
-                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${OUTCOME_BADGE[t.outcomeType] || "bg-gray-100 text-gray-600"}`}>
-                  {t.outcomeType}
+              {t.outcomeType && (() => {
+                const b = OUTCOME_BADGE[t.outcomeType] || { bg: "var(--atlas-gray-300)", fg: "var(--atlas-gray-900)" }
+                return (
+                  <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: b.bg, color: b.fg }}>
+                    {t.outcomeType}
+                  </span>
+                )
+              })()}
+              {t.legacyImpact && t.legacyImpact === "accelerates-sunset" && (
+                <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "var(--atlas-blue-100)", color: "var(--atlas-blue-900)" }}>
+                  ↑ sunset
                 </span>
               )}
-              {t.legacyImpact && t.legacyImpact !== "neutral" && (
-                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${LEGACY_BADGE[t.legacyImpact]?.style}`}>
-                  {LEGACY_BADGE[t.legacyImpact]?.label}
+              {t.legacyImpact && t.legacyImpact === "delays-sunset" && (
+                <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "var(--atlas-coral-100)", color: "#7A1818" }}>
+                  ↓ blocks sunset
                 </span>
               )}
               {t.instrumentationGap && (
-                <span className="text-xs px-1.5 py-0.5 rounded font-medium bg-amber-100 text-amber-700">no tracking</span>
+                <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "var(--atlas-orangellow-100)", color: "#5A3A0B" }}>
+                  no tracking
+                </span>
               )}
               {t.targetPersona && (
-                <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">{t.targetPersona}</span>
+                <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: "var(--atlas-gray-50)", color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+                  {t.targetPersona}
+                </span>
               )}
             </div>
-            <p className="text-xs text-gray-600 mt-2 leading-relaxed">{t.userImpact}</p>
+            <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--atlas-gray-900)", opacity: 0.7 }}>{t.userImpact}</p>
           </div>
         </div>
       </div>
-      {/* Recommended action — visually distinct row */}
       {t.recommendedAction && (
-        <div className="flex items-start gap-2 px-4 py-2.5 bg-gray-900 border-t border-gray-800">
-          <span className="text-gray-400 text-xs shrink-0 mt-0.5 font-mono">→</span>
+        <div className="flex items-start gap-2 px-4 py-2.5 border-t" style={{ background: "var(--atlas-blue-900)", borderColor: "var(--atlas-blue-900)" }}>
+          <span className="text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5" style={{ color: "var(--atlas-blue-250)" }}>→</span>
           <p className="text-xs font-semibold text-white leading-relaxed">{t.recommendedAction}</p>
         </div>
       )}
       {(t.ignoreCost || (t.reviewerRisks && t.reviewerRisks.length > 0)) && (
-        <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 space-y-1">
+        <div className="px-4 py-2 border-t space-y-1" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
           {t.ignoreCost && (
-            <p className="text-xs text-red-600 leading-snug">
+            <p className="text-xs leading-snug" style={{ color: "var(--atlas-coral-500)" }}>
               <span className="font-medium">If ignored:</span> {t.ignoreCost}
             </p>
           )}
           {t.reviewerRisks?.slice(0, 1).map((risk: string, i: number) => (
-            <p key={i} className="text-xs text-amber-700 flex gap-1 items-start">
+            <p key={i} className="text-xs flex gap-1 items-start" style={{ color: "#5A3A0B" }}>
               <span className="shrink-0">⚠</span>{risk}
             </p>
           ))}
@@ -126,7 +181,6 @@ export default async function SignalsPage() {
 
   const eventMap = Object.fromEntries(events.map((e: { event: string; thisWeek: number; lastWeek: number }) => [e.event, e]))
 
-  // Group PRs by urgency tier, sort each group newest-first
   const sortByDate = (a: AtomPR, b: AtomPR) => new Date(b.mergedAt).getTime() - new Date(a.mergedAt).getTime()
   const p1s = prs.filter(pr => pr.translation.urgencyTier === "P1").sort(sortByDate)
   const p2s = prs.filter(pr => pr.translation.urgencyTier === "P2").sort(sortByDate)
@@ -135,29 +189,61 @@ export default async function SignalsPage() {
   const totalPRs = prs.length
   const p1Stale = p1s.filter(pr => Math.floor((Date.now() - new Date(pr.mergedAt).getTime()) / 86400000) >= 2)
 
-  return (
-    <div className="space-y-6">
+  if (totalPRs === 0 && regressions.length === 0 && gaps.length === 0) return (
+    <div className="atlas-brand">
+      <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid var(--atlas-gray-300)", background: "white" }}>
+        <div className="px-5 py-3 border-b" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--atlas-gray-900)" }}>Signal Feed</h2>
+        </div>
+        <div className="px-5 py-10 text-center">
+          <p className="text-sm" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>No signals this week.</p>
+          <p className="text-[11px] mt-1" style={{ color: "var(--atlas-gray-900)", opacity: 0.4 }}>Run a sync to pull the latest PRs and events.</p>
+        </div>
+      </div>
+    </div>
+  )
 
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">Signal Feed</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            {totalPRs} signals this week · sorted by urgency
-          </p>
-        </div>
-        <div className="flex gap-2 text-xs">
-          {p1s.length > 0 && <span className="bg-red-600 text-white px-2.5 py-1 rounded-full font-bold">{p1s.length} P1</span>}
-          {p2s.length > 0 && <span className="bg-amber-500 text-white px-2.5 py-1 rounded-full font-bold">{p2s.length} P2</span>}
-          {p3s.length > 0 && <span className="bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full font-bold">{p3s.length} P3</span>}
-        </div>
+  return (
+    <div className="atlas-brand space-y-8">
+      {/* Hero */}
+      <AtomHero
+        pill="ATLAS HXM · SIGNAL FEED"
+        headline={`${totalPRs} engineering signals this week.`}
+        subline="Merged PRs translated to product impact — sorted by urgency, P1 first."
+        stats={
+          <div className="space-y-2 min-w-[140px]">
+            <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-blue-250)" }}>
+              Urgency Mix
+            </p>
+            {p1s.length > 0 && (
+              <p className="text-sm text-white"><span className="font-semibold">{p1s.length}</span> P1 — act now</p>
+            )}
+            {p2s.length > 0 && (
+              <p className="text-sm text-white"><span className="font-semibold">{p2s.length}</span> P2 — next sprint</p>
+            )}
+            {p3s.length > 0 && (
+              <p className="text-sm" style={{ color: "var(--atlas-blue-250)" }}><span className="font-semibold">{p3s.length}</span> P3 — monitor</p>
+            )}
+          </div>
+        }
+      />
+
+      {/* Stat tiles */}
+      <div className="grid gap-3 sm:grid-cols-4">
+        <StatTile label="P1 Signals" value={p1s.length} accent="var(--atlas-coral-500)" caption="Act within 48h" />
+        <StatTile label="P2 Signals" value={p2s.length} accent="var(--atlas-orangellow-500)" caption="Next sprint" />
+        <StatTile label="Regressions" value={regressions.length} accent="var(--atlas-magenta-500)" caption="Events down >20% WoW" />
+        <StatTile label="Shipped Blind" value={gaps.length} accent="var(--atlas-purple-500)" caption="PRs with no tracking" dark={p1s.length > 0} />
       </div>
 
       {/* Stale P1 warning */}
       {p1Stale.length > 0 && (
-        <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 flex items-center gap-3">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-600 shrink-0" />
-          <p className="text-sm text-red-800 font-medium">
+        <div
+          className="rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm"
+          style={{ border: "1px solid var(--atlas-coral-100)", background: "var(--atlas-coral-100)" }}
+        >
+          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: "var(--atlas-coral-500)" }} />
+          <p className="text-sm font-medium" style={{ color: "#7A1818" }}>
             {p1Stale.length} P1 signal{p1Stale.length > 1 ? "s have" : " has"} been open for 2+ days without action.
             P1s require response within 48h.
           </p>
@@ -166,131 +252,136 @@ export default async function SignalsPage() {
 
       {/* Regression Alerts */}
       {regressions.length > 0 && (
-        <div className="rounded-xl border border-red-200 bg-red-50 overflow-hidden shadow-sm">
-          <div className="px-5 py-3 border-b border-red-200 flex items-center gap-2">
-            <span className="text-red-700 font-semibold text-sm">Regression Alerts</span>
-            <span className="text-xs bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded font-medium">
+        <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid var(--atlas-coral-100)", background: "var(--atlas-coral-100)" }}>
+          <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "rgba(255,89,90,0.2)" }}>
+            <span className="font-semibold text-sm" style={{ color: "#7A1818" }}>Regression Alerts</span>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ background: "rgba(255,89,90,0.15)", color: "#7A1818", border: "1px solid rgba(255,89,90,0.3)" }}
+            >
               {regressions.length} events down &gt;20% WoW
             </span>
           </div>
-          <div className="divide-y divide-red-100">
+          <div>
             {regressions.map((r) => (
-              <div key={r.event} className="px-5 py-3 flex items-center justify-between">
+              <div
+                key={r.event}
+                className="px-5 py-3 flex items-center justify-between"
+                style={{ borderTop: "1px solid rgba(255,89,90,0.12)" }}
+              >
                 <div>
-                  <code className="text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-mono">{r.event}</code>
-                  <p className="text-xs text-red-600 mt-1">{r.pod} · dropped {r.dropPct}% — {r.lastWeek.toLocaleString()} → {r.thisWeek.toLocaleString()}</p>
+                  <code className="text-xs px-1.5 py-0.5 rounded font-mono" style={{ background: "rgba(255,89,90,0.15)", color: "#7A1818" }}>
+                    {r.event}
+                  </code>
+                  <p className="text-xs mt-1" style={{ color: "#7A1818", opacity: 0.8 }}>
+                    {r.pod} · dropped {r.dropPct}% — {r.lastWeek.toLocaleString()} → {r.thisWeek.toLocaleString()}
+                  </p>
                 </div>
-                <span className="text-sm font-bold text-red-700">−{r.dropPct}%</span>
+                <span className="text-sm font-bold" style={{ color: "#7A1818" }}>−{r.dropPct}%</span>
               </div>
             ))}
           </div>
-          <div className="px-5 py-2 bg-red-50 border-t border-red-100">
-            <p className="text-xs text-red-600">No shipped PR explains these drops. Investigate broken flows or data pipeline issues.</p>
+          <div className="px-5 py-2 border-t" style={{ borderColor: "rgba(255,89,90,0.15)" }}>
+            <p className="text-xs" style={{ color: "#7A1818", opacity: 0.75 }}>No shipped PR explains these drops. Investigate broken flows or data pipeline issues.</p>
           </div>
         </div>
       )}
 
       {/* Instrumentation Gaps */}
       {gaps.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 overflow-hidden">
-          <div className="px-5 py-3 border-b border-amber-200 flex items-center gap-2">
-            <span className="text-amber-700 font-semibold text-sm">Shipped Blind</span>
-            <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-2 py-0.5 rounded font-medium">
+        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--atlas-orangellow-100)" }}>
+          <div className="px-5 py-3 border-b flex items-center gap-2" style={{ background: "var(--atlas-orangellow-100)", borderColor: "rgba(255,120,44,0.2)" }}>
+            <span className="font-semibold text-sm" style={{ color: "#5A3A0B" }}>Shipped Blind</span>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ background: "rgba(255,120,44,0.15)", color: "#5A3A0B", border: "1px solid rgba(255,120,44,0.3)" }}
+            >
               {gaps.length} PRs with no PostHog tracking
             </span>
           </div>
-          <div className="divide-y divide-amber-100">
+          <div style={{ background: "white" }}>
             {gaps.map((g) => (
-              <div key={`${g.repo}-${g.prNumber}`} className="px-5 py-3 flex items-start gap-3">
-                <span className="text-amber-400 text-lg shrink-0">◎</span>
+              <div
+                key={`${g.repo}-${g.prNumber}`}
+                className="px-5 py-3 flex items-start gap-3"
+                style={{ borderTop: "1px solid var(--atlas-orangellow-100)" }}
+              >
+                <span className="text-lg shrink-0" style={{ color: "var(--atlas-orangellow-500)" }}>◎</span>
                 <div>
-                  <a href={`/pr/${g.repo}/${g.prNumber}`} className="text-sm font-medium text-amber-800 hover:underline">
+                  <a href={`/pr/${g.repo}/${g.prNumber}`} className="text-sm font-medium hover:underline" style={{ color: "#5A3A0B" }}>
                     {g.prTitle}
                   </a>
-                  <p className="text-xs text-amber-600 mt-0.5">{g.team} · {g.newCapability}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "#5A3A0B", opacity: 0.7 }}>{g.team} · {g.newCapability}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="px-5 py-2 border-t border-amber-100">
-            <p className="text-xs text-amber-600">These features shipped with no user behavior tracking. You cannot measure adoption or detect failures.</p>
+          <div className="px-5 py-2 border-t" style={{ borderColor: "var(--atlas-orangellow-100)" }}>
+            <p className="text-xs" style={{ color: "#5A3A0B", opacity: 0.75 }}>These features shipped with no user behavior tracking. You cannot measure adoption or detect failures.</p>
           </div>
         </div>
       )}
 
-      {/* No P1s — good news state */}
+      {/* All clear */}
       {p1s.length === 0 && regressions.length === 0 && (
-        <div className="rounded-xl border border-green-200 bg-green-50 px-5 py-4 flex items-center gap-3 shadow-sm">
-          <span className="text-green-500 text-xl shrink-0">✓</span>
+        <div
+          className="rounded-2xl px-5 py-4 flex items-center gap-3 shadow-sm"
+          style={{ border: "1px solid var(--atlas-blue-100)", background: "var(--atlas-blue-100)" }}
+        >
+          <span className="text-xl shrink-0" style={{ color: "var(--atlas-blue-500)" }}>✓</span>
           <div>
-            <p className="text-sm font-semibold text-green-800">No P1 signals this week</p>
-            <p className="text-xs text-green-600 mt-0.5">No regressions or critical issues detected. All clear.</p>
+            <p className="text-sm font-semibold" style={{ color: "var(--atlas-blue-900)" }}>No P1 signals this week</p>
+            <p className="text-xs mt-0.5" style={{ color: "var(--atlas-blue-900)", opacity: 0.7 }}>No regressions or critical issues detected. All clear.</p>
           </div>
         </div>
       )}
 
-      {/* P1 Signals */}
-      {p1s.length > 0 && (
-        <div className="rounded-xl border border-red-200 overflow-hidden">
-          <div className="px-5 py-3 bg-red-50 border-b border-red-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-bold">P1</span>
-              <span className="text-sm font-semibold text-red-900">Act within 48 hours</span>
+      {/* Signal sections: P1, P2, P3 */}
+      {(["P1", "P2", "P3"] as const).map((tier) => {
+        const tierPRs = tier === "P1" ? p1s : tier === "P2" ? p2s : p3s
+        if (tierPRs.length === 0) return null
+        const s = URGENCY_SECTION[tier]
+        return (
+          <div key={tier} className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${s.border}` }}>
+            <div className="px-5 py-3 border-b flex items-center justify-between" style={{ background: s.headerBg, borderColor: s.border }}>
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                  style={{ background: URGENCY_BADGE[tier].bg, color: URGENCY_BADGE[tier].fg }}
+                >
+                  {s.label}
+                </span>
+                <span className="text-sm font-semibold" style={{ color: s.headerText }}>{s.sublabel}</span>
+              </div>
+              <span className="text-xs" style={{ color: s.headerText, opacity: 0.7 }}>
+                {tierPRs.length} signal{tierPRs.length > 1 ? "s" : ""}
+              </span>
             </div>
-            <span className="text-xs text-red-600">{p1s.length} signal{p1s.length > 1 ? "s" : ""}</span>
-          </div>
-          <div className="p-4 space-y-3 bg-white">
-            {p1s.map(pr => <PRCard key={`${pr.repo}-${pr.number}`} pr={pr} />)}
-          </div>
-        </div>
-      )}
-
-      {/* P2 Signals */}
-      {p2s.length > 0 && (
-        <div className="rounded-xl border border-amber-200 overflow-hidden">
-          <div className="px-5 py-3 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded font-bold">P2</span>
-              <span className="text-sm font-semibold text-amber-900">Next sprint</span>
+            <div className="p-4 space-y-3" style={{ background: "white" }}>
+              {tierPRs.map(pr => <PRCard key={`${pr.repo}-${pr.number}`} pr={pr} />)}
             </div>
-            <span className="text-xs text-amber-700">{p2s.length} signal{p2s.length > 1 ? "s" : ""}</span>
           </div>
-          <div className="p-4 space-y-3 bg-white">
-            {p2s.map(pr => <PRCard key={`${pr.repo}-${pr.number}`} pr={pr} />)}
-          </div>
-        </div>
-      )}
+        )
+      })}
 
-      {/* P3 Signals */}
-      {p3s.length > 0 && (
-        <div className="rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-5 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded font-bold">P3</span>
-              <span className="text-sm font-semibold text-gray-700">Monitor — no immediate action</span>
-            </div>
-            <span className="text-xs text-gray-500">{p3s.length} signal{p3s.length > 1 ? "s" : ""}</span>
-          </div>
-          <div className="p-4 space-y-3 bg-white">
-            {p3s.map(pr => <PRCard key={`${pr.repo}-${pr.number}`} pr={pr} />)}
-          </div>
-        </div>
-      )}
-
-      {/* PostHog Event Boards — reference panel */}
-      <div>
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">PostHog Event Boards — 7d by Pod</h2>
+      {/* PostHog Event Boards */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.65 }}>
+          PostHog Event Boards · 7d by Pod
+        </h2>
         <div className="space-y-4">
           {Object.entries(POD_EVENTS).map(([pod, podEvents]) => {
             const podRegressions = regressions.filter(r => r.pod === pod)
             const podHyps = hypotheses.filter(h => h.pod === pod && h.status === "active")
             if (podEvents.length === 0 && podHyps.length === 0) return null
             return (
-              <div key={pod} className="rounded-xl border border-gray-200 overflow-hidden bg-white">
-                <div className="px-5 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">{pod}</span>
+              <div key={pod} className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--atlas-gray-300)", background: "white" }}>
+                <div className="px-5 py-3 border-b flex items-center justify-between" style={{ background: "var(--atlas-gray-50)", borderColor: "var(--atlas-gray-300)" }}>
+                  <span className="text-sm font-semibold" style={{ color: "var(--atlas-gray-900)" }}>{pod}</span>
                   {podRegressions.length > 0 && (
-                    <span className="text-xs text-red-600 font-medium">{podRegressions.length} regression{podRegressions.length > 1 ? "s" : ""}</span>
+                    <span className="text-xs font-medium" style={{ color: "var(--atlas-coral-500)" }}>
+                      {podRegressions.length} regression{podRegressions.length > 1 ? "s" : ""}
+                    </span>
                   )}
                 </div>
                 <div className="p-4 space-y-3">
@@ -300,11 +391,21 @@ export default async function SignalsPage() {
                         const data = eventMap[ev]
                         const isRegression = podRegressions.some(r => r.event === ev)
                         return (
-                          <div key={ev} className={`rounded-lg border px-3 py-2 ${isRegression ? "border-red-300 bg-red-50" : "border-gray-200 bg-gray-50"}`}>
-                            <p className="font-mono text-xs text-gray-500 truncate">{ev}</p>
+                          <div
+                            key={ev}
+                            className="rounded-xl border px-3 py-2"
+                            style={{
+                              borderColor: isRegression ? "var(--atlas-coral-100)" : "var(--atlas-gray-300)",
+                              background: isRegression ? "var(--atlas-coral-100)" : "var(--atlas-gray-50)",
+                            }}
+                          >
+                            <p className="font-mono text-xs truncate" style={{ color: "var(--atlas-gray-900)", opacity: 0.55 }}>{ev}</p>
                             {data ? (
                               <div className="flex items-end gap-2 mt-1">
-                                <span className={`text-lg font-semibold tabular-nums ${isRegression ? "text-red-700" : "text-gray-900"}`}>
+                                <span
+                                  className="text-lg font-semibold tabular-nums"
+                                  style={{ color: isRegression ? "var(--atlas-coral-500)" : "var(--atlas-gray-900)" }}
+                                >
                                   {data.thisWeek.toLocaleString()}
                                 </span>
                                 <span className={`text-xs font-medium mb-0.5 ${wowColor(data.thisWeek, data.lastWeek, !ev.includes("failed"))}`}>
@@ -312,7 +413,7 @@ export default async function SignalsPage() {
                                 </span>
                               </div>
                             ) : (
-                              <p className="text-gray-400 text-xs mt-1">No events this week</p>
+                              <p className="text-xs mt-1" style={{ color: "var(--atlas-gray-900)", opacity: 0.4 }}>No events this week</p>
                             )}
                           </div>
                         )
@@ -322,9 +423,13 @@ export default async function SignalsPage() {
                   {podHyps.length > 0 && (
                     <div className="space-y-2">
                       {podHyps.map(h => (
-                        <div key={h.id} className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-800">
-                          <p className="font-medium text-xs">{h.title}</p>
-                          <p className="text-xs mt-0.5 opacity-70">{h.evidence}</p>
+                        <div
+                          key={h.id}
+                          className="rounded-xl border px-3 py-2"
+                          style={{ borderColor: "var(--atlas-blue-100)", background: "rgba(218,230,254,0.35)" }}
+                        >
+                          <p className="font-medium text-xs" style={{ color: "var(--atlas-blue-900)" }}>{h.title}</p>
+                          <p className="text-xs mt-0.5" style={{ color: "var(--atlas-blue-900)", opacity: 0.65 }}>{h.evidence}</p>
                         </div>
                       ))}
                     </div>
@@ -334,19 +439,7 @@ export default async function SignalsPage() {
             )
           })}
         </div>
-      </div>
-
-      {totalPRs === 0 && regressions.length === 0 && gaps.length === 0 && (
-        <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-          <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
-            <h2 className="text-sm font-semibold text-gray-900">Signal Feed</h2>
-          </div>
-          <div className="px-5 py-10 text-center">
-            <p className="text-sm text-gray-500">No signals this week.</p>
-            <p className="text-xs text-gray-400 mt-1">Run a sync to pull the latest PRs and events.</p>
-          </div>
-        </div>
-      )}
+      </section>
     </div>
   )
 }
