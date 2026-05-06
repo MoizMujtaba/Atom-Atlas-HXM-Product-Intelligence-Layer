@@ -103,8 +103,14 @@ export default function CyclesPage() {
 
   if (!data) {
     return (
-      <div className="text-center py-20 text-gray-500">
-        No cycle data available. Run Atom to pull Linear cycle data.
+      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+          <h1 className="text-sm font-semibold text-gray-900">Cycle Intelligence</h1>
+        </div>
+        <div className="px-5 py-10 text-center">
+          <p className="text-sm text-gray-500">No cycle data available.</p>
+          <p className="text-xs text-gray-400 mt-1">Click Sync in the top nav to pull Linear cycle data.</p>
+        </div>
       </div>
     )
   }
@@ -217,7 +223,7 @@ export default function CyclesPage() {
                 </div>
               </div>
 
-              <div className="p-5 space-y-5">
+              <div className="p-4 space-y-4">
                 {/* P1 signals inline */}
                 {p1Signals.length > 0 && (
                   <div className="space-y-2">

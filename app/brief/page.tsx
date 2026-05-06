@@ -34,7 +34,17 @@ export default async function BriefPage() {
     brief = generated as unknown as typeof brief
   }
 
-  if (!brief) return <p className="text-gray-500 p-8">Brief unavailable — run a sync to generate.</p>
+  if (!brief) return (
+    <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+      <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+        <h2 className="text-sm font-semibold text-gray-900">Weekly Brief</h2>
+      </div>
+      <div className="px-5 py-10 text-center">
+        <p className="text-sm text-gray-500">Brief unavailable — run a sync to generate.</p>
+        <p className="text-xs text-gray-400 mt-1">Click the Sync button in the top nav to pull fresh data.</p>
+      </div>
+    </div>
+  )
 
   const lastRefreshed = getLastRefreshed()
   const briefDate = brief.generatedAt
@@ -91,8 +101,8 @@ export default async function BriefPage() {
       )}
 
       {brief.regressions?.length > 0 && (
-        <div className="rounded-xl border border-red-200 overflow-hidden shadow-sm">
-          <div className="px-5 py-3 bg-red-50 border-b border-red-200 flex items-center gap-2">
+        <div className="rounded-xl border border-red-200 bg-red-50 overflow-hidden shadow-sm">
+          <div className="px-5 py-3 border-b border-red-200 flex items-center gap-2">
             <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-bold">Regressions</span>
             <span className="text-xs bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded font-medium">
               {brief.regressions.length} event{brief.regressions.length > 1 ? "s" : ""} down

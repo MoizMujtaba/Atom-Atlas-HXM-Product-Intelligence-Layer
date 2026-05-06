@@ -156,7 +156,7 @@ export default async function SignalsPage() {
       {/* Stale P1 warning */}
       {p1Stale.length > 0 && (
         <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 flex items-center gap-3">
-          <span className="text-red-600 text-lg shrink-0">🔴</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-red-600 shrink-0" />
           <p className="text-sm text-red-800 font-medium">
             {p1Stale.length} P1 signal{p1Stale.length > 1 ? "s have" : " has"} been open for 2+ days without action.
             P1s require response within 48h.
@@ -337,7 +337,15 @@ export default async function SignalsPage() {
       </div>
 
       {totalPRs === 0 && regressions.length === 0 && gaps.length === 0 && (
-        <p className="text-gray-400 text-sm text-center py-12">No signals this week.</p>
+        <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+          <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+            <h2 className="text-sm font-semibold text-gray-900">Signal Feed</h2>
+          </div>
+          <div className="px-5 py-10 text-center">
+            <p className="text-sm text-gray-500">No signals this week.</p>
+            <p className="text-xs text-gray-400 mt-1">Run a sync to pull the latest PRs and events.</p>
+          </div>
+        </div>
       )}
     </div>
   )

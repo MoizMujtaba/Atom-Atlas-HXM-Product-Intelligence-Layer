@@ -33,9 +33,14 @@ export default function CompetePage() {
 
   if (!intel) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-xl font-semibold text-gray-900">Competitive Intelligence</h1>
-        <p className="text-gray-500 text-sm">No competitor data yet. Run the Atom refresh session to populate.</p>
+      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+          <h1 className="text-sm font-semibold text-gray-900">Competitive Intelligence</h1>
+        </div>
+        <div className="px-5 py-10 text-center">
+          <p className="text-sm text-gray-500">No competitor data yet.</p>
+          <p className="text-xs text-gray-400 mt-1">Run the Atom refresh session to populate competitor intel.</p>
+        </div>
       </div>
     )
   }
@@ -87,14 +92,14 @@ export default function CompetePage() {
       <div className="space-y-5">
         {intel.competitors.map((c) => (
           <div key={c.name} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-            <div className="px-5 py-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="font-semibold text-gray-900">{c.name}</h2>
+            <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+              <h2 className="text-sm font-semibold text-gray-900">{c.name}</h2>
             </div>
 
             <div className="divide-y divide-gray-100">
               {/* Recent moves */}
               {c.recentMoves.length > 0 && (
-                <div className="p-5 space-y-4">
+                <div className="p-4 space-y-4">
                   <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">Recent Moves</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {c.recentMoves.map((move, i) => (
@@ -118,7 +123,7 @@ export default function CompetePage() {
 
               {/* G2 complaints */}
               {c.g2Complaints.length > 0 && (
-                <div className="p-5 space-y-2">
+                <div className="p-4 space-y-2">
                   <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">G2 Complaints</p>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5">
                     {c.g2Complaints.map((complaint, i) => (
@@ -132,7 +137,7 @@ export default function CompetePage() {
               )}
 
               {/* Atlas play — most actionable, always last */}
-              <div className="px-5 py-4 bg-gray-900">
+              <div className="px-5 py-3 bg-gray-900">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Atlas play</p>
                 <p className="text-sm text-white leading-relaxed">{c.atlasOpportunity}</p>
               </div>
