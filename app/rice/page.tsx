@@ -3,6 +3,8 @@ import { calcRICE, riceLabel } from "@/lib/utils"
 import RiceForm from "@/components/rice-form"
 import AtomHero from "@/components/atom-hero"
 import StatTile from "@/components/stat-tile"
+import PieChart from "@/components/sentinel/pie-chart"
+import BarChart from "@/components/bar-chart"
 
 export const dynamic = "force-static"
 
@@ -42,9 +44,19 @@ export default async function RicePage() {
   const hypotheses = loadHypotheses()
   const sorted = [...hypotheses].sort((a, b) => b.score - a.score)
 
-  const shipItCount = sorted.filter(h => riceLabel(calcRICE(h.reach, h.impact, h.confidence, h.effort)).label === "Ship it").length
-  const strongCount = sorted.filter(h => riceLabel(calcRICE(h.reach, h.impact, h.confidence, h.effort)).label === "Strong").length
-  const validateCount = sorted.filter(h => riceLabel(calcRICE(h.reach, h.impact, h.confidence, h.effort)).label === "Validate").length
+  const scored = sorted.map(h => ({ ...h, _label: riceLabel(calcRICE(h.reach, h.impact, h.confidence, h.effort)).label }))
+  const shipItCount = scored.filter(h => h._label === "Ship it").length
+  const strongCount = scored.filter(h => h._label === "Strong").length
+  const validateCount = scored.filter(h => h._label === "Validate").length
+  const monitorCount = scored.filter(h => h._label === "Monitor").length
+  const hypothesisCount = scored.filter(h => h._label === "Hypothesis").length
+
+  const typeCounts = Object.entries(
+    sorted.reduce<Record<string, number>>((acc, h) => {
+      acc[h.signalType] = (acc[h.signalType] ?? 0) + 1
+      return acc
+    }, {})
+  ).sort((a, b) => b[1] - a[1])
 
   return (
     <div className="atlas-brand space-y-8">
@@ -66,6 +78,47 @@ export default async function RicePage() {
           </div>
         }
       />
+
+      {/* Chart cards row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Score band donut */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Score Band Distribution
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            Where hypotheses cluster
+          </h3>
+          <PieChart
+            data={[
+              { label: "Ship it (600+)", value: shipItCount, color: "#0559FA" },
+              { label: "Strong (300–599)", value: strongCount, color: "#82ACFC" },
+              { label: "Validate (100–299)", value: validateCount, color: "#5827E3" },
+              { label: "Monitor (40–99)", value: monitorCount, color: "#FF782C" },
+              { label: "Hypothesis (<40)", value: hypothesisCount, color: "#E9E9E9" },
+            ].filter(d => d.value > 0)}
+            title="RICE score band distribution"
+            size={180}
+          />
+        </div>
+
+        {/* Signal type bar chart */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Signal Type Breakdown
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            What's driving the backlog
+          </h3>
+          <BarChart
+            data={typeCounts.map(([label, value], i) => ({
+              label: TYPE_LABELS[label] ?? label,
+              value,
+              color: ["#0559FA","#5827E3","#BA33CA","#FF782C","#FF595A"][i % 5],
+            }))}
+          />
+        </div>
+      </div>
 
       {/* Stat tiles */}
       <div className="grid gap-3 sm:grid-cols-4">

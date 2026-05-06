@@ -1,6 +1,8 @@
 import { getCompetitorIntel } from "@/lib/atom-data"
 import AtomHero from "@/components/atom-hero"
 import StatTile from "@/components/stat-tile"
+import PieChart from "@/components/sentinel/pie-chart"
+import BarChart from "@/components/bar-chart"
 
 export const dynamic = "force-static"
 
@@ -62,6 +64,14 @@ export default function CompetePage() {
 
   const criticalThemes = intel.crossCompetitorThemes.filter(t => t.urgency === "critical").length
   const highThemes = intel.crossCompetitorThemes.filter(t => t.urgency === "high").length
+  const mediumThemes = intel.crossCompetitorThemes.filter(t => t.urgency === "medium").length
+  const lowThemes = intel.crossCompetitorThemes.filter(t => t.urgency === "low").length
+
+  // Count move types across all competitors
+  const moveTypeCounts = intel.competitors.reduce<Record<string, number>>((acc, c) => {
+    c.recentMoves.forEach(m => { acc[m.type] = (acc[m.type] ?? 0) + 1 })
+    return acc
+  }, {})
 
   return (
     <div className="atlas-brand space-y-8">
@@ -92,6 +102,48 @@ export default function CompetePage() {
           </div>
         }
       />
+
+      {/* Chart cards row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Theme urgency donut */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Theme Urgency Mix
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            Where the market is moving fastest
+          </h3>
+          <PieChart
+            data={[
+              { label: "Critical", value: criticalThemes, color: "#FF595A" },
+              { label: "High", value: highThemes, color: "#FF782C" },
+              { label: "Medium", value: mediumThemes, color: "#5827E3" },
+              { label: "Low", value: lowThemes, color: "#E9E9E9" },
+            ].filter(d => d.value > 0)}
+            title="Competitive theme urgency"
+            size={180}
+          />
+        </div>
+
+        {/* Competitor move types bar chart */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Competitor Activity · Move Types
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            What competitors are doing most
+          </h3>
+          <BarChart
+            data={Object.entries(moveTypeCounts)
+              .sort((a, b) => b[1] - a[1])
+              .map(([label, value], i) => ({
+                label: label.replace(/-/g, " "),
+                value,
+                color: ["#0559FA","#5827E3","#BA33CA","#FF782C","#FF595A"][i % 5],
+              }))}
+          />
+        </div>
+      </div>
 
       {/* Stat tiles */}
       <div className="grid gap-3 sm:grid-cols-4">

@@ -2,6 +2,8 @@ import fs from "fs"
 import path from "path"
 import AtomHero from "@/components/atom-hero"
 import StatTile from "@/components/stat-tile"
+import PieChart from "@/components/sentinel/pie-chart"
+import BarChart from "@/components/bar-chart"
 
 export const dynamic = "force-static"
 
@@ -159,6 +161,51 @@ export default function CyclesPage() {
           </div>
         }
       />
+
+      {/* Chart cards row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Pod completion bar chart */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Completion · By Pod
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            Cycle progress across all pods
+          </h3>
+          <BarChart
+            max={100}
+            data={pods.map(p => ({
+              label: p.pod,
+              value: p.completionPct,
+              suffix: "%",
+              color: p.completionPct >= 70
+                ? "var(--atlas-blue-500)"
+                : p.slipRisk === "high"
+                ? "#FF595A"
+                : "#FF782C",
+            }))}
+          />
+        </div>
+
+        {/* Slip risk donut */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Slip Risk Distribution
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            How many pods are at risk
+          </h3>
+          <PieChart
+            data={[
+              { label: "High risk", value: pods.filter(p => p.slipRisk === "high").length, color: "#FF595A" },
+              { label: "Medium risk", value: pods.filter(p => p.slipRisk === "medium").length, color: "#FF782C" },
+              { label: "Low risk", value: pods.filter(p => p.slipRisk === "low").length, color: "#0559FA" },
+            ].filter(d => d.value > 0)}
+            title="Pod slip risk"
+            size={180}
+          />
+        </div>
+      </div>
 
       {/* Stat tiles */}
       <div className="grid gap-3 sm:grid-cols-4">

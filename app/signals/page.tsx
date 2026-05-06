@@ -3,6 +3,8 @@ import { loadHypotheses } from "@/lib/rice"
 import { wowTrend, wowColor } from "@/lib/utils"
 import AtomHero from "@/components/atom-hero"
 import StatTile from "@/components/stat-tile"
+import PieChart from "@/components/sentinel/pie-chart"
+import BarChart from "@/components/bar-chart"
 
 export const dynamic = "force-static"
 
@@ -228,12 +230,58 @@ export default async function SignalsPage() {
         }
       />
 
+      {/* Chart cards row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Urgency mix donut */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Signal Urgency Mix
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            Where attention is needed
+          </h3>
+          <PieChart
+            data={[
+              { label: "P1 — act now", value: p1s.length, color: "#FF595A" },
+              { label: "P2 — next sprint", value: p2s.length, color: "#FF782C" },
+              { label: "P3 — monitor", value: p3s.length, color: "#E9E9E9" },
+            ].filter(d => d.value > 0)}
+            title="Signal urgency distribution"
+            size={180}
+          />
+        </div>
+
+        {/* Pod activity bar chart */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Signal Volume · By Pod
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            Which pods are shipping most
+          </h3>
+          <BarChart
+            data={(() => {
+              const podCounts: Record<string, number> = {}
+              prs.forEach(pr => { podCounts[pr.team] = (podCounts[pr.team] ?? 0) + 1 })
+              return Object.entries(podCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8)
+                .map(([label, value], i) => ({
+                  label,
+                  value,
+                  color: ["#0559FA","#5827E3","#BA33CA","#FF782C","#FF595A","#82ACFC","#AB93F1","#DD98E5"][i % 8],
+                }))
+            })()}
+          />
+        </div>
+      </div>
+
       {/* Stat tiles */}
       <div className="grid gap-3 sm:grid-cols-4">
-        <StatTile label="P1 Signals" value={p1s.length} accent="var(--atlas-coral-500)" caption="Act within 48h" />
+        <StatTile label="P1 Signals" value={p1s.length} accent="var(--atlas-coral-500)" caption="Act within 48h" dark={p1s.length > 0} />
         <StatTile label="P2 Signals" value={p2s.length} accent="var(--atlas-orangellow-500)" caption="Next sprint" />
         <StatTile label="Regressions" value={regressions.length} accent="var(--atlas-magenta-500)" caption="Events down >20% WoW" />
-        <StatTile label="Shipped Blind" value={gaps.length} accent="var(--atlas-purple-500)" caption="PRs with no tracking" dark={p1s.length > 0} />
+        <StatTile label="Shipped Blind" value={gaps.length} accent="var(--atlas-purple-500)" caption="PRs with no tracking" />
       </div>
 
       {/* Stale P1 warning */}

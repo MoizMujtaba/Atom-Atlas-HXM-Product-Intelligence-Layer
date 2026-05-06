@@ -2,6 +2,7 @@ import { getMergedPRs, getWeeklyEvents, getRegressions, getBrief, getLastRefresh
 import { generateWeeklyBrief } from "@/lib/claude"
 import AtomHero from "@/components/atom-hero"
 import StatTile from "@/components/stat-tile"
+import PieChart from "@/components/sentinel/pie-chart"
 
 export const dynamic = "force-dynamic"
 
@@ -86,7 +87,69 @@ export default async function BriefPage() {
         }
       />
 
-      {/* Stat tiles */}
+      {/* Chart cards row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Week composition donut */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.6 }}>
+            Week Composition
+          </p>
+          <h3 className="text-base font-semibold mt-0.5 mb-4" style={{ color: "var(--atlas-gray-900)" }}>
+            What this week looks like
+          </h3>
+          <PieChart
+            data={[
+              { label: "P1 actions", value: brief.p1Actions?.length ?? 0, color: "#FF595A" },
+              { label: "Regressions", value: brief.regressions?.length ?? 0, color: "#FF782C" },
+              { label: "Risks", value: brief.topRisks?.length ?? 0, color: "#AB93F1" },
+              { label: "Opportunities", value: brief.opportunities?.length ?? 0, color: "#0559FA" },
+              { label: "Gaps", value: brief.instrumentationGaps?.length ?? 0, color: "#F6B942" },
+            ].filter(d => d.value > 0)}
+            title="Week composition"
+            size={180}
+          />
+        </div>
+
+        {/* Exec signal SmartSignal card */}
+        <div className="rounded-2xl px-5 py-5 shadow-sm" style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <span
+              className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold"
+              style={{ background: signalAccent + "22", color: signalAccent }}
+              aria-hidden
+            >
+              ✦
+            </span>
+            <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: signalAccent }}>
+              Exec Signal · {(brief.weekSignal ?? "amber").toUpperCase()}
+            </p>
+          </div>
+          <p className="text-[16px] font-bold leading-snug" style={{ color: "var(--atlas-gray-900)" }}>
+            {brief.execSignal}
+          </p>
+          {brief.weekSignalReason && (
+            <p className="text-[12.5px] mt-3 leading-relaxed" style={{ color: "var(--atlas-gray-900)", opacity: 0.7 }}>
+              {brief.weekSignalReason}
+            </p>
+          )}
+          <div className="flex gap-3 mt-4 flex-wrap">
+            <div className="text-center">
+              <p className="text-2xl font-extrabold" style={{ color: "var(--atlas-coral-500)" }}>{brief.p1Actions?.length ?? 0}</p>
+              <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.5 }}>P1 actions</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-extrabold" style={{ color: "var(--atlas-orangellow-500)" }}>{brief.regressions?.length ?? 0}</p>
+              <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.5 }}>regressions</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-extrabold" style={{ color: "var(--atlas-blue-500)" }}>{brief.opportunities?.length ?? 0}</p>
+              <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--atlas-gray-900)", opacity: 0.5 }}>opportunities</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Remaining stat tiles */}
       <div className="grid gap-3 sm:grid-cols-3">
         <StatTile
           label="Week Signal"
@@ -99,6 +162,7 @@ export default async function BriefPage() {
           value={brief.p1Actions?.length ?? 0}
           accent="var(--atlas-coral-500)"
           caption="Act this week"
+          dark={(brief.p1Actions?.length ?? 0) > 0}
         />
         <StatTile
           label="Regressions"
@@ -106,33 +170,6 @@ export default async function BriefPage() {
           accent="var(--atlas-orangellow-500)"
           caption="Events down week-over-week"
         />
-      </div>
-
-      {/* Exec signal */}
-      <div
-        className="rounded-2xl px-5 py-4 shadow-sm"
-        style={{ background: "white", border: "1px solid var(--atlas-gray-300)" }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <span
-            className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold"
-            style={{ background: signalAccent + "22", color: signalAccent }}
-            aria-hidden
-          >
-            ✦
-          </span>
-          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: signalAccent }}>
-            Exec Signal
-          </p>
-        </div>
-        <p className="text-[15px] font-semibold leading-snug" style={{ color: "var(--atlas-gray-900)" }}>
-          {brief.execSignal}
-        </p>
-        {brief.weekSignalReason && (
-          <p className="text-[12.5px] mt-2 leading-relaxed" style={{ color: "var(--atlas-gray-900)", opacity: 0.7 }}>
-            {brief.weekSignalReason}
-          </p>
-        )}
       </div>
 
       {/* P1 Actions */}
