@@ -62,6 +62,55 @@ Every signal Atom surfaces includes:
 
 ---
 
+## Sentinel — Customer Voice Intelligence
+
+**Sentinel** bridges the gap between raw customer data and actionable product intelligence. It captures customer voice from call transcripts and CRM records, normalizes them against the roadmap, and surfaces only approved, sourced signals in Atom.
+
+### What Sentinel does
+
+Every insight Atom publishes about customer needs, market gaps, or alignment signals originates in Sentinel. The system:
+
+1. **Captures** raw customer voice from three sources:
+   - Avoma transcripts (qualification, demo, discovery, vendor reviews)
+   - HubSpot deals (last 90 days of pipeline with outcome and amount)
+   - Atlas product roadmap (official quarterly plan with vertical and theme)
+
+2. **Normalizes** (Synapse layer — local-only working layer):
+   - Deduplicate and classify by source system
+   - Match each source against roadmap themes and verticals
+   - Score roadmap overlap: aligned, adjacent, gap, unknown
+   - Compute confidence based on signal density and deal outcome
+
+3. **Publishes** (Sentinel layer — approved signals only):
+   - Promote approved signals to Atom (approved + confidence ≥ medium + verifiable source)
+   - Hold back drafts until evidence and source linkage are clean
+   - Surface action lenses: Needs Product, Needs Marketing, Aligned, Gap
+   - Persist a directory of every reviewed source for full traceability
+
+### Accessing Sentinel
+
+| View | Purpose | URL |
+|------|---------|-----|
+| **Insights** | Approved signals categorized by roadmap theme, smart signals (top themes, gap pressure, conversation gravity), pie charts by source system and overlap type | `/sentinel` |
+| **Source Directory** | Complete input register: 562 sources (100 Avoma transcripts, 431 HubSpot deals, 31 roadmap items). Search, filter by system/overlap/theme, switch table/card view, click any source for full details | `/sentinel/sources` |
+| **Source Detail** | Full metadata for any input: company, stage/purpose, owner, deal amount, outcome signal, roadmap match basis, confidence level, source links | `/sentinel/sources/[source-id]` |
+| **Architecture** | System diagram (Sources → Synapse → Sentinel → Atom) with flow visualization, trust boundary, and explanation of each layer | `/sentinel/architecture` |
+
+### Trust boundary
+
+Synapse holds raw transcripts, deal data, and unreviewed normalization. Atom only renders signals that have been approved with confidence ≥ medium and at least one verifiable source link. The directory exposes every source the layer reviewed — including drafts and unmapped rows — so reviewers can audit the full chain.
+
+### Smart signals
+
+The Insights hub auto-derives key metrics from the full 562-source library:
+
+- **Top themes** — roadmap themes with the highest signal density
+- **Gap pressure** — customer asks that fall outside the roadmap
+- **Conversation gravity** — themes surfaced across multiple source systems (Avoma + HubSpot alignment)
+- **Overlap distribution** — pie charts showing what % of sources are aligned, adjacent, gap, or unknown
+
+---
+
 ## Architecture
 
 ```
